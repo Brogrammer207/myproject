@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myproject/homepage.dart';
 import 'package:myproject/signup.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -12,12 +14,24 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+    next() {
+    Timer(const Duration(seconds: 2), () async {
+      checkLogin();
+    });
+  }
+  checkLogin() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser != null) {
+      Get.to(HomePage());
+    }else{
+            Get.to(SignUpScreen());
+
+    }
+  }
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
-      Get.to(const SignUpScreen());
-    });
+    next();
   }
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,31 +39,37 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/images/borawarlogo.png',
-            width: 240,
+          Center(
+            child: Image.asset(
+              'assets/images/borawarlogo.png',
+              width: 240,
+            ),
           ),
           const SizedBox(
             height: 18,
           ),
-          const Text(
-            "Let's get started",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+          const Center(
+            child: Text(
+              "Let's get started",
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(
             height: 10,
           ),
-          const Text(
-            "Never a better time than now to start.",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.black38,
+        const Center(
+            child: Text(
+              "Never a better time than now to start.",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black38,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
           const SizedBox(
             height: 38,

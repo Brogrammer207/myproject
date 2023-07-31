@@ -43,6 +43,13 @@ dependencies:
   flutter_svg: ^1.1.0
   pinput: ^2.3.0
   cloud_firestore: ^4.8.4
+  carousel_slider: ^4.0.0
+  bottom_navy_bar: ^6.0.0
+  smooth_page_indicator: ^1.1.0
+  flutter_rating_bar: ^4.0.1
+  font_awesome_flutter: ^10.4.0
+  animations: ^2.0.7
+
 
 dev_dependencies:
   flutter_test:
