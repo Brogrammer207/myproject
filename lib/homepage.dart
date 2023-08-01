@@ -19,60 +19,25 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Image.asset("assets/images/ic_menu.png"),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+          leading: const Icon(Icons.menu),
           backgroundColor: Colors.white,
           elevation: 0,
-          actions: [Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: Image.asset("assets/images/ic_search.png"),
+          actions: const [Padding(
+            padding: EdgeInsets.only(right: 20),
+            child: Icon(Icons.search),
           )],
         ),
         body: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
-              StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: firestore.collection('categories').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text('Error fetching products'),
-                    );
-                  }
-
-                  List<Category> category = snapshot.data!.docs.map((doc) {
-                    return Category.fromMap(doc.id, doc.data());
-                  }).toList();
-
-                  return GridView.builder(
-                    itemCount: category.length,
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      childAspectRatio: 1,
-                    ),
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 100,
-                                child: Image.network(
-                                  category[index].imageUrl,
+            SizedBox(
+                        height: 180,
+                                child: Image.asset(
+                                  "assets/images/oil.jpg",
+                                  fit: BoxFit.fill,
                                 ),
-                              );
-                    },
-                  );
-                },
-              ),
+                              ),
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: firestore.collection('categories').snapshots(),
                 builder: (context, snapshot) {
@@ -81,50 +46,55 @@ class _HomePageState extends State<HomePage> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
+        
                   if (snapshot.hasError) {
                     return const Center(
                       child: Text('Error fetching products'),
                     );
                   }
-
+        
                   List<Category> category = snapshot.data!.docs.map((doc) {
                     return Category.fromMap(doc.id, doc.data());
                   }).toList();
-
+        
                   return GridView.builder(
                     itemCount: category.length,
                     scrollDirection: Axis.vertical,
+                    physics:const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
+                      crossAxisCount: 5,
                       childAspectRatio: 1,
                     ),
                     itemBuilder: (context, index) {
-                      return Container(
-                        height: 80,
-                        width: 80,
-                        child: Column(
-                          children: [
-                            Expanded(
-                                child: CircleAvatar(
-                              radius: 30, // Image radius
-                              backgroundImage:
-                                  NetworkImage(category[index].imageUrl),
-                            )),
-                            Center(
-                              child: Text(
-                                category[index].name,
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Container(
+                          height: 80,
+                          width: 80,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 30, // Image radius
+                                backgroundImage:
+                                NetworkImage(category[index].imageUrl),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 7,),
+                              Center(
+                                child: Text(
+                                  category[index].name,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
                   );
                 },
               ),
+              SizedBox(height: 50,),
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 stream: firestore.collection('products').snapshots(),
                 builder: (context, snapshot) {
@@ -133,17 +103,17 @@ class _HomePageState extends State<HomePage> {
                       child: CircularProgressIndicator(),
                     );
                   }
-
+        
                   if (snapshot.hasError) {
                     return const Center(
                       child: Text('Error fetching products'),
                     );
                   }
-
+        
                   List<Product> products = snapshot.data!.docs.map((doc) {
                     return Product.fromMap(doc.id, doc.data());
                   }).toList();
-
+        
                   return GridView.builder(
                     itemCount: products.length,
                     scrollDirection: Axis.vertical,
@@ -159,77 +129,80 @@ class _HomePageState extends State<HomePage> {
                           Get.to(ProductDetailsScreen(
                               productId: products[index].id));
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white38,
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Color(0x3600000F),
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(0),
-                                        bottomRight: Radius.circular(0),
-                                        topLeft: Radius.circular(8),
-                                        topRight: Radius.circular(8),
-                                      ),
-                                      child: Image.network(
-                                        products[index].imageUrl,
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.fill,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 4,
+                                  color: Color(0x3600000F),
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: [
+                                    Expanded(
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.only(
+                                          bottomLeft: Radius.circular(0),
+                                          bottomRight: Radius.circular(0),
+                                          topLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                        child: Image.network(
+                                          products[index].imageUrl,
+                                          width: 100,
+                                          height: 100,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0, 4, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsetsDirectional.fromSTEB(
+                                                8, 4, 0, 0),
+                                        child: Text(
+                                          products[index].name,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0, 4, 0, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              8, 4, 0, 0),
-                                      child: Text(
-                                        products[index].name,
-                                      ),
-                                    ),
-                                  ],
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsetsDirectional.fromSTEB(
-                                    0, 2, 0, 0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsetsDirectional.fromSTEB(
-                                              8, 4, 0, 0),
-                                      child: Text(
-                                        '\$${products[index].price.toStringAsFixed(2)}',
+                                Padding(
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0, 2, 0, 0),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsetsDirectional.fromSTEB(
+                                                8, 4, 0, 0),
+                                        child: Text(
+                                          '\$${products[index].price.toStringAsFixed(2)}',
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       );
