@@ -76,38 +76,24 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 ElevatedButton(
                     onPressed: () {
                       try {
-                        if (product.name ==
-                            FirebaseFirestore.instance
-                                .collection('cart')
-                                .doc(auth?.currentUser?.uid)
-                                .get()) {
-                          FirebaseFirestore.instance
-                              .collection('cart')
-                              .doc(auth?.currentUser?.uid)
-                              .set({
-                            'product': product.name,
-                            'price': product.price.toStringAsFixed(2),
-                            'description': product.description,
-                            'imageUrl': product.imageUrl
-                          });
-                          Fluttertoast.showToast(
-                              msg: "Product Added successfully",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                        } else {
-                          Fluttertoast.showToast(
-                              msg: "Product Already Exits",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.CENTER,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0);
-                        }
+                        FirebaseFirestore.instance
+                            .collection('cart')
+                            .doc(auth?.currentUser?.uid)
+                            .set({
+                          'product': product.name,
+                          'price': product.price.toStringAsFixed(2),
+                          'description': product.description,
+                          'imageUrl': product.imageUrl
+                        });
+                        Fluttertoast.showToast(
+                            msg: "Product Added successfully",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+
                         //Get.to(const CartScreen());
                       } catch (e) {
                         print('Error adding product to cart in Firestore: $e');

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/route_manager.dart';
+import 'package:myproject/cart_screen.dart';
 import 'package:myproject/model/Category.dart';
 import 'package:myproject/model/banner_model.dart';
 import 'package:myproject/productDetailsScreen.dart';
@@ -30,10 +31,14 @@ class _HomePageState extends State<HomePage> {
           leading: const Icon(Icons.menu),
           backgroundColor: Colors.white,
           elevation: 0,
-          actions: const [
+          actions: [
             Padding(
               padding: EdgeInsets.only(right: 20),
-              child: Icon(Icons.search),
+              child: InkWell(
+                  onTap: () {
+                    Get.to(CartScreen());
+                  },
+                  child: Icon(Icons.card_travel)),
             )
           ],
         ),
@@ -75,8 +80,8 @@ class _HomePageState extends State<HomePage> {
                             banner.length,
                             (index) => Container(
                                 width: width,
-                                margin:
-                                    EdgeInsets.symmetric(horizontal: width * .01),
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: width * .01),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15),
                                     color: Colors.grey),
@@ -84,7 +89,8 @@ class _HomePageState extends State<HomePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   child: CachedNetworkImage(
                                     imageUrl: banner[index].imageUrl,
-                                    errorWidget: (_, __, ___) => const SizedBox(),
+                                    errorWidget: (_, __, ___) =>
+                                        const SizedBox(),
                                     placeholder: (_, __) => const SizedBox(),
                                     fit: BoxFit.cover,
                                   ),
@@ -107,7 +113,6 @@ class _HomePageState extends State<HomePage> {
                       // ),
                     ],
                   );
-                  
                 },
               ),
               StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

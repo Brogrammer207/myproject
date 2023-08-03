@@ -2,44 +2,52 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({super.key});
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: CartScreen(),
+    );
+  }
+}
 
+class CartScreen extends StatefulWidget {
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
-String? fieldName;
-  String? fieldValue;
 
-  void fetchData() async {
-    try {
-      // Replace 'users' with your Firestore collection name
-      DocumentSnapshot<Map<String, dynamic>> snapshot =
-          await FirebaseFirestore.instance.collection('cart').doc(currentUserId).get();
-
-      if (snapshot.exists) {
-        // Replace 'field_name' with the name of the field you want to fetch
-        fieldName = 'field_name';
-        fieldValue = snapshot.get("name");
-      } else {
-        fieldName = null;
-        fieldValue = null;
-      }
-
-      setState(() {});
-    } catch (e) {
-      print('Error fetching data: $e');
-    }
-  }
   @override
   Widget build(BuildContext context) {
-    if (fieldName != null && fieldValue != null) {
-      return Text('$fieldName: $fieldValue');
-    } else {
-      return Center(child: CircularProgressIndicator());
-    }
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Cart Screen'),
+        ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection("cart").snapshots(),
+          builder: (context, snapshot) {
+            return !snapshot.hasData
+                ? const CircularProgressIndicator()
+                : ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot products =
+                          snapshot.data!.docs[index];
+                      return  ListTile(
+                        leading: Container(
+                          height: 100,
+                          width: 60,
+                          child: Image.network(products['imageUrl'],fit: BoxFit.fill,)),
+                        title: Text(products['product']),
+                        subtitle: Text(products['description']),
+                        trailing: Text(products['price']),
+                      );
+                    },
+                  );
+          },
+        ));
   }
 }
