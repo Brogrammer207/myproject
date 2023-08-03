@@ -1,21 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myproject/model/model_product.dart';
 
-class ProductDetailsScreen extends StatelessWidget {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class ProductDetailsScreen extends StatefulWidget {
   final String productId;
 
   ProductDetailsScreen({super.key, required this.productId});
 
   @override
+  State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
+}
+
+class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  FirebaseAuth? auth;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:const Text('Product Details'),
+        title: const Text('Product Details'),
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        stream: _firestore.collection('products').doc(productId).snapshots(),
+        stream:
+            _firestore.collection('products').doc(widget.productId).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -30,7 +40,7 @@ class ProductDetailsScreen extends StatelessWidget {
           }
 
           final productData = snapshot.data!.data()!;
-          final product = Product.fromMap(productId, productData);
+          final product = Product.fromMap(widget.productId, productData);
 
           return SingleChildScrollView(
             child: Column(
@@ -63,9 +73,47 @@ class ProductDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                ElevatedButton(onPressed: (){
-                  
-                }, child: Text("Add to cart"))
+                ElevatedButton(
+                    onPressed: () {
+                      try {
+                        if (product.name ==
+                            FirebaseFirestore.instance
+                                .collection('cart')
+                                .doc(auth?.currentUser?.uid)
+                                .get()) {
+                          FirebaseFirestore.instance
+                              .collection('cart')
+                              .doc(auth?.currentUser?.uid)
+                              .set({
+                            'product': product.name,
+                            'price': product.price.toStringAsFixed(2),
+                            'description': product.description,
+                            'imageUrl': product.imageUrl
+                          });
+                          Fluttertoast.showToast(
+                              msg: "Product Added successfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Product Already Exits",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                        //Get.to(const CartScreen());
+                      } catch (e) {
+                        print('Error adding product to cart in Firestore: $e');
+                      }
+                    },
+                    child: const Text("Add to cart"))
               ],
             ),
           );

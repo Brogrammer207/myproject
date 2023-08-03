@@ -87,6 +87,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                       decoration: InputDecoration(
+                        hintText: "Enter Your Number",
                         enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black12),
                             borderRadius: BorderRadius.circular(10)),
