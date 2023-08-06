@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Product {
   String id; // Document ID from Firestore
   String name;
@@ -22,5 +24,15 @@ class Product {
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
     );
+  }
+    static Product fromSnapshot(DocumentSnapshot snap) {
+    Product product = Product(
+      name: snap['name'],
+      price: snap['price'],
+      imageUrl: snap['imageUrl'],
+      description: snap['description'],
+      id: snap['id'],
+    );
+    return product;
   }
 }

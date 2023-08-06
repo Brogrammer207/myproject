@@ -23,130 +23,135 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xfff7f6fb),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 18,
-              ),
-              Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple.shade50,
-                  shape: BoxShape.circle,
+      body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 18,
                 ),
-                child: Image.asset(
-                  'assets/images/borawarlogo.png',
+                Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    'assets/images/borawarlogo.png',
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 24,
-              ),
-              const Text(
-                'Registration',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                const SizedBox(
+                  height: 24,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                "Add your phone number. we'll send you a verification code so we know you're real",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black38,
+                const Text(
+                  'Registration',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 28,
-              ),
-              Container(
-                padding: const EdgeInsets.all(28),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                const SizedBox(
+                  height: 10,
                 ),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: phoneController,
-                      keyboardType: TextInputType.text,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: "Enter Your Number",
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black12),
-                            borderRadius: BorderRadius.circular(10)),
-                        prefix: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
+                const Text(
+                  "Add your phone number. we'll send you a verification code so we know you're real",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black38,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: phoneController,
+                        keyboardType: TextInputType.text,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                        suffixIcon: const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                          size: 32,
+                        decoration: InputDecoration(
+                          hintText: "Enter Your Number",
+                          hintStyle: TextStyle(fontSize: 15),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black12),
+                              borderRadius: BorderRadius.circular(10)),
+                          prefix: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            child: Text("+91",style: TextStyle(color: Colors.black),),
+                          ),
+                          suffixIcon: const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                            size: 32,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          auth.verifyPhoneNumber(
-                            phoneNumber: "${phoneController.text.trim()}",
-                            verificationCompleted: (PhoneAuthCredential credential) {},
-                            verificationFailed: (FirebaseAuthException e) {},
-                            codeSent: (String verificationId, int? resendToken) {
-                            SignUpScreen.verify = verificationId;
-                            Get.to(const Otp());
-                            },
-                            codeAutoRetrievalTimeout: (String verificationId) {}, );
-                            
-                        },
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.purple),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            auth.verifyPhoneNumber(
+                              phoneNumber: "${"+91"}${phoneController.text.trim()}",
+                              verificationCompleted: (PhoneAuthCredential credential) {},
+                              verificationFailed: (FirebaseAuthException e) {},
+                              codeSent: (String verificationId, int? resendToken) {
+                              SignUpScreen.verify = verificationId;
+                              Get.to(const Otp());
+                              },
+                              codeAutoRetrievalTimeout: (String verificationId) {}, );
+                              
+                          },
+                          style: ButtonStyle(
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.purple),
+                            shape:
+                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                            ),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(14.0),
+                            child: Text(
+                              'Send',
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(14.0),
-                          child: Text(
-                            'Send',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

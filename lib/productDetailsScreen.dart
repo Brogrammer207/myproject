@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/route_manager.dart';
 import 'package:myproject/model/model_product.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -46,7 +47,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.network(product.imageUrl),
+                Image.network(
+                  product.imageUrl,
+                  height: 300,
+                  width: Get.width,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 16),
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -73,33 +79,40 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     ],
                   ),
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      try {
-                        FirebaseFirestore.instance
-                            .collection('cart')
-                            .doc(auth?.currentUser?.uid)
-                            .set({
-                          'product': product.name,
-                          'price': product.price.toStringAsFixed(2),
-                          'description': product.description,
-                          'imageUrl': product.imageUrl
-                        });
-                        Fluttertoast.showToast(
-                            msg: "Product Added successfully",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-
-                        //Get.to(const CartScreen());
-                      } catch (e) {
-                        print('Error adding product to cart in Firestore: $e');
-                      }
-                    },
-                    child: const Text("Add to cart"))
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 60,
+                    width: Get.width,
+                    child: ElevatedButton(
+                        onPressed: () {
+                          try {
+                            FirebaseFirestore.instance
+                                .collection('cart')
+                                .doc(auth?.currentUser?.uid)
+                                .set({
+                              'product': product.name,
+                              'price': product.price.toStringAsFixed(2),
+                              'description': product.description,
+                              'imageUrl': product.imageUrl
+                            });
+                            Fluttertoast.showToast(
+                                msg: "Product Added successfully",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                  
+                            //Get.to(const CartScreen());
+                          } catch (e) {
+                            print('Error adding product to cart in Firestore: $e');
+                          }
+                        },
+                        child: const Text("Add to cart")),
+                  ),
+                )
               ],
             ),
           );
