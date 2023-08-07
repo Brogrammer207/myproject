@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/route_manager.dart';
 import 'package:myproject/cart_screen.dart';
+import 'package:myproject/delivery_address.dart';
 import 'package:myproject/model/Category.dart';
 import 'package:myproject/model/banner_model.dart';
 import 'package:myproject/productDetailsScreen.dart';
@@ -102,6 +103,7 @@ class _HomePageState extends State<HomePage> {
               leading: const Icon(Icons.access_alarm),
               title: const Text('Orders'),
               onTap: () {
+                Get.to(DeliveryAddress());
               },
             ),
             ListTile(
