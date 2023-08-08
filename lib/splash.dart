@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myproject/homepage.dart';
+import 'package:myproject/screens/home_screens/homepage.dart';
 import 'package:myproject/signup.dart';
+
+import 'screens/home_screens/bottom_navigation_bar_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -23,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   checkLogin() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      Get.to(const HomePage());
+      Get.to(const BottomNavigationScreen());
     } else {
       Get.to(const SignUpScreen());
     }

@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
-import 'package:myproject/homepage.dart';
+import 'package:myproject/screens/home_screens/homepage.dart';
 import 'package:myproject/signup.dart';
 import 'package:pinput/pinput.dart';
+
+import 'screens/home_screens/bottom_navigation_bar_screen.dart';
 
 class Otp extends StatefulWidget {
   const Otp({super.key});
@@ -94,7 +96,7 @@ class _OtpState extends State<Otp> {
                               PhoneAuthCredential credential =
                                   PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
                               await auth.signInWithCredential(credential);
-                              Get.to(const HomePage());
+                              Get.to(const BottomNavigationScreen());
                             } catch (e) {
                               Fluttertoast.showToast(
                                   msg: "Wrong Otp",
