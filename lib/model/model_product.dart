@@ -25,7 +25,7 @@ class Product {
       imageUrl: map['imageUrl'] ?? '',
     );
   }
-    static Product fromSnapshot(DocumentSnapshot snap) {
+  static Product fromSnapshot(DocumentSnapshot snap) {
     Product product = Product(
       name: snap['name'],
       price: snap['price'],

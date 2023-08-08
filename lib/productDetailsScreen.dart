@@ -25,8 +25,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         title: const Text('Product Details'),
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-        stream:
-            _firestore.collection('products').doc(widget.productId).snapshots(),
+        stream: _firestore.collection('products').doc(widget.productId).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -87,10 +86,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     child: ElevatedButton(
                         onPressed: () {
                           try {
-                            FirebaseFirestore.instance
-                                .collection('cart')
-                                .doc(auth?.currentUser?.uid)
-                                .set({
+                            FirebaseFirestore.instance.collection('cart').doc(auth?.currentUser?.uid).set({
                               'product': product.name,
                               'price': product.price.toStringAsFixed(2),
                               'description': product.description,
@@ -104,7 +100,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                 backgroundColor: Colors.red,
                                 textColor: Colors.white,
                                 fontSize: 16.0);
-                  
+
                             //Get.to(const CartScreen());
                           } catch (e) {
                             print('Error adding product to cart in Firestore: $e');

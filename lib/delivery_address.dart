@@ -40,16 +40,15 @@ class _DeliveryAddressState extends State<DeliveryAddress> {
           children: [
             const Text(
               'Where are you ordered items shipped?',
-              style: TextStyle(fontSize: 30,color: Colors.blue),
+              style: TextStyle(fontSize: 30, color: Colors.blue),
             ),
-          
             Lottie.network(
-                  'https://assets1.lottiefiles.com/private_files/lf30_QLsD8M.json',
-                height: 200.0,
-                repeat: true,
-                reverse: true,
-                animate: true,
-              ),
+              'https://assets1.lottiefiles.com/private_files/lf30_QLsD8M.json',
+              height: 200.0,
+              repeat: true,
+              reverse: true,
+              animate: true,
+            ),
             buildTextField(
                 'Enter Your Name',
                 const Icon(
@@ -71,9 +70,7 @@ class _DeliveryAddressState extends State<DeliveryAddress> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50),
-                  color: Colors.grey.withOpacity(0.2)),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.grey.withOpacity(0.2)),
               child: TextField(
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(2),
@@ -106,15 +103,14 @@ class _DeliveryAddressState extends State<DeliveryAddress> {
                   Icons.home,
                   color: Colors.blue,
                 )),
-                const SizedBox(
+            const SizedBox(
               height: 80,
             ),
             Container(
               height: 50,
               margin: const EdgeInsets.symmetric(horizontal: 20),
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(50), color: Colors.blue),
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.blue),
               child: const Center(
                   child: Text(
                 'CheckOut',
@@ -131,15 +127,12 @@ class _DeliveryAddressState extends State<DeliveryAddress> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
-          color: Colors.grey.withOpacity(0.2)),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.grey.withOpacity(0.2)),
       child: TextField(
         cursorColor: Colors.orange,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.name,
-        decoration: InputDecoration(
-            border: InputBorder.none, icon: icon, hintText: hintetxt),
+        decoration: InputDecoration(border: InputBorder.none, icon: icon, hintText: hintetxt),
       ),
     );
   }

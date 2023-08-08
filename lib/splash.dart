@@ -14,25 +14,28 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-    next() {
+  next() {
     Timer(const Duration(seconds: 2), () async {
       checkLogin();
     });
   }
+
   checkLogin() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
-    if(currentUser != null) {
-      Get.to(HomePage());
-    }else{
-            Get.to(SignUpScreen());
-
+    if (currentUser != null) {
+      Get.to(const HomePage());
+    } else {
+      Get.to(const SignUpScreen());
     }
   }
+
   @override
   void initState() {
     super.initState();
     next();
   }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -60,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen> {
           const SizedBox(
             height: 10,
           ),
-        const Center(
+          const Center(
             child: Text(
               "Never a better time than now to start.",
               style: TextStyle(
@@ -74,8 +77,6 @@ class _SplashScreenState extends State<SplashScreen> {
           const SizedBox(
             height: 38,
           ),
-        
-      
         ],
       ),
     );

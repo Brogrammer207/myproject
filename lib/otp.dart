@@ -6,7 +6,6 @@ import 'package:myproject/homepage.dart';
 import 'package:myproject/signup.dart';
 import 'package:pinput/pinput.dart';
 
-
 class Otp extends StatefulWidget {
   const Otp({super.key});
 
@@ -93,9 +92,7 @@ class _OtpState extends State<Otp> {
                           onPressed: () async {
                             try {
                               PhoneAuthCredential credential =
-                                  PhoneAuthProvider.credential(
-                                      verificationId: SignUpScreen.verify,
-                                      smsCode: code);
+                                  PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
                               await auth.signInWithCredential(credential);
                               Get.to(const HomePage());
                             } catch (e) {
@@ -110,12 +107,9 @@ class _OtpState extends State<Otp> {
                             }
                           },
                           style: ButtonStyle(
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.purple),
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

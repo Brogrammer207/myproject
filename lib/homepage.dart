@@ -173,11 +173,8 @@ class _HomePageState extends State<HomePage> {
                           banner.length,
                           (index) => Container(
                               width: width,
-                              margin:
-                                  EdgeInsets.symmetric(horizontal: width * .01),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Colors.grey),
+                              margin: EdgeInsets.symmetric(horizontal: width * .01),
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(15),
                                 child: CachedNetworkImage(
@@ -242,8 +239,7 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           CircleAvatar(
                             radius: 30, // Image radius
-                            backgroundImage:
-                                NetworkImage(category[index].imageUrl),
+                            backgroundImage: NetworkImage(category[index].imageUrl),
                           ),
                           const SizedBox(
                             height: 7,
@@ -294,8 +290,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Get.to(ProductDetailsScreen(
-                            productId: products[index].id));
+                        Get.to(ProductDetailsScreen(productId: products[index].id));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -339,21 +334,21 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 8,right: 8,top: 8),
+                                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
                                     Flexible(
                                       child: Text(
                                         products[index].name,
-                                        style: TextStyle(fontSize: 10,color: Colors.black),
+                                        style: TextStyle(fontSize: 10, color: Colors.black),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 8,right: 8),
+                                padding: const EdgeInsets.only(left: 8, right: 8),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [

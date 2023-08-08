@@ -62,8 +62,7 @@ class _CartScreenState extends State<CartScreen> {
                         shrinkWrap: true,
                         physics: const AlwaysScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          DocumentSnapshot products =
-                              snapshot.data!.docs[index];
+                          DocumentSnapshot products = snapshot.data!.docs[index];
                           return Container(
                               child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -73,16 +72,13 @@ class _CartScreenState extends State<CartScreen> {
                                   height: 150,
                                   width: 150,
                                   padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          blurRadius: 4,
-                                          color: Color(0x3600000F),
-                                          offset: Offset(0, 2),
-                                        )
-                                      ],
-                                      borderRadius: BorderRadius.circular(21),
-                                      color: Colors.white),
+                                  decoration: BoxDecoration(boxShadow: const [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x3600000F),
+                                      offset: Offset(0, 2),
+                                    )
+                                  ], borderRadius: BorderRadius.circular(21), color: Colors.white),
                                   child: Image.network(
                                     products['imageUrl'],
                                     fit: BoxFit.contain,
@@ -97,9 +93,7 @@ class _CartScreenState extends State<CartScreen> {
                                     Text(
                                       products['product'],
                                       style: const TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold),
+                                          fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
                                     ),
                                     const SizedBox(
                                       height: 10,
@@ -115,8 +109,7 @@ class _CartScreenState extends State<CartScreen> {
                                       height: 10,
                                     ),
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
                                         Container(
                                           width: 28,
@@ -128,8 +121,7 @@ class _CartScreenState extends State<CartScreen> {
                                           child: const Center(
                                               child: Text(
                                             '-',
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(color: Colors.white),
                                           )),
                                         ),
                                         const SizedBox(
@@ -153,8 +145,7 @@ class _CartScreenState extends State<CartScreen> {
                                           child: const Center(
                                               child: Text(
                                             '+',
-                                            style:
-                                                TextStyle(color: Colors.white),
+                                            style: TextStyle(color: Colors.white),
                                           )),
                                         ),
                                       ],
@@ -193,17 +184,11 @@ class _CartScreenState extends State<CartScreen> {
                           children: [
                             Text(
                               'Total',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal),
+                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.normal),
                             ),
                             Text(
                               '₹ 500.70',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -214,16 +199,12 @@ class _CartScreenState extends State<CartScreen> {
                           },
                           child: const Text(
                             'CheckOut',
-                            style: TextStyle(
-                                fontSize: 15,
-                                letterSpacing: 2,
-                                color: Colors.white),
+                            style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
                           ),
                           style: ElevatedButton.styleFrom(
                               primary: Colors.blue,
                               padding: const EdgeInsets.symmetric(horizontal: 50),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10))),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                         ),
                         const SizedBox(
                           width: 20,

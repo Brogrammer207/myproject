@@ -20,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,14 +93,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           hintText: "Enter Your Number",
                           hintStyle: TextStyle(fontSize: 15),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
+                              borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12),
-                              borderRadius: BorderRadius.circular(10)),
+                              borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
                           prefix: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8),
-                            child: Text("+91",style: TextStyle(color: Colors.black),),
+                            child: Text(
+                              "+91",
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                           suffixIcon: const Icon(
                             Icons.check_circle,
@@ -120,19 +122,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               verificationCompleted: (PhoneAuthCredential credential) {},
                               verificationFailed: (FirebaseAuthException e) {},
                               codeSent: (String verificationId, int? resendToken) {
-                              SignUpScreen.verify = verificationId;
-                              Get.to(const Otp());
+                                SignUpScreen.verify = verificationId;
+                                Get.to(const Otp());
                               },
-                              codeAutoRetrievalTimeout: (String verificationId) {}, );
-                              
+                              codeAutoRetrievalTimeout: (String verificationId) {},
+                            );
                           },
                           style: ButtonStyle(
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            backgroundColor:
-                                MaterialStateProperty.all<Color>(Colors.purple),
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
+                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),
