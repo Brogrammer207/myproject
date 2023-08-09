@@ -58,6 +58,7 @@ dependencies:
   google_fonts: ^5.1.0
   awesome_bottom_bar: ^1.2.4
   lottie: ^2.6.0
+  loading_animation_widget: ^1.2.0+4
 
 
 dev_dependencies:

@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,8 @@ import '../../model/model_cart_list.dart';
 import '../home_screens/cart_screen.dart';
 
 class CartButton extends StatefulWidget {
-  const CartButton({super.key});
+  const CartButton({super.key, required this.onPressed});
+  final VoidCallback onPressed;
 
   @override
   State<CartButton> createState() => _CartButtonState();
@@ -30,7 +30,6 @@ class _CartButtonState extends State<CartButton> {
             if (snapshot.data == null) return const SizedBox();
             log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
             cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
-
             int totalAmount = cartList
                 .map((e) => e.productQuantity!)
                 .toList()
@@ -41,9 +40,7 @@ class _CartButtonState extends State<CartButton> {
               offset: const Offset(-5, 4),
               label: Text(totalAmount.toString()),
               child: IconButton(
-                  onPressed: () {
-                    Get.to(()=> const CartScreen());
-                  },
+                  onPressed: widget.onPressed,
                   icon: const Icon(Icons.card_travel)),
             );
           }

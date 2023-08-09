@@ -2,10 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
+import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:myproject/screens/home_screens/homepage.dart';
 import 'package:myproject/signup.dart';
 import 'package:pinput/pinput.dart';
 
+import 'profile.dart';
 import 'screens/home_screens/bottom_navigation_bar_screen.dart';
 
 class Otp extends StatefulWidget {
@@ -23,12 +25,12 @@ class _OtpState extends State<Otp> {
   Widget build(BuildContext context) {
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xfff7f6fb),
+      backgroundColor: const Color(0xfff7f6fb),
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +75,7 @@ class _OtpState extends State<Otp> {
                   height: 28,
                 ),
                 Container(
-                  padding: EdgeInsets.all(28),
+                  padding: const EdgeInsets.all(28),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
@@ -96,7 +98,12 @@ class _OtpState extends State<Otp> {
                               PhoneAuthCredential credential =
                                   PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
                               await auth.signInWithCredential(credential);
-                              Get.to(const BottomNavigationScreen());
+                              bool userExists = await FirebaseFireStoreService().checkUserProfile();
+                              if(userExists == true) {
+                                Get.offAll(const BottomNavigationScreen());
+                              } else {
+                                Get.offAll(const ProfileScreen(fromLogin: true,));
+                              }
                             } catch (e) {
                               Fluttertoast.showToast(
                                   msg: "Wrong Otp",

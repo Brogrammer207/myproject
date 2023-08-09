@@ -89,7 +89,7 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
               leading: const Icon(Icons.person),
               title: const Text('profile'),
               onTap: () {
-                Get.to(const ProfileScreen());
+                Get.to(const ProfileScreen(fromLogin: false,));
               },
             ),
             ListTile(
@@ -117,8 +117,13 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
             child: const Icon(Icons.menu)),
         backgroundColor: Colors.white,
         elevation: 0,
-        actions: const [
-          CartButton()
+        actions: [
+          CartButton(
+            onPressed: (){
+              selectedIndex = 2;
+              setState(() {});
+            },
+          )
         ],
       ),
       body: IndexedStack(

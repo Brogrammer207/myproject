@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:myproject/screens/home_screens/homepage.dart';
 import 'package:myproject/signup.dart';
 
+import 'firebase_services/firestore_service.dart';
+import 'profile.dart';
 import 'screens/home_screens/bottom_navigation_bar_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,7 +27,12 @@ class _SplashScreenState extends State<SplashScreen> {
   checkLogin() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      Get.to(const BottomNavigationScreen());
+      bool userExists = await FirebaseFireStoreService().checkUserProfile();
+      if(userExists == true) {
+        Get.offAll(const BottomNavigationScreen());
+      } else {
+        Get.offAll(const ProfileScreen(fromLogin: true,));
+      }
     } else {
       Get.to(const SignUpScreen());
     }

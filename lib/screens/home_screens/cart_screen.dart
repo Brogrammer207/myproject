@@ -27,13 +27,27 @@ class _CartScreenState extends State<CartScreen> {
     required int productQuantity,
   }){
     if(updatingValue == true)return;
-    updatingValue = true;
-    print("updating value............");
-    fireStoreService.updatePriceQuantity(productId: productId, productQuantity: productQuantity).then((value) {
+    try {
+      updatingValue = true;
+      if (productQuantity != 0) {
+        fireStoreService.updatePriceQuantity(productId: productId, productQuantity: productQuantity).then((value) {
+          updatingValue = false;
+        }).catchError((e) {
+          updatingValue = false;
+        });
+      } else {
+        fireStoreService.removeProduct(productId: productId).then((value) {
+          updatingValue = false;
+        }).catchError((e) {
+          updatingValue = false;
+        });
+      }
+    } catch(e){
       updatingValue = false;
-    }).catchError((e){
+      return;
+    } finally {
       updatingValue = false;
-    });
+    }
   }
 
   @override
@@ -112,10 +126,8 @@ class _CartScreenState extends State<CartScreen> {
                                       children: [
                                         GestureDetector(
                                           onTap: (){
-                                            if(item.productQuantity! > 1 ){
                                               int updateNew = item.productQuantity! -1;
                                               updateValue(productId: item.productId!, productQuantity: updateNew);
-                                            }
                                           },
                                           child: Container(
                                             width: 28,
@@ -137,7 +149,7 @@ class _CartScreenState extends State<CartScreen> {
                                         Center(
                                             child: Text(
                                           item.productQuantity.toString(),
-                                          style: const TextStyle(color: Colors.black),
+                                          style: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.w500),
                                         )),
                                         const SizedBox(
                                           width: 10,
@@ -176,13 +188,6 @@ class _CartScreenState extends State<CartScreen> {
                     height: 70,
                     width: Get.width,
                     decoration: const BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 4,
-                          color: Color(0x3600000F),
-                          offset: Offset(0, 2),
-                        )
-                      ],
                       color: Colors.white,
                     ),
                     child: Padding(
