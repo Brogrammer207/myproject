@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myproject/screens/home_screens/homepage.dart';
-import 'package:myproject/signup.dart';
 
 import 'firebase_services/firestore_service.dart';
-import 'profile.dart';
-import 'screens/home_screens/bottom_navigation_bar_screen.dart';
+import 'screens/auth/signup.dart';
+import 'screens/home_screens/profile.dart';
+import 'bottom_navigation_bar_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -29,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     if (currentUser != null) {
       bool userExists = await FirebaseFireStoreService().checkUserProfile();
       if(userExists == true) {
-        Get.offAll(const BottomNavigationScreen());
+        Get.offAll(()=> const BottomNavigationScreen());
       } else {
         Get.offAll(const ProfileScreen(fromLogin: true,));
       }

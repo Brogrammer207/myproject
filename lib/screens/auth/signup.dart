@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:myproject/otp.dart';
+import 'package:myproject/screens/auth/otp.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

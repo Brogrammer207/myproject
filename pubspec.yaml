@@ -59,6 +59,9 @@ dependencies:
   awesome_bottom_bar: ^1.2.4
   lottie: ^2.6.0
   loading_animation_widget: ^1.2.0+4
+  flutter_animate: ^4.2.0+1
+  upi_india: ^3.0.1
+  intl:
 
 
 dev_dependencies:

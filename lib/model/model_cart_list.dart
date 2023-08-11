@@ -1,8 +1,16 @@
 // To parse this JSON data, do
 //
 //     final modelCartList = modelCartListFromJson(jsonString);
-
+import 'package:collection/collection.dart';
 import 'dart:convert';
+
+import 'package:myproject/helper/new_helper.dart';
+
+extension GetTotal on List<ModelCartList>{
+  num get getTotalAmount {
+    return map((e) => e.productQuantity.toString().toNum * e.productDetails!.price.toString().toNum).toList().sum;
+}
+}
 
 class ModelCartList {
   final String? productId;

@@ -6,11 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/route_manager.dart';
-import 'package:myproject/delivery_address.dart';
+import 'package:myproject/screens/check_out/delivery_address.dart';
 import 'package:myproject/model/Category.dart';
 import 'package:myproject/model/banner_model.dart';
-import 'package:myproject/productDetailsScreen.dart';
-import 'package:myproject/profile.dart';
+import 'package:myproject/screens/product/productDetailsScreen.dart';
+import 'package:myproject/screens/home_screens/profile.dart';
 
 import '../../model/model_product.dart';
 import '../widgets/cart_button.dart';

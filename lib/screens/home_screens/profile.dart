@@ -7,13 +7,14 @@ import 'package:get/route_manager.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:myproject/helper/helper.dart';
 
-import 'helper/new_helper.dart';
-import 'screens/home_screens/bottom_navigation_bar_screen.dart';
-import 'signup.dart';
+import '../../helper/new_helper.dart';
+import '../../bottom_navigation_bar_screen.dart';
+import '../auth/signup.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key, required this.fromLogin});
+  const ProfileScreen({super.key, required this.fromLogin, this.home});
   final bool fromLogin;
+  final bool? home;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -82,9 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: widget.home == null ?
+      AppBar(
         title: const Text('Profile'),
-      ),
+      ) : null,
       body: dataLoaded ?
       Container(
         padding: const EdgeInsets.only(left: 15, top: 20, right: 15),

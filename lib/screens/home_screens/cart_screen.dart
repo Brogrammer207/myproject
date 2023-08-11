@@ -5,7 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:myproject/delivery_address.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:myproject/screens/check_out/delivery_address.dart';
 
 import '../../firebase_services/firestore_service.dart';
 import '../../model/model_cart_list.dart';
@@ -66,7 +68,24 @@ class _CartScreenState extends State<CartScreen> {
                   .toList()
                   .sum
                   .toDouble();
-
+              if(cartList.isEmpty){
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20,),
+                      Center(
+                        child: Lottie.asset("assets/images/wishlist.json"),
+                      ),
+                      Center(
+                        child: Text(
+                          'Your Cart is empty',
+                          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 22),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
               return Column(
                 children: [
                   Expanded(
@@ -184,6 +203,7 @@ class _CartScreenState extends State<CartScreen> {
                       },
                     ),
                   ),
+                  if(cartList.isNotEmpty)
                   Container(
                     height: 70,
                     width: Get.width,
@@ -213,7 +233,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              Get.to(const DeliveryAddress());
+                              Get.to(const SelectAddressScreen());
                             },
                             style: ElevatedButton.styleFrom(
                                 primary: Colors.blue,

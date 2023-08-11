@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
 import 'package:myproject/model/model_product.dart';
 
-import 'firebase_services/firestore_service.dart';
+import '../../firebase_services/firestore_service.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;

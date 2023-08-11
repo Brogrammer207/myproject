@@ -28,7 +28,7 @@ class _CartButtonState extends State<CartButton> {
           if (snapshot.hasData) {
             List<ModelCartList> cartList = [];
             if (snapshot.data == null) return const SizedBox();
-            log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
+            // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
             cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
             int totalAmount = cartList
                 .map((e) => e.productQuantity!)

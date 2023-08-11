@@ -6,22 +6,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:myproject/helper/helper.dart';
 
 import '../helper/new_helper.dart';
+import '../model/model_address.dart';
+import '../model/model_cart_list.dart';
+import '../model/model_shipping_details.dart';
 import '../model/profile_model.dart';
+import '../bottom_navigation_bar_screen.dart';
 
 enum UpdateType { set, update }
 
 class FirebaseFireStoreService {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
   static String cartCollection = "cart";
+  static String orderCollection = "orders";
   static String productsCollection = "products";
   static String profileCollection = "profile_collection";
+  static String addressCollection = "address_collection";
+  static String shippingCollection = "shipping_collection";
   final FirebaseAuth auth = FirebaseAuth.instance;
   final storageRef = FirebaseStorage.instance.ref();
 
   String get userId => auth.currentUser!.uid;
+  String get phoneNumber => auth.currentUser!.phoneNumber!;
 
   addToCart({
     required String productId,
@@ -123,7 +133,7 @@ class FirebaseFireStoreService {
         UploadTask task6 = userProfileImageRef.putFile(profileImage);
         profileUrl = await (await task6).ref.getDownloadURL();
       }
-      final response = await fireStore.collection(profileCollection).doc(userId).set({
+      await fireStore.collection(profileCollection).doc(userId).set({
         "email": email,
         "name": name,
         "address": address,
@@ -135,7 +145,6 @@ class FirebaseFireStoreService {
         return true;
       });
       NewHelper.hideLoader(loader);
-      print("kkkkkkdkskdakdsakdkadkadkas....");
       return false;
     } catch(e){
       NewHelper.hideLoader(loader);
@@ -144,4 +153,123 @@ class FirebaseFireStoreService {
       NewHelper.hideLoader(loader);
     }
   }
+
+  Future<ModelAddress?> getAddress() async {
+    final response = await fireStore.collection(addressCollection).doc(userId).get();
+    if(response.exists){
+      if(response.data() == null)return null;
+      return ModelAddress.fromJson(response.data()!);
+    }
+    return null;
+  }
+
+  Future updateAddress({
+    required String title,
+    required String phone,
+    required String city,
+    required String address,
+    required String landmark,
+  }) async {
+    try {
+      await fireStore.collection(addressCollection).doc(userId).set({
+        "title": title,
+        "phone": phone,
+        "city": city,
+        "address": address,
+        "landmark": landmark,
+      }).then((value) {
+        showToast("Address Updated");
+      });
+    } catch(e){
+      throw Exception(e);
+    }
+  }
+
+  Future<ModelShippingAddress?> getShippingDetails() async {
+    try {
+      final response = await fireStore.collection(shippingCollection).doc("shipping").get();
+      if(response.exists == false)return null;
+        if (response.data() == null) return null;
+        final gg = ModelShippingAddress.fromJson(response.data()!);
+        print(jsonEncode(response.data()));
+        print(gg.shippingAmount);
+        return gg;
+    } catch(e){
+      throw Exception(e);
+    }
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getOrdersList() {
+    return fireStore.collection(orderCollection)
+        .where("user_id", isEqualTo:  userId)
+    .orderBy("orderTimeInMilliSec", descending: true)
+        .snapshots();
+  }
+
+  checkOutTransaction({
+    required String shipping,
+    required String total,
+    required String transactionId,
+    required BuildContext context,
+}) async {
+
+    OverlayEntry loader = NewHelper.overlayLoader(context);
+    Overlay.of(context).insert(loader);
+    try {
+      final cartListCollection = await fireStore.collection(cartCollection).doc(userId).collection("products").get();
+
+      List<ModelCartList> cartList = cartListCollection.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
+
+      if (cartList.isEmpty) {
+        showToast("Cart is empty");
+        return;
+      }
+
+      final userInfo = await getProfileDetails();
+
+      if (userInfo == null) {
+        showToast("Invalid User");
+        return;
+      }
+
+      final response = await fireStore.collection(orderCollection)
+          .doc(DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString()).set({
+        "products_list": cartListCollection.docs.map((e) => e.data()).toList(),
+        "total_amount": total,
+        "sub_total": cartList.getTotalAmount,
+        "shipping": shipping,
+        "orderTimeInMilliSec": DateTime
+            .now()
+            .millisecondsSinceEpoch,
+        "transactionId": transactionId,
+        "user_id": userId,
+        "phone_number": phoneNumber,
+        "user_details": userInfo.toJson(),
+      }).then((value) async {
+        await fireStore.collection(cartCollection).doc(userId).collection("products").get().then((value) async {
+          for (var element in value.docs) {
+            element.reference.delete();
+          }
+        });
+        Get.offAll(()=> const BottomNavigationScreen());
+        showToast("Order Placed");
+      });
+    } catch(e){
+      NewHelper.hideLoader(loader);
+      throw Exception(e);
+    } finally {
+      NewHelper.hideLoader(loader);
+    }
+  }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> getAllProducts() async {
+    return await fireStore.collection("products").get();
+  }
+
+
+
+
 }

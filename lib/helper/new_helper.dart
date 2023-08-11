@@ -164,6 +164,9 @@ extension ConvertToNum on String{
   num? get convertToNum{
     return num.tryParse(this);
   }
+  num get toNum{
+    return num.tryParse(this) ?? 0;
+  }
   bool get isValidEmail{
     Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern.toString());

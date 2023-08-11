@@ -4,11 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:myproject/screens/home_screens/homepage.dart';
-import 'package:myproject/signup.dart';
+import 'package:myproject/screens/auth/signup.dart';
 import 'package:pinput/pinput.dart';
 
-import 'profile.dart';
-import 'screens/home_screens/bottom_navigation_bar_screen.dart';
+import '../home_screens/profile.dart';
+import '../../bottom_navigation_bar_screen.dart';
 
 class Otp extends StatefulWidget {
   const Otp({super.key});
