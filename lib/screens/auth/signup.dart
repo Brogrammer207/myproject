@@ -96,11 +96,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
-                          prefix: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8),
+                          prefixIcon: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 18),
                             child: Text(
                               "+91",
-                              style: TextStyle(color: Colors.black),
+                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
                             ),
                           ),
                           suffixIcon: const Icon(
@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           child: const Padding(
                             padding: EdgeInsets.all(14.0),
                             child: Text(
-                              'Send',
+                              'Register',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
