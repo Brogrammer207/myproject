@@ -6,6 +6,7 @@ class Product {
   double price;
   String description;
   String imageUrl;
+  String category;
 
   Product({
     required this.id,
@@ -13,6 +14,7 @@ class Product {
     required this.price,
     required this.description,
     required this.imageUrl,
+    required this.category,
   });
 
   // Factory method to create a Product object from a map and document ID
@@ -23,6 +25,7 @@ class Product {
       price: (map['price'] ?? 0).toDouble(),
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
+      category: map['category'] ?? '',
     );
   }
   static Product fromSnapshot(DocumentSnapshot snap) {
@@ -32,6 +35,7 @@ class Product {
       imageUrl: snap['imageUrl'],
       description: snap['description'],
       id: snap['id'],
+      category: snap['category'],
     );
     return product;
   }
