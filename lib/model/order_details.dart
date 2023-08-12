@@ -1,20 +1,26 @@
+import 'model_address.dart';
+
 class ModelOrderDetails {
-  int? orderTimeInMilliSec;
-  String? shipping;
-  String? totalAmount;
-  String? userId;
+  dynamic orderTimeInMilliSec;
+  dynamic shipping;
+  ModelAddress? address;
+  dynamic totalAmount;
+  dynamic userId;
   UserDetails? userDetails;
-  int? subTotal;
+  dynamic subTotal;
   List<ProductsList>? productsList;
-  String? phoneNumber;
-  String? transactionId;
+  dynamic phoneNumber;
+  dynamic transactionId;
+  dynamic paymentMethod;
 
   ModelOrderDetails(
       {this.orderTimeInMilliSec,
         this.shipping,
         this.totalAmount,
+        this.paymentMethod,
         this.userId,
         this.userDetails,
+        this.address,
         this.subTotal,
         this.productsList,
         this.phoneNumber,
@@ -23,10 +29,14 @@ class ModelOrderDetails {
   ModelOrderDetails.fromJson(Map<String, dynamic> json) {
     orderTimeInMilliSec = json['orderTimeInMilliSec'];
     shipping = json['shipping'];
+    paymentMethod = json['payment_method'];
     totalAmount = json['total_amount'];
     userId = json['user_id'];
     userDetails = json['user_details'] != null
         ? UserDetails.fromJson(json['user_details'])
+        : null;
+    address = json['address'] != null
+        ? ModelAddress.fromJson(json['address'])
         : null;
     subTotal = json['sub_total'];
     if (json['products_list'] != null) {
@@ -43,10 +53,14 @@ class ModelOrderDetails {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['orderTimeInMilliSec'] = orderTimeInMilliSec;
     data['shipping'] = shipping;
+    data['payment_method'] = paymentMethod;
     data['total_amount'] = totalAmount;
     data['user_id'] = userId;
     if (userDetails != null) {
       data['user_details'] = userDetails!.toJson();
+    }
+    if (address != null) {
+      data['user_details'] = address!.toJson();
     }
     data['sub_total'] = subTotal;
     if (productsList != null) {
@@ -60,10 +74,10 @@ class ModelOrderDetails {
 }
 
 class UserDetails {
-  String? address;
-  String? profile;
-  String? name;
-  String? email;
+  dynamic address;
+  dynamic profile;
+  dynamic name;
+  dynamic email;
 
   UserDetails({this.address, this.profile, this.name, this.email});
 
@@ -85,9 +99,9 @@ class UserDetails {
 }
 
 class ProductsList {
-  String? productId;
+  dynamic productId;
   ProductDetails? productDetails;
-  int? productQuantity;
+  dynamic productQuantity;
 
   ProductsList({this.productId, this.productDetails, this.productQuantity});
 
@@ -111,11 +125,11 @@ class ProductsList {
 }
 
 class ProductDetails {
-  int? price;
-  String? imageUrl;
-  String? name;
-  String? description;
-  String? category;
+  dynamic price;
+  dynamic imageUrl;
+  dynamic name;
+  dynamic description;
+  dynamic category;
 
   ProductDetails(
       {this.price, this.imageUrl, this.name, this.description, this.category});

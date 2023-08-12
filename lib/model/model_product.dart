@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myproject/helper/new_helper.dart';
 
 class Product {
   String id; // Document ID from Firestore
@@ -22,7 +23,7 @@ class Product {
     return Product(
       id: id,
       name: map['name'] ?? '',
-      price: (map['price'] ?? 0).toDouble(),
+      price: map['price'].toString().toNum.toDouble(),
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
       category: map['category'] ?? '',

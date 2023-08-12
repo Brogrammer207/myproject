@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/check_out/delivery_address.dart';
 
 import '../../firebase_services/firestore_service.dart';
@@ -64,7 +65,7 @@ class _CartScreenState extends State<CartScreen> {
               cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
 
               double totalAmount = cartList
-                  .map((e) => e.productQuantity! * (double.tryParse(e.productDetails!.price.toString()) ?? 0))
+                  .map((e) => e.productQuantity!.toString().toNum * e.productDetails!.price.toString().toNum)
                   .toList()
                   .sum
                   .toDouble();
@@ -236,7 +237,7 @@ class _CartScreenState extends State<CartScreen> {
                               Get.to(const SelectAddressScreen());
                             },
                             style: ElevatedButton.styleFrom(
-                                primary: Colors.blue,
+                                backgroundColor: Colors.blue,
                                 padding: const EdgeInsets.symmetric(horizontal: 50),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                             child: const Text(

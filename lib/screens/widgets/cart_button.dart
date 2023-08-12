@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:collection/collection.dart';
+import 'package:myproject/helper/new_helper.dart';
 import '../../firebase_services/firestore_service.dart';
 import '../../model/model_cart_list.dart';
 import '../home_screens/cart_screen.dart';
@@ -31,7 +32,7 @@ class _CartButtonState extends State<CartButton> {
             // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
             cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
             int totalAmount = cartList
-                .map((e) => e.productQuantity!)
+                .map((e) => e.productQuantity!.toString().toNum)
                 .toList()
                 .sum
                 .toInt();

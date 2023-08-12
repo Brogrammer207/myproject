@@ -216,10 +216,12 @@ class _AddressScreenState extends State<AddressScreen> {
 
 Widget buildTextField({
   required String hintetxt,
-  required Widget icon,
+  Widget? icon,
   required TextEditingController controller,
   required TextInputType keyboardType,
-  required FormFieldValidator<String> validator
+  required FormFieldValidator<String> validator,
+  bool? allowMultiLine
+
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -231,26 +233,28 @@ Widget buildTextField({
             fontWeight: FontWeight.w600,
             fontSize: 13.2
         ),),
-        const SizedBox(height: 2,),
+        const SizedBox(height: 4,),
         TextFormField(
           cursorColor: Colors.orange,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: controller,
           validator: validator,
-          textInputAction: TextInputAction.next,
+          // textInputAction: TextInputAction.next,
+          minLines: allowMultiLine == true ? 4 : 1,
+          maxLines: allowMultiLine == true ? null : 1,
           maxLength: 300,
           keyboardType: keyboardType,
           decoration: InputDecoration(
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(1000),
+                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 :1000),
                 borderSide: BorderSide.none
             ),
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(1000),
+                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 :1000),
                 borderSide: BorderSide.none
             ),
             counterText: "",
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
             enabled: true,
             filled: true,
             fillColor: Colors.grey.withOpacity(0.2),

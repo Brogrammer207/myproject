@@ -13,9 +13,9 @@ extension GetTotal on List<ModelCartList>{
 }
 
 class ModelCartList {
-  final String? productId;
+  final dynamic productId;
   final ProductDetails? productDetails;
-  final int? productQuantity;
+  final dynamic productQuantity;
 
   ModelCartList({
     this.productId,
@@ -41,10 +41,10 @@ class ModelCartList {
 }
 
 class ProductDetails {
-  final int? price;
-  final String? imageUrl;
-  final String? name;
-  final String? description;
+  final dynamic price;
+  final dynamic imageUrl;
+  final dynamic name;
+  final dynamic description;
 
   ProductDetails({
     this.price,

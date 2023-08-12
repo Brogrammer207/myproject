@@ -12,6 +12,7 @@ import 'package:myproject/helper/helper.dart';
 
 import '../helper/new_helper.dart';
 import '../model/model_address.dart';
+import '../model/model_admin_details.dart';
 import '../model/model_cart_list.dart';
 import '../model/model_shipping_details.dart';
 import '../model/profile_model.dart';
@@ -154,6 +155,61 @@ class FirebaseFireStoreService {
     }
   }
 
+
+  Future<bool> updateProduct({
+    required String productId,
+    required String name,
+    required String description,
+    required String price,
+    required String category,
+    required String deletePrevious,
+    required File profileImage,
+    required bool allowChange,
+    required BuildContext context,
+    required Function(bool gg) updated,
+  }) async {
+    String profileUrl = profileImage.path;
+    OverlayEntry loader = NewHelper.overlayLoader(context);
+    try {
+      if (allowChange) {
+        Overlay.of(context).insert(loader);
+        if(deletePrevious.isNotEmpty) {
+          try {
+            await FirebaseStorage.instance.refFromURL(deletePrevious).delete();
+          }catch(e){}
+        }
+        final userProfileImageRef = storageRef.child("product_image/${name}_${DateTime.now().millisecondsSinceEpoch}");
+        UploadTask task6 = userProfileImageRef.putFile(profileImage);
+        profileUrl = await (await task6).ref.getDownloadURL();
+      }
+      // name
+      // price
+      // imageUrl
+      // description
+      // category
+
+      await fireStore.collection("products").doc(productId).set({
+        "name": name,
+        "price": price,
+        "category": category,
+        "description": description,
+        "imageUrl": profileUrl,
+      }).then((value) {
+        showToast("Product updated");
+        updated(true);
+        NewHelper.hideLoader(loader);
+        return true;
+      });
+      NewHelper.hideLoader(loader);
+      return false;
+    } catch(e){
+      NewHelper.hideLoader(loader);
+      throw Exception(e);
+    } finally{
+      NewHelper.hideLoader(loader);
+    }
+  }
+
   Future<ModelAddress?> getAddress() async {
     final response = await fireStore.collection(addressCollection).doc(userId).get();
     if(response.exists){
@@ -203,6 +259,13 @@ class FirebaseFireStoreService {
     return fireStore.collection(orderCollection)
         .where("user_id", isEqualTo:  userId)
     .orderBy("orderTimeInMilliSec", descending: true)
+    .limit(100)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAdminOrdersList({int? limit}) {
+    return fireStore.collection(orderCollection)
+    .orderBy("orderTimeInMilliSec", descending: true)
         .snapshots();
   }
 
@@ -210,9 +273,10 @@ class FirebaseFireStoreService {
     required String shipping,
     required String total,
     required String transactionId,
+    required String paymentMethod,
     required BuildContext context,
+    required Map<String, dynamic> address,
 }) async {
-
     OverlayEntry loader = NewHelper.overlayLoader(context);
     Overlay.of(context).insert(loader);
     try {
@@ -241,6 +305,8 @@ class FirebaseFireStoreService {
         "total_amount": total,
         "sub_total": cartList.getTotalAmount,
         "shipping": shipping,
+        "payment_method": paymentMethod,
+        "address": address,
         "orderTimeInMilliSec": DateTime
             .now()
             .millisecondsSinceEpoch,
@@ -269,7 +335,42 @@ class FirebaseFireStoreService {
     return await fireStore.collection("products").get();
   }
 
+  Stream<QuerySnapshot<Map<String, dynamic>>> getAllProductsList() {
+    return fireStore.collection("products").snapshots();
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getCategories() {
+    return fireStore.collection("categories").snapshots();
+  }
 
 
+  Future<bool> checkAdminAccount() async{
+    final response = await fireStore.collection("admin_details").doc("admin_info").get();
+    if(response.exists){
+      if(response.data() == null)return false;
+      log(jsonEncode(response.data()));
+      log(auth.currentUser!.phoneNumber!.toString().simpleString);
+      ModelAdminDetails modelAdminDetails = ModelAdminDetails.fromJson(response.data()!);
+      if(modelAdminDetails.number!.contains(auth.currentUser!.phoneNumber.toString().simpleString)){
+        auth.currentUser!.updateDisplayName("Admin");
+        return true;
+      }
+      else {
+        auth.currentUser!.updateDisplayName("User");
+        return false;
+      }
+    } else {
+      return false;
+    }
+    
+    
+  }
 
+
+}
+
+extension TrimString on String{
+  String get simpleString{
+    return replaceAll("+91", "");
+  }
 }

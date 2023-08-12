@@ -4,8 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/route_manager.dart';
+import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/check_out/delivery_address.dart';
 import 'package:myproject/model/Category.dart';
 import 'package:myproject/model/banner_model.dart';
@@ -13,6 +15,7 @@ import 'package:myproject/screens/product/productDetailsScreen.dart';
 import 'package:myproject/screens/home_screens/profile.dart';
 
 import '../../model/model_product.dart';
+import '../category_screen/category_screen.dart';
 import '../widgets/cart_button.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -71,7 +74,7 @@ class _HomePageState extends State<HomePageScreen> {
                         height: height * .20),
                     items: List.generate(
                         banner.length,
-                            (index) => Container(
+                        (index) => Container(
                             width: width,
                             margin: EdgeInsets.symmetric(horizontal: width * .01),
                             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
@@ -127,29 +130,48 @@ class _HomePageState extends State<HomePageScreen> {
                 List<Category> category = snapshot.data!.docs.map((doc) {
                   return Category.fromMap(doc.id, doc.data());
                 }).toList();
-                return PageView.builder(
+                return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    // shrinkWrap: true,
-                    padEnds: false,
-                    controller: PageController(viewportFraction: .2),
+                    shrinkWrap: true,
+                    // padEnds: false,
+                    // controller: PageController(viewportFraction: .2),
                     itemCount: category.length,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          CircleAvatar(
-                            radius: 30, // Image radius
-                            backgroundImage: NetworkImage(category[index].imageUrl),
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => CategoryScreen(
+                                keyId: category[index].name,
+                              ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.transparent, width: 2)),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          constraints: BoxConstraints(
+                            maxWidth: context.getSize.width*.16
                           ),
-                          const SizedBox(
-                            height: 7,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 30, // Image radius
+                                backgroundImage: NetworkImage(category[index].imageUrl),
+                              ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Center(
+                                child: Text(
+                                  category[index].name.capitalize!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
                           ),
-                          Center(
-                            child: Text(
-                              category[index].name,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
+                        ),
                       );
                     });
               },
@@ -188,7 +210,7 @@ class _HomePageState extends State<HomePageScreen> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Get.to(()=> ProductDetailsScreen(productId: products[index].id));
+                      Get.to(() => ProductDetailsScreen(productId: products[index].id));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),

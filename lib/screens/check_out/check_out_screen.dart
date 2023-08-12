@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -78,16 +80,22 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   ///Upi Payment
 
   getAvailableApps() {
-    _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
-      apps = value;
-      if (kDebugMode) {
-        print(apps.map((e) => e.name).toString());
-      }
-      upiLoaded = true;
-      setState(() {});
-    }).catchError((e) {
+    if(Platform.isAndroid) {
+      _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
+        apps = value;
+        if (kDebugMode) {
+          print(apps.map((e) => e.name).toString());
+        }
+        upiLoaded = true;
+        setState(() {});
+      }).catchError((e) {
+        apps = [];
+      });
+    } else {
       apps = [];
-    });
+      upiLoaded = true;
+      cashOnDelivery.value = "Cod";
+    }
   }
 
   Future<UpiResponse> initiateTransaction(UpiApp app, refId, double total) async {
@@ -101,29 +109,50 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     );
   }
 
-  addPaymentUPI(double total,shipping) {
-    if(apps.isEmpty){
-      showToast(
-        "Install UPI App for payment or contact to support for more",
-      );
+  addPaymentUPI(double total, shipping) {
+    if (total > 100000) {
+      showToast("Total Amount is greater than 1,00,000\n"
+          "Lower the amount to initiate order");
       return;
     }
-    if(upiApp == null){
+    if (upiApp == null && cashOnDelivery.isEmpty) {
       showToast("Select Available Payment Methods");
       return;
     }
-      final refId = DateTime.now().microsecondsSinceEpoch.toString();
+    if(upiApp != null) {
+      final refId = DateTime
+          .now()
+          .microsecondsSinceEpoch
+          .toString();
       initiateTransaction(upiApp!, refId, total).then((value) {
         if (value.status.toString() == "success" || true) {
           // value.transactionId ?? refId;
           fireStoreService.checkOutTransaction(
               shipping: shipping,
               total: total.toString(),
+              paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
               transactionId: value.transactionId ?? refId,
+              address: widget.address.toJson(),
               context: context);
         }
       });
+    }
+    if(cashOnDelivery.value == "Cod"){
+      final refId = DateTime
+          .now()
+          .microsecondsSinceEpoch
+          .toString();
+      fireStoreService.checkOutTransaction(
+          shipping: shipping,
+          total: total.toString(),
+          paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
+          transactionId: refId,
+          address: widget.address.toJson(),
+          context: context);
+    }
   }
+
+  RxString cashOnDelivery = "".obs;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +170,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
               child: Column(
                 children: [
-                  addressCard(),
+                  addressCard(address: widget.address, ordersDetails: false),
                   const SizedBox(
                     height: 20,
                   ),
@@ -154,7 +183,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
 
                         double subTotalAmount = cartList
-                            .map((e) => e.productQuantity! * (double.tryParse(e.productDetails!.price.toString()) ?? 0))
+                            .map((e) =>
+                                e.productQuantity!.toString().toNum *
+                                (double.tryParse(e.productDetails!.price.toString()) ?? 0))
                             .toList()
                             .sum
                             .toDouble();
@@ -306,7 +337,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                addPaymentUPI(totalAmount,freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),);
+                                addPaymentUPI(
+                                  totalAmount,
+                                  freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
+                                );
                                 // Get.to(const OrdersScreen());
                               },
                               style: ElevatedButton.styleFrom(
@@ -421,6 +455,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             const SizedBox(
               height: 6,
             ),
+            if(Platform.isAndroid)
+            if(apps.isNotEmpty)
             ...apps
                 .map((e) => Obx(() {
                       if (refreshInt > 0) {}
@@ -430,6 +466,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         onTap: () {
                           upiApp = e;
                           refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                          cashOnDelivery.value = "";
                         },
                         visualDensity: VisualDensity.compact,
                         title: Text(e.name.toString()),
@@ -449,6 +486,36 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       );
                     }))
                 .toList()
+            else
+              const Center(
+                child: Text("No UPI installed"),
+              ),
+            Obx(() => ListTile(
+              contentPadding: EdgeInsets.zero,
+              onTap: () {
+                upiApp = null;
+                refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                cashOnDelivery.value = "Cod";
+              },
+              visualDensity: VisualDensity.compact,
+              title: const Text("Cash On Delivery"),
+              trailing: IgnorePointer(
+                ignoring: true,
+                child: Radio<String?>(
+                  value: "Cod",
+                  visualDensity: VisualDensity.compact,
+                  groupValue: cashOnDelivery.value,
+                  onChanged: (fa) {
+                    cashOnDelivery.value = "Cod";
+                  },
+                ),
+              ),
+              leading: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.delivery_dining_rounded),
+                // child: Image.memory("e.icon"),
+              ),
+            ))
           ],
         ),
       ),
@@ -456,45 +523,50 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
 
   RxInt refreshInt = 0.obs;
+}
 
-  Card addressCard() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            Column(
-              children: widget.address
-                  .toJson()
-                  .entries
-                  .map((e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                flex: 5,
-                                child: Text(
-                                  "${e.key.capitalize!} :",
-                                  style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
-                                )),
-                            Expanded(
-                                flex: 12,
-                                child: Text(
-                                  e.value.toString().capitalize!,
-                                  style: GoogleFonts.urbanist(
-                                    fontSize: 16,
-                                    height: 1.2,
-                                    color: Colors.grey.shade700,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )),
-                          ],
-                        ),
-                      ))
-                  .toList(),
-            ),
+Card addressCard({
+  required ModelAddress address,
+  required bool ordersDetails,
+}) {
+  return Card(
+    margin: EdgeInsets.zero,
+    child: Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Column(
+        children: [
+          Column(
+            children: address
+                .toJson()
+                .entries
+                .map((e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              flex: 5,
+                              child: Text(
+                                "${e.key.capitalize!} :",
+                                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                              )),
+                          Expanded(
+                              flex: 12,
+                              child: Text(
+                                e.value.toString().capitalize!,
+                                style: GoogleFonts.urbanist(
+                                  fontSize: 16,
+                                  height: 1.2,
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              )),
+                        ],
+                      ),
+                    ))
+                .toList(),
+          ),
+          if (!ordersDetails)
             ElevatedButton(
                 onPressed: () {
                   Get.back();
@@ -507,9 +579,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   "Edit Address",
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
                 ))
-          ],
-        ),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }

@@ -2,6 +2,7 @@ import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'firebase_services/firestore_service.dart';
 import 'screens/home_screens/profile.dart';
 import 'screens/search/search_products.dart';
 import 'screens/widgets/animation_text.dart';
@@ -38,6 +39,7 @@ class BottomNavigationScreen extends StatefulWidget {
 
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
   Color color2 = const Color(0XFF96B1FD);
   Color bgColor = const Color(0XFF1752FE);
 
@@ -55,6 +57,12 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     "Cart",
     "Profile",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    fireStoreService.checkAdminAccount();
+  }
 
   @override
   Widget build(BuildContext context) {

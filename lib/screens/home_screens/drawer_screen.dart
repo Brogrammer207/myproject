@@ -1,14 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myproject/firebase_services/firestore_service.dart';
 
+import '../../admin/homepage.dart';
 import '../check_out/delivery_address.dart';
 import '../orders/orders_screen.dart';
 import 'profile.dart';
 import '../orders/address_screen.dart';
 
-class DrawerScreen extends StatelessWidget {
+class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});
+
+  @override
+  State<DrawerScreen> createState() => _DrawerScreenState();
+}
+
+class _DrawerScreenState extends State<DrawerScreen> {
+final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
+
+bool get adminAccess => fireStoreService.auth.currentUser!.displayName.toString() == "Admin";
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +47,21 @@ class DrawerScreen extends StatelessWidget {
               ],
             ),
           ),
+          if(adminAccess)
+          ListTile(
+            leading: const Icon(CupertinoIcons.settings_solid),
+            title: const Text('Admin Control'),
+            onTap: () {
+              // Handle the tap on the Home item
+              Get.to(()=> const AdminHomePage());
+            },
+          ),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
               // Handle the tap on the Home item
+              Get.back();
             },
           ),
           ListTile(

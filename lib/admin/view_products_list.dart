@@ -1,61 +1,66 @@
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
-import 'package:myproject/screens/widgets/loading_animation.dart';
-import '../../model/order_details.dart';
-import 'order_details.dart';
+import '../model/model_product.dart';
+import '../screens/widgets/common_app_bar.dart';
+import '../screens/widgets/loading_animation.dart';
+import 'addproduct.dart';
 
-class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key, this.admin});
-  final bool? admin;
+class ViewProductsLList extends StatefulWidget {
+  const ViewProductsLList({super.key});
 
   @override
-  State<OrdersScreen> createState() => _OrdersScreenState();
+  State<ViewProductsLList> createState() => _ViewProductsLListState();
 }
 
-class _OrdersScreenState extends State<OrdersScreen> {
+class _ViewProductsLListState extends State<ViewProductsLList> {
   final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Orders',
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 18
-          ),),
+      appBar: CommonAppBar(
+        title: "Products List",
+        actions: [
+          IconButton(
+              onPressed: (){
+                Get.to(()=> const AddProductAdmin());
+              },
+              icon: const Icon(Icons.add_circle_outline_rounded,color: Colors.teal,size: 30,)
+          ),
+          const SizedBox(width: 10,)
+        ],
       ),
       body: StreamBuilder(
-        stream: widget.admin == true ? fireStoreService.getAdminOrdersList() : fireStoreService.getOrdersList(),
+        stream: fireStoreService.getAllProductsList(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if(snapshot.hasData){
             if(snapshot.data == null)return const SizedBox();
-            log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
-            List<ModelOrderDetails> ordersList = snapshot.data!.docs.map((e) => ModelOrderDetails.fromJson(e.data())).toList();
+            // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
+            List<Product> products = snapshot.data!.docs.map((e) => Product.fromMap(e.id, e.data())).toList();
             return ListView.builder(
-              itemCount: ordersList.length,
+                itemCount: products.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16),
                 itemBuilder: (context, index){
-                final order = ordersList[index];
-                final productDetails = ordersList[index].productsList!.first.productDetails;
+                  final productInfo = products[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
+                        borderRadius: BorderRadius.circular(10)
                     ),
                     child: InkWell(
                       onTap: (){
-                        Get.to(()=> OrderDetails(modelOrderDetails: order,),
-                            transition: Transition.rightToLeft);
+                        Get.to(()=> AddProductAdmin(
+                          product: productInfo,
+                        ));
+                        // Get.to(()=> OrderDetails(modelOrderDetails: order,),
+                        //     transition: Transition.rightToLeft);
                       },
-                        borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: IntrinsicHeight(
@@ -74,7 +79,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   )
                                 ], borderRadius: BorderRadius.circular(21), color: Colors.white),
                                 child: Image.network(
-                                  productDetails!.imageUrl!,
+                                  productInfo.imageUrl,
                                   fit: BoxFit.contain,
                                 ),
                               ),
@@ -86,15 +91,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      order.productsList!.map((e) => e.productDetails!.name.toString()).toList().join("+"),
-                                      style: const TextStyle(
-                                          fontSize: 15, color: Colors.teal, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text(
-                                      "${order.totalAmount} Rs",
+                                      productInfo.name,
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
@@ -106,7 +103,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       height: 2,
                                     ),
                                     Text(
-                                      DateFormat("dd MMM, yyyy  hh:mm a").format(DateTime.fromMillisecondsSinceEpoch(order.orderTimeInMilliSec!)),
+                                      productInfo.category.toString(),
+                                      style: GoogleFonts.urbanist(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    Text(
+                                      productInfo.price.toString(),
                                       style: GoogleFonts.urbanist(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,
