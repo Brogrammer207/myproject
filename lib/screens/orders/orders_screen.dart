@@ -25,37 +25,39 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders',
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 18
-          ),),
+        title: Text(
+          'Orders',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
+        ),
       ),
       body: StreamBuilder(
         stream: widget.admin == true ? fireStoreService.getAdminOrdersList() : fireStoreService.getOrdersList(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-          if(snapshot.hasData){
-            if(snapshot.data == null)return const SizedBox();
+          if (snapshot.hasData) {
+            if (snapshot.data == null) return const SizedBox();
             log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
-            List<ModelOrderDetails> ordersList = snapshot.data!.docs.map((e) => ModelOrderDetails.fromJson(e.data())).toList();
+            List<ModelOrderDetails> ordersList =
+                snapshot.data!.docs.map((e) => ModelOrderDetails.fromJson(e.data(),e.id)).toList();
             return ListView.builder(
-              itemCount: ordersList.length,
+                itemCount: ordersList.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index){
-                final order = ordersList[index];
-                final productDetails = ordersList[index].productsList!.first.productDetails;
+                itemBuilder: (context, index) {
+                  final order = ordersList[index];
+                  final productDetails = ordersList[index].productsList!.first.productDetails;
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
-                      onTap: (){
-                        Get.to(()=> OrderDetails(modelOrderDetails: order,),
+                      onTap: () {
+                        Get.to(
+                            () => OrderDetails(
+                                  modelOrderDetails: order,
+                              admin: widget.admin,
+                                ),
                             transition: Transition.rightToLeft);
                       },
-                        borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: IntrinsicHeight(
@@ -86,7 +88,10 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      order.productsList!.map((e) => e.productDetails!.name.toString()).toList().join("+"),
+                                      order.productsList!
+                                          .map((e) => e.productDetails!.name.toString())
+                                          .toList()
+                                          .join("+"),
                                       style: const TextStyle(
                                           fontSize: 15, color: Colors.teal, fontWeight: FontWeight.bold),
                                     ),
@@ -98,7 +103,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-
                                         color: Colors.black,
                                       ),
                                     ),
@@ -106,7 +110,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                       height: 2,
                                     ),
                                     Text(
-                                      DateFormat("dd MMM, yyyy  hh:mm a").format(DateTime.fromMillisecondsSinceEpoch(order.orderTimeInMilliSec!)),
+                                      DateFormat("dd MMM, yyyy  hh:mm a")
+                                          .format(DateTime.fromMillisecondsSinceEpoch(order.orderTimeInMilliSec!)),
                                       style: GoogleFonts.urbanist(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w600,

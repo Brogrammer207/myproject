@@ -113,13 +113,30 @@ class _ViewProductsLListState extends State<ViewProductsLList> {
                                     const SizedBox(
                                       height: 2,
                                     ),
-                                    Text(
-                                      productInfo.price.toString(),
-                                      style: GoogleFonts.urbanist(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.grey.shade700,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            productInfo.price.toString(),
+                                            style: GoogleFonts.urbanist(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.grey.shade700,
+                                            ),
+                                          ),
+                                        ),
+                                        productInfo.inStock == true ?
+                                        Text("InStock",
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.greenAccent.shade700
+                                        ),) :
+                                        Text("Out of Stock",
+                                          style: GoogleFonts.poppins(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.redAccent.shade700
+                                          ),)
+                                      ],
                                     ),
                                   ],
                                 ),

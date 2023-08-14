@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myproject/admin/addproduct.dart';
+import 'package:myproject/screens/widgets/common_app_bar.dart';
 
 import '../screens/orders/orders_screen.dart';
 import 'view_products_list.dart';
@@ -16,6 +17,9 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const CommonAppBar(
+        title: "Admin Panel",
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(

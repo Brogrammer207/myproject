@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:myproject/helper/helper.dart';
+import 'package:myproject/model/model_product.dart';
 
 import '../helper/new_helper.dart';
 import '../model/model_address.dart';
@@ -165,6 +166,7 @@ class FirebaseFireStoreService {
     required String deletePrevious,
     required File profileImage,
     required bool allowChange,
+    required bool inStock,
     required BuildContext context,
     required Function(bool gg) updated,
   }) async {
@@ -192,6 +194,7 @@ class FirebaseFireStoreService {
         "name": name,
         "price": price,
         "category": category,
+        "inStock": inStock,
         "description": description,
         "imageUrl": profileUrl,
       }).then((value) {
@@ -241,15 +244,47 @@ class FirebaseFireStoreService {
     }
   }
 
+  Future updateOrdersDetails({
+    required bool dispatch,
+    required bool delivered,
+    required String orderID,
+    required Function(bool gg) updated,
+  }) async {
+    try {
+      await fireStore.collection("orders").doc(orderID).update({
+        "dispatch": dispatch,
+        "delivered": delivered,
+      }).then((value) {
+        showToast("Order Updated");
+        updated(true);
+      });
+    } catch(e){
+      throw Exception(e);
+    }
+  }
+
   Future<ModelShippingAddress?> getShippingDetails() async {
     try {
       final response = await fireStore.collection(shippingCollection).doc("shipping").get();
       if(response.exists == false)return null;
         if (response.data() == null) return null;
         final gg = ModelShippingAddress.fromJson(response.data()!);
-        print(jsonEncode(response.data()));
-        print(gg.shippingAmount);
         return gg;
+    } catch(e){
+      throw Exception(e);
+    }
+  }
+
+  Future<ModelCityList?> getCityList() async {
+    try {
+      final response = await fireStore.collection("admin_details").doc("address_city").get();
+      if(response.exists == false)return null;
+        if (response.data() == null) return null;
+        if (kDebugMode) {
+          print(jsonEncode(response.data()));
+        }
+        return ModelCityList.fromJson(response.data()!);
+        // return gg;
     } catch(e){
       throw Exception(e);
     }
@@ -296,7 +331,7 @@ class FirebaseFireStoreService {
         return;
       }
 
-      final response = await fireStore.collection(orderCollection)
+      await fireStore.collection(orderCollection)
           .doc(DateTime
           .now()
           .millisecondsSinceEpoch
@@ -362,10 +397,17 @@ class FirebaseFireStoreService {
     } else {
       return false;
     }
-    
-    
   }
 
+ Future<Product?> getProductDetails({
+    required String productId,
+}) async {
+    final response = await fireStore.collection("products").doc(productId).get();
+    if(response.exists == false || response.data() == null){
+      return null;
+    }
+    return Product.fromMap(response.id, response.data()!);
+  }
 
 }
 

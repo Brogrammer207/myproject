@@ -96,6 +96,7 @@ class _CartScreenState extends State<CartScreen> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
                         final item = cartList[index];
+
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(

@@ -30,6 +30,8 @@ class AddProductAdmin extends StatefulWidget {
 class _AddProductAdminState extends State<AddProductAdmin> {
   final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
   File image = File("");
+  bool inStock = false;
+  bool updating = false;
 
   updateProfile() {
     if(!formKey.currentState!.validate())return;
@@ -37,26 +39,44 @@ class _AddProductAdminState extends State<AddProductAdmin> {
       showToast("Please select category");
       return;
     }
-    fireStoreService.updateProduct(
-      category: category.value,
-        deletePrevious: widget.product != null ?  widget.product!.imageUrl : "",
-        description: description.text.trim(),
-        price: price.text.trim(),
-        allowChange: imagePicked,
-        context: context,
-        name: nameController.text.trim(),
-        profileImage: image,
-        productId: widget.product != null ? widget.product!.id : DateTime.now().millisecondsSinceEpoch.toString(),
-        updated: (bool value){
-        Get.back();
-          // if(value == false)return;
-          // if (widget.fromLogin == false) {
-          //   Get.back();
-          // } else {
-          //   Get.offAll(const BottomNavigationScreen());
-          // }
-        }
-    );
+    if(updating == true){
+      return;
+    }
+    updating = true;
+    try {
+      fireStoreService.updateProduct(
+          category: category.value,
+          deletePrevious: widget.product != null ? widget.product!.imageUrl : "",
+          description: description.text.trim(),
+          price: price.text.trim(),
+          allowChange: imagePicked,
+          context: context,
+          inStock: inStock,
+          name: nameController.text.trim(),
+          profileImage: image,
+          productId: widget.product != null ? widget.product!.id : DateTime
+              .now()
+              .millisecondsSinceEpoch
+              .toString(),
+          updated: (bool value) {
+            Get.back();
+            updating = false;
+            // if(value == false)return;
+            // if (widget.fromLogin == false) {
+            //   Get.back();
+            // } else {
+            //   Get.offAll(const BottomNavigationScreen());
+            // }
+          }
+      ).then((value) {
+      }).catchError((e) {
+        updating = false;
+      });
+    } catch(e){
+      updating = false;
+    } finally {
+      updating = false;
+    }
 
   }
 
@@ -79,6 +99,7 @@ class _AddProductAdminState extends State<AddProductAdmin> {
       description.text = widget.product!.description.toString();
       category.value = widget.product!.category.toString();
       image = File(widget.product!.imageUrl.toString());
+      inStock = widget.product!.inStock!;
     }
   }
 
@@ -260,6 +281,18 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                       }
                       return null;
                     }
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    const Expanded(child: Text("Product In Stock")),
+                    CupertinoSwitch(value: inStock, onChanged: (value){
+                      inStock = value;
+                      setState(() {});
+                    }),
+                  ],
                 ),
                 const SizedBox(
                   height: 30,

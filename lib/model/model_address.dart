@@ -26,3 +26,24 @@ class ModelAddress {
     return data;
   }
 }
+
+class ModelCityList {
+  List<String>? cityList = [];
+
+  ModelCityList({this.cityList});
+
+  ModelCityList.fromJson(Map<String, dynamic> json) {
+    if(json['cityList'] == null){
+      cityList = [];
+      return;
+    }
+    cityList = json['cityList'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['cityList'] = this.cityList;
+    return data;
+  }
+}
+

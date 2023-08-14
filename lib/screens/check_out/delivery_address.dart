@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../firebase_services/firestore_service.dart';
+import '../../helper/helper.dart';
 import '../../model/model_address.dart';
 import '../orders/address_screen.dart';
 import '../widgets/loading_animation.dart';
@@ -22,7 +23,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
   final TextEditingController addressName = TextEditingController();
   final TextEditingController number = TextEditingController();
-  final TextEditingController city = TextEditingController();
+  // final TextEditingController city = TextEditingController();
   final TextEditingController address = TextEditingController();
   final TextEditingController landMark = TextEditingController();
   final formKey = GlobalKey<FormState>();
@@ -30,24 +31,32 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
   final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
 
   bool apiLoaded = false;
+  List<String> cities = [];
+  String city = "";
+
+  bool cityLoaded = false;
 
   bool updating = false;
 
   updateAddress(){
     if(formKey.currentState!.validate()) {
+      if(city.isEmpty){
+        showToast("Please wait loading city");
+        return;
+      }
       if(updating == true)return;
       updating = true;
       fireStoreService.updateAddress(
           title: addressName.text.trim(),
           phone: number.text.trim(),
-          city: city.text.trim(),
+          city: city.trim(),
           address: address.text.trim(),
           landmark: landMark.text.trim()).then((value) {
         Get.to(()=> CheckOutScreen(
           address: ModelAddress(
             title: addressName.text.trim(),
             address: address.text.trim(),
-            city: city.text.trim(),
+            city: city.trim(),
             landmark: landMark.text.trim(),
             phone: number.text.trim(),
           ),
@@ -64,13 +73,22 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       fireStoreService.getAddress().then((value) {
-        if(value != null){
+        if (value != null) {
           addressName.text = value.title.toString();
           number.text = value.phone.toString();
-          city.text = value.city.toString();
+          city = value.city.toString();
           address.text = value.address.toString();
           landMark.text = value.landmark.toString();
         }
+        fireStoreService.getCityList().then((value) {
+          if (value == null) return;
+          cities = value.cityList ?? [];
+          if(!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())){
+            city = "";
+          }
+          cityLoaded = true;
+          setState(() {});
+        });
         apiLoaded = true;
         setState(() {});
       });
@@ -147,20 +165,62 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
               const SizedBox(
                 height: 20,
               ),
-              buildTextField(
-                  hintetxt: 'City',
-                  controller: city,
-                  keyboardType: TextInputType.number,
-                  validator: (value){
-                    if(value!.trim().isEmpty){
-                      return "Please your city".capitalize;
-                    }
-                    return null;
-                  },
-                  icon: const Icon(
-                    Icons.location_city_rounded,
-                    color: Colors.blue,
-                  )),
+
+              if(cityLoaded)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "City",
+                        style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                            counterText: "",
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            enabled: true,
+                            filled: true,
+                            fillColor: Colors.grey.withOpacity(0.2),
+                            hintText: "City",),
+                          validator: (vds){
+                            if(city.isEmpty){
+                              return "Please select city";
+                            }
+                            return null;
+                          },
+                          value: city.isEmpty ? null : city,
+                          items:
+                          cities.map((e) => DropdownMenuItem(value: e.toLowerCase(), child: Text(e))).toList(),
+                          onChanged: (value) {
+                            if (value == null) return;
+                            city = value;
+                          }),
+                    ],
+                  ),
+                ),
+              // buildTextField(
+              //     hintetxt: 'City',
+              //     controller: city,
+              //     keyboardType: TextInputType.number,
+              //     validator: (value){
+              //       if(value!.trim().isEmpty){
+              //         return "Please your city".capitalize;
+              //       }
+              //       return null;
+              //     },
+              //     icon: const Icon(
+              //       Icons.location_city_rounded,
+              //       color: Colors.blue,
+              //     )),
               const SizedBox(
                 height: 20,
               ),

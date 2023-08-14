@@ -16,6 +16,7 @@ import '../../helper/helper.dart';
 import '../../model/model_address.dart';
 import '../../model/model_cart_list.dart';
 import '../../model/model_shipping_details.dart';
+import 'check_in_stock.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key, required this.address});
@@ -194,6 +195,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                         double totalAmount =
                             freeShipping ? subTotalAmount : subTotalAmount + modelShippingAddress!.shippingAmount!;
 
+                        bool canBuy = true;
+
                         return Column(
                           children: [
                             ListView.builder(
@@ -262,57 +265,74 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                               height: 5,
                                             ),
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    int updateNew = item.productQuantity! - 1;
-                                                    updateValue(productId: item.productId!, productQuantity: updateNew);
-                                                  },
-                                                  child: Container(
-                                                    width: 28,
-                                                    height: 28,
-                                                    decoration: const BoxDecoration(
-                                                      color: Colors.black, // border color
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: const Center(
-                                                        child: Text(
-                                                      '--',
-                                                      style: TextStyle(color: Colors.white),
-                                                    )),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          int updateNew = item.productQuantity! - 1;
+                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
+                                                        },
+                                                        child: Container(
+                                                          width: 28,
+                                                          height: 28,
+                                                          decoration: const BoxDecoration(
+                                                            color: Colors.black, // border color
+                                                            shape: BoxShape.circle,
+                                                          ),
+                                                          child: const Center(
+                                                              child: Text(
+                                                            '--',
+                                                            style: TextStyle(color: Colors.white),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Center(
+                                                          child: Text(
+                                                        item.productQuantity.toString(),
+                                                        style: const TextStyle(
+                                                            color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+                                                      )),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          int updateNew = item.productQuantity! + 1;
+                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
+                                                        },
+                                                        child: Container(
+                                                          width: 28,
+                                                          height: 28,
+                                                          decoration: const BoxDecoration(
+                                                            color: Colors.black, // border color
+                                                            shape: BoxShape.circle,
+                                                          ),
+                                                          child: const Center(
+                                                              child: Text(
+                                                            '+',
+                                                            style: TextStyle(color: Colors.white),
+                                                          )),
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Center(
-                                                    child: Text(
-                                                  item.productQuantity.toString(),
-                                                  style: const TextStyle(
-                                                      color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
-                                                )),
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    int updateNew = item.productQuantity! + 1;
-                                                    updateValue(productId: item.productId!, productQuantity: updateNew);
+                                                CheckInStock(
+                                                  productID: item.productId,
+                                                  inStock: (bool value){
+                                                    item.inStock = value;
+                                                    canBuy = value;
+                                                    if (kDebugMode) {
+                                                      print("Value updated......    ${cartList.map((e) => e.inStock)}");
+                                                    }
+                                                    // print("Value updated......    $value");
                                                   },
-                                                  child: Container(
-                                                    width: 28,
-                                                    height: 28,
-                                                    decoration: const BoxDecoration(
-                                                      color: Colors.black, // border color
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: const Center(
-                                                        child: Text(
-                                                      '+',
-                                                      style: TextStyle(color: Colors.white),
-                                                    )),
-                                                  ),
                                                 ),
                                               ],
                                             )
@@ -337,6 +357,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
+                                if(cartList.map((e) => e.inStock).toList().contains(null)){
+                                  showToast("Please wait");
+                                  return;
+                                }
+                                if(canBuy == false){
+                                  showToast("some product is out of stock");
+                                  return;
+                                }
                                 addPaymentUPI(
                                   totalAmount,
                                   freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),

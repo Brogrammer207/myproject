@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/route_manager.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/helper/helper.dart';
 import 'package:myproject/model/model_product.dart';
 
 import '../../firebase_services/firestore_service.dart';
@@ -31,10 +33,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: fireStoreService.fireStore.collection('products').doc(widget.productId).snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.hasData) {
+          if (snapshot.hasData) {
             final productData = snapshot.data!.data()!;
             final product = Product.fromMap(widget.productId, productData);
-
+            bool canBuy = product.inStock == true;
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,9 +61,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Price: \$${product.price.toStringAsFixed(2)}',
-                          style: const TextStyle(fontSize: 16),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Price: \$${product.price.toStringAsFixed(2)}',
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            product.inStock == true
+                                ? Text(
+                                    "InStock",
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500, color: Colors.greenAccent.shade700),
+                                  )
+                                : Text(
+                                    "Out of Stock",
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w500, color: Colors.redAccent.shade700),
+                                  )
+                          ],
                         ),
                         const SizedBox(height: 8),
                         Text(
@@ -78,32 +97,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       width: Get.width,
                       child: ElevatedButton(
                           onPressed: () {
+                            if(canBuy == false){
+                              showToast("Product is out of stock");
+                              return;
+                            }
                             fireStoreService.addToCart(
                                 productId: product.id.trim().toString(), productData: productData);
-
-
-                            // try {
-                            //   FirebaseFirestore.instance.collection('cart').doc(fireStoreService.userId).set({
-                            //     'product': product.name,
-                            //     'price': product.price.toStringAsFixed(2),
-                            //     'description': product.description,
-                            //     'imageUrl': product.imageUrl
-                            //   });
-                            //   Fluttertoast.showToast(
-                            //       msg: "Product Added successfully",
-                            //       toastLength: Toast.LENGTH_SHORT,
-                            //       gravity: ToastGravity.CENTER,
-                            //       timeInSecForIosWeb: 1,
-                            //       backgroundColor: Colors.red,
-                            //       textColor: Colors.white,
-                            //       fontSize: 16.0);
-                            //
-                            //   //Get.to(const CartScreen());
-                            // } catch (e) {
-                            //   if (kDebugMode) {
-                            //     print('Error adding product to cart in Firestore: $e');
-                            //   }
-                            // }
                           },
                           child: const Text("Add to cart")),
                     ),

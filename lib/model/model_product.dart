@@ -8,10 +8,12 @@ class Product {
   String description;
   String imageUrl;
   String category;
+  bool? inStock;
 
   Product({
     required this.id,
     required this.name,
+    this.inStock,
     required this.price,
     required this.description,
     required this.imageUrl,
@@ -23,6 +25,7 @@ class Product {
     return Product(
       id: id,
       name: map['name'] ?? '',
+      inStock: map['inStock'] ?? false,
       price: map['price'].toString().toNum.toDouble(),
       description: map['description'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
@@ -33,6 +36,7 @@ class Product {
     Product product = Product(
       name: snap['name'],
       price: snap['price'],
+      inStock: snap['inStock'],
       imageUrl: snap['imageUrl'],
       description: snap['description'],
       id: snap['id'],

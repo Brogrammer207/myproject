@@ -16,10 +16,12 @@ class ModelCartList {
   final dynamic productId;
   final ProductDetails? productDetails;
   final dynamic productQuantity;
+  bool? inStock;
 
   ModelCartList({
     this.productId,
     this.productDetails,
+    this.inStock,
     this.productQuantity,
   });
 

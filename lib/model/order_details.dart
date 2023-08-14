@@ -1,6 +1,7 @@
 import 'model_address.dart';
 
 class ModelOrderDetails {
+  String orderId = "";
   dynamic orderTimeInMilliSec;
   dynamic shipping;
   ModelAddress? address;
@@ -12,10 +13,15 @@ class ModelOrderDetails {
   dynamic phoneNumber;
   dynamic transactionId;
   dynamic paymentMethod;
+  bool? dispatch = false;
+  bool? delivered = false;
 
   ModelOrderDetails(
       {this.orderTimeInMilliSec,
         this.shipping,
+        required this.orderId,
+        this.dispatch,
+        this.delivered,
         this.totalAmount,
         this.paymentMethod,
         this.userId,
@@ -26,9 +32,12 @@ class ModelOrderDetails {
         this.phoneNumber,
         this.transactionId});
 
-  ModelOrderDetails.fromJson(Map<String, dynamic> json) {
+  ModelOrderDetails.fromJson(Map<String, dynamic> json, givenOrderId) {
+    orderId = givenOrderId;
     orderTimeInMilliSec = json['orderTimeInMilliSec'];
     shipping = json['shipping'];
+    dispatch = json['dispatch'] ?? false;
+    delivered = json['delivered'] ?? false;
     paymentMethod = json['payment_method'];
     totalAmount = json['total_amount'];
     userId = json['user_id'];

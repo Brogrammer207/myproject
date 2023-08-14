@@ -1,13 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:myproject/helper/new_helper.dart';
 
 import '../../model/order_details.dart';
 import '../check_out/check_out_screen.dart';
 
-class OrderDetails extends StatelessWidget {
-  const OrderDetails({super.key, required this.modelOrderDetails});
+class OrderDetails extends StatefulWidget {
+  const OrderDetails({super.key, required this.modelOrderDetails, this.admin});
   final ModelOrderDetails modelOrderDetails;
+  final bool? admin;
+
+  @override
+  State<OrderDetails> createState() => _OrderDetailsState();
+}
+
+class _OrderDetailsState extends State<OrderDetails> {
+  final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
+
+  bool dispatch = false;
+  bool delivered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    dispatch = widget.modelOrderDetails.dispatch!;
+    delivered = widget.modelOrderDetails.delivered!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +43,9 @@ class OrderDetails extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverList.builder(
-                itemCount: modelOrderDetails.productsList!.length,
+                itemCount: widget.modelOrderDetails.productsList!.length,
                 itemBuilder: (context, index) {
-                  final productDetails = modelOrderDetails.productsList![index];
+                  final productDetails = widget.modelOrderDetails.productsList![index];
                   return Card(
                     elevation: 1,
                     margin: const EdgeInsets.symmetric(vertical: 8),
@@ -104,7 +124,7 @@ class OrderDetails extends StatelessWidget {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: addressCard(address: modelOrderDetails.address!, ordersDetails: true),
+                child: addressCard(address: widget.modelOrderDetails.address!, ordersDetails: true),
               ),
             ),
             SliverToBoxAdapter(
@@ -114,7 +134,7 @@ class OrderDetails extends StatelessWidget {
                   padding: const EdgeInsets.all(14.0),
                   child: Column(
                     children: [
-                      if (modelOrderDetails.paymentMethod != null) ...[
+                      if (widget.modelOrderDetails.paymentMethod != null) ...[
                         const SizedBox(
                           height: 5,
                         ),
@@ -126,11 +146,8 @@ class OrderDetails extends StatelessWidget {
                               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                             )),
                             Text(
-                              modelOrderDetails.paymentMethod,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Colors.black),
+                              widget.modelOrderDetails.paymentMethod,
+                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
                             ),
                           ],
                         ),
@@ -142,15 +159,12 @@ class OrderDetails extends StatelessWidget {
                         children: [
                           const Expanded(
                               child: Text(
-                                "Transaction ID:",
-                                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                              )),
+                            "Transaction ID:",
+                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                          )),
                           Text(
-                            modelOrderDetails.transactionId,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                                color: Colors.black),
+                            widget.modelOrderDetails.transactionId,
+                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
                           ),
                         ],
                       ),
@@ -165,13 +179,13 @@ class OrderDetails extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                           )),
                           Text(
-                            modelOrderDetails.shipping.toString() == "0"
+                            widget.modelOrderDetails.shipping.toString() == "0"
                                 ? "Free Shipping!"
-                                : "${modelOrderDetails.shipping.toString()} Rs",
+                                : "${widget.modelOrderDetails.shipping.toString()} Rs",
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
-                                color: modelOrderDetails.shipping.toString() == "0"
+                                color: widget.modelOrderDetails.shipping.toString() == "0"
                                     ? Colors.greenAccent.shade700
                                     : Colors.red),
                           ),
@@ -188,7 +202,7 @@ class OrderDetails extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                           )),
                           Text(
-                            "${(modelOrderDetails.totalAmount.toString().toNum - modelOrderDetails.shipping.toString().toNum).toStringAsFixed(2)} Rs",
+                            "${(widget.modelOrderDetails.totalAmount.toString().toNum - widget.modelOrderDetails.shipping.toString().toNum).toStringAsFixed(2)} Rs",
                             style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.red),
                           ),
                         ],
@@ -204,7 +218,7 @@ class OrderDetails extends StatelessWidget {
                             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                           )),
                           Text(
-                            "${modelOrderDetails.totalAmount.toString()} Rs",
+                            "${widget.modelOrderDetails.totalAmount.toString()} Rs",
                             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.red),
                           ),
                         ],
@@ -214,6 +228,103 @@ class OrderDetails extends StatelessWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Card(
+                margin: const EdgeInsets.only(top: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: StreamBuilder<Object>(
+                      stream: null,
+                      builder: (context, snapshot) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  "Dispatch",
+                                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16),
+                                )),
+                                widget.admin == true
+                                    ? CupertinoSwitch(
+                                        value: dispatch,
+                                        onChanged: (value) {
+                                          fireStoreService.updateOrdersDetails(
+                                              delivered: value == false ? false : delivered,
+                                              dispatch: value,
+                                              orderID: widget.modelOrderDetails.orderId,
+                                              updated: (bool gg) {
+                                                dispatch = value;
+                                                if (value == false) {
+                                                  delivered = false;
+                                                }
+                                                setState(() {});
+                                              });
+                                        })
+                                    : dispatch
+                                        ? Text(
+                                            "Done",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.greenAccent.shade700),
+                                          )
+                                        : Text(
+                                            "Pending",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.orangeAccent.shade700),
+                                          ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                    child: Text(
+                                  "Delivered",
+                                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16),
+                                )),
+                                widget.admin == true
+                                    ? CupertinoSwitch(
+                                        value: delivered,
+                                        onChanged: (value) {
+                                          fireStoreService.updateOrdersDetails(
+                                              delivered: value,
+                                              dispatch: true,
+                                              orderID: widget.modelOrderDetails.orderId,
+                                              updated: (bool gg) {
+                                                delivered = value;
+                                                dispatch = true;
+                                                setState(() {});
+                                              });
+                                        })
+                                    : delivered
+                                        ? Text(
+                                            "Done",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.greenAccent.shade700),
+                                          )
+                                        : Text(
+                                            "Pending",
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.orangeAccent.shade700),
+                                          ),
+                              ],
+                            ),
+                          ],
+                        );
+                      }),
                 ),
               ),
             ),
