@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "263074428074",
-    "project_id": "myproject-40407",
-    "storage_bucket": "myproject-40407.appspot.com"
+    "project_number": "267123965425",
+    "project_id": "borawar-oil-meal",
+    "storage_bucket": "borawar-oil-meal.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:263074428074:android:f7394df51a6d8ea772ccd3",
+        "mobilesdk_app_id": "1:267123965425:android:06e583511cce38eb8a1850",
         "android_client_info": {
           "package_name": "com.borawar"
         }
       },
       "oauth_client": [
         {
-          "client_id": "263074428074-4lohtnripgoog18cfh5j6pj1ibectks2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.borawar",
-            "certificate_hash": "3f3fd043779f449d4fbdd1cfa198dd70879c48a6"
-          }
-        },
-        {
-          "client_id": "263074428074-8t3cl0lmfu0tedkb1kk7ilgdvgej5ds1.apps.googleusercontent.com",
+          "client_id": "267123965425-htr0jrc1rjiu8p9kvhc3325mkka2rb4t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA55VmBixJ0Gqm409b7BKXt7kT1rSVMCSw"
+          "current_key": "AIzaSyC8UXwypW-NBM8YNHyg1PWdEWsJSD6JF-Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "263074428074-8t3cl0lmfu0tedkb1kk7ilgdvgej5ds1.apps.googleusercontent.com",
+              "client_id": "267123965425-htr0jrc1rjiu8p9kvhc3325mkka2rb4t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
