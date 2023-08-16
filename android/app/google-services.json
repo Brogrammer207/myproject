@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:263074428074:android:f7394df51a6d8ea772ccd3",
         "android_client_info": {
-          "package_name": "com.example.firebase_ecommers"
+          "package_name": "com.borawar"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "263074428074-4lohtnripgoog18cfh5j6pj1ibectks2.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.firebase_ecommers",
+            "package_name": "com.borawar",
             "certificate_hash": "3f3fd043779f449d4fbdd1cfa198dd70879c48a6"
           }
         },
