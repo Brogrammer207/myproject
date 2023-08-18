@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>263074428074-pmuucif8tth68tes1on1uov5sjbqp11n.apps.googleusercontent.com</string>
+	<string>267123965425-evgppg2o6huba0ee8pgvi1e1vcb36mg9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.263074428074-pmuucif8tth68tes1on1uov5sjbqp11n</string>
+	<string>com.googleusercontent.apps.267123965425-evgppg2o6huba0ee8pgvi1e1vcb36mg9</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>263074428074-0et6tucp3gmv05flr36b7s3s5l9hq2h7.apps.googleusercontent.com</string>
+	<string>267123965425-u6r6vik8bsijpo62gh2rkmshi98s1rsu.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyB66uBbTz7nnzltIrerY0mn57GHjlkNTig</string>
+	<string>AIzaSyC54z8wnQO4yXsiJAKYRNHgeKVgHLqQmAA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>263074428074</string>
+	<string>267123965425</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.firebase.eco</string>
+	<string>com.borawar</string>
 	<key>PROJECT_ID</key>
-	<string>myproject-40407</string>
+	<string>borawar-oil-meal</string>
 	<key>STORAGE_BUCKET</key>
-	<string>myproject-40407.appspot.com</string>
+	<string>borawar-oil-meal.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:263074428074:ios:187805ea433bc51e72ccd3</string>
+	<string>1:267123965425:ios:01a649e3effd7e5e8a1850</string>
 </dict>
 </plist>
