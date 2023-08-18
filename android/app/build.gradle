@@ -56,7 +56,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("/Users/manish/upload-keystore.jks")
+            storeFile file("//Users//kartikghosh//StudioProjects//firebase_ecommers//android//upload-keystore.jks")
             storePassword "Manish1@babu"
             keyAlias "upload"
             keyPassword "Manish1@babu"
