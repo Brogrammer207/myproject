@@ -62,7 +62,7 @@ dependencies:
   flutter_animate: ^4.2.0+1
   upi_india: ^3.0.1
   intl:
-  firebase_messaging: ^14.6.5
+  firebase_messaging: ^14.6.6
 
 
 dev_dependencies:
