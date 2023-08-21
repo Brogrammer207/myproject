@@ -246,7 +246,7 @@ class _HomePageState extends State<HomePageScreen> {
                                         products[index].imageUrl,
                                         width: 100,
                                         height: 100,
-                                        fit: BoxFit.contain,
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
@@ -261,7 +261,7 @@ class _HomePageState extends State<HomePageScreen> {
                                   Flexible(
                                     child: Text(
                                       products[index].name,
-                                      style: const TextStyle(fontSize: 10, color: Colors.black),
+                                      style: const TextStyle(fontSize: 17, color: Colors.black),
                                     ),
                                   ),
                                 ],
@@ -274,9 +274,11 @@ class _HomePageState extends State<HomePageScreen> {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      '\$${products[index].price.toStringAsFixed(2)}',
+                                      '\₹${products[index].price.toStringAsFixed(2)}',
+                              style: const TextStyle(fontSize: 20, color: Colors.black
                                     ),
                                   ),
+                                  )
                                 ],
                               ),
                             ),

@@ -234,7 +234,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                   ],
-                )
+                ),
+                const SizedBox(height: 15,),
+                if(FirebaseAuth.instance.currentUser != null)
+                ElevatedButton(
+                  onPressed: () async {
+                      User? user = FirebaseAuth.instance.currentUser;
+                      await user!.delete();
+                      showToast("Your account has been deleted");
+                      Get.to(const SignUpScreen());
+                  },
+                  style: ElevatedButton.styleFrom(
+                      primary: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 50),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                  child: const Text(
+                    'Delete Account',
+                    style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                  ),
+                ),
               ],
             ),
           ),

@@ -135,7 +135,7 @@ class _SearchProductsState extends State<SearchProducts> {
                                               height: 2,
                                             ),
                                             Text(
-                                              "${productInfo.price}",
+                                              "₹${productInfo.price}",
                                               style: GoogleFonts.poppins(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.w500,
