@@ -23,7 +23,8 @@ class _CartButtonState extends State<CartButton> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      child: fireStoreService.auth.currentUser != null ?
+      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: fireStoreService.getCartList(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -53,7 +54,8 @@ class _CartButtonState extends State<CartButton> {
                 icon: const Icon(Icons.card_travel)),
           );
         }
-      ),
+      ) :
+      const SizedBox.shrink(),
     );
   }
 }

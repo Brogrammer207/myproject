@@ -34,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAll(const ProfileScreen(fromLogin: true,));
       }
     } else {
-      Get.to(const SignUpScreen());
+      Get.offAll(()=> const BottomNavigationScreen());
     }
   }
 

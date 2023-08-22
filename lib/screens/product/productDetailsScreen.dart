@@ -7,6 +7,7 @@ import 'package:get/route_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/helper/helper.dart';
 import 'package:myproject/model/model_product.dart';
+import 'package:myproject/screens/auth/signup.dart';
 
 import '../../firebase_services/firestore_service.dart';
 
@@ -97,6 +98,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       width: Get.width,
                       child: ElevatedButton(
                           onPressed: () {
+                            if(!fireStoreService.userLoggedIn){
+                              Get.to(()=> const SignUpScreen());
+                              return;
+                            }
                             if(canBuy == false){
                               showToast("Product is out of stock");
                               return;

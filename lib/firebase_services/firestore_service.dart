@@ -33,6 +33,7 @@ class FirebaseFireStoreService {
   final storageRef = FirebaseStorage.instance.ref();
 
   String get userId => auth.currentUser!.uid;
+  bool get userLoggedIn => auth.currentUser != null;
   String get phoneNumber => auth.currentUser!.phoneNumber!;
 
   addToCart({

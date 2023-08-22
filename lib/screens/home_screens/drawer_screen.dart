@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
 
 import '../../admin/homepage.dart';
+import '../auth/signup.dart';
 import '../check_out/delivery_address.dart';
 import '../orders/orders_screen.dart';
 import 'profile.dart';
@@ -17,9 +18,9 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
+  final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
 
-bool get adminAccess => fireStoreService.auth.currentUser?.displayName.toString() == "Admin";
+  bool get adminAccess => fireStoreService.auth.currentUser?.displayName.toString() == "Admin";
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +48,15 @@ bool get adminAccess => fireStoreService.auth.currentUser?.displayName.toString(
               ],
             ),
           ),
-          if(adminAccess)
-          ListTile(
-            leading: const Icon(CupertinoIcons.settings_solid),
-            title: const Text('Admin Control'),
-            onTap: () {
-              // Handle the tap on the Home item
-              Get.to(()=> const AdminHomePage());
-            },
-          ),
+          if (adminAccess)
+            ListTile(
+              leading: const Icon(CupertinoIcons.settings_solid),
+              title: const Text('Admin Control'),
+              onTap: () {
+                // Handle the tap on the Home item
+                Get.to(() => const AdminHomePage());
+              },
+            ),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
@@ -68,30 +69,44 @@ bool get adminAccess => fireStoreService.auth.currentUser?.displayName.toString(
             leading: const Icon(Icons.person),
             title: const Text('profile'),
             onTap: () {
-              Get.to(()=> const ProfileScreen(fromLogin: false,));
+              if (fireStoreService.userLoggedIn) {
+                Get.to(() => const ProfileScreen(
+                      fromLogin: false,
+                    ));
+              } else {
+                Get.to(() => const SignUpScreen());
+              }
             },
           ),
           ListTile(
             leading: const Icon(Icons.access_alarm),
             title: const Text('Orders'),
             onTap: () {
-              Get.to(()=> const OrdersScreen());
+              if (fireStoreService.userLoggedIn) {
+                Get.to(() => const OrdersScreen());
+              } else {
+                Get.to(() => const SignUpScreen());
+              }
             },
           ),
           ListTile(
             leading: const Icon(CupertinoIcons.map_pin_ellipse),
             title: const Text('Address'),
             onTap: () {
-              Get.to(()=> const AddressScreen());
+              if (fireStoreService.userLoggedIn) {
+                Get.to(() => const AddressScreen());
+              } else {
+                Get.to(() => const SignUpScreen());
+              }
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text('AboutUs'),
-            onTap: () {
-              // Handle the tap on the Logout item
-            },
-          ),
+          // ListTile(
+          //   leading: const Icon(Icons.exit_to_app),
+          //   title: const Text('AboutUs'),
+          //   onTap: () {
+          //     // Handle the tap on the Logout item
+          //   },
+          // ),
         ],
       ),
     );

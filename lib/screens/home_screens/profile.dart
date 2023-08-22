@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    if(!fireStoreService.userLoggedIn)return;
     if(widget.fromLogin == false){
       dataLoaded = false;
       fireStoreService.getProfileDetails().then((value) {
@@ -87,7 +88,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       AppBar(
         title: const Text('Profile'),
       ) : null,
-      body: dataLoaded ?
+      body: fireStoreService.userLoggedIn ?
+      dataLoaded ?
       Container(
         padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
         child: GestureDetector(
@@ -257,7 +259,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ),
-      ) : const Center(child: CircularProgressIndicator(),),
+      ) : const Center(child: CircularProgressIndicator(),) : Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Account not logged in"),
+            SizedBox(height: 10,),
+            ElevatedButton(onPressed: (){
+              Get.to(SignUpScreen());
+            }, child: Text("Login In"))
+          ],
+        ),
+      ),
     );
   }
 
