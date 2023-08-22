@@ -19,7 +19,7 @@ class DrawerScreen extends StatefulWidget {
 class _DrawerScreenState extends State<DrawerScreen> {
 final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
 
-bool get adminAccess => fireStoreService.auth.currentUser!.displayName.toString() == "Admin";
+bool get adminAccess => fireStoreService.auth.currentUser?.displayName.toString() == "Admin";
 
   @override
   Widget build(BuildContext context) {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myproject/screens/home_screens/homepage.dart';
 
 import 'firebase_services/firestore_service.dart';
 import 'screens/auth/signup.dart';
@@ -33,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAll(const ProfileScreen(fromLogin: true,));
       }
     } else {
-      Get.to(const SignUpScreen());
+      Get.to(const HomePageScreen());
     }
   }
 
