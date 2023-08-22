@@ -41,22 +41,7 @@ class _HomePageState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: const DrawerScreen(),
-      appBar: AppBar(
-        leading: InkWell(
-            onTap: (){
-              _scaffoldKey.currentState!.openDrawer();
-            },
-            child: const Icon(Icons.menu)),
-        title: const Text('Home'),
-        actions: const [
-          Icon(Icons.card_travel)
-        ],
-      ),
-
-      body: SingleChildScrollView(
+    return SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           children: [
@@ -314,7 +299,6 @@ class _HomePageState extends State<HomePageScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 }
