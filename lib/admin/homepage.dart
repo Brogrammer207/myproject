@@ -27,28 +27,38 @@ class _AdminHomePageState extends State<AdminHomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             InkWell(
-              onTap: (){
+              onTap: () {
                 Get.to(const ViewProductsLList());
               },
               child: Container(
                 height: 50,
                 width: Get.width,
-                decoration: BoxDecoration(color: Colors.blue,borderRadius: BorderRadius.circular(21)),
-                child: const Center(child: Text('View Product',style: TextStyle(color: Colors.white,fontSize: 20),)),
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
+                child: const Center(
+                    child: Text(
+                  'View Product',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )),
               ),
             ),
-            const SizedBox(height: 25,),
+            const SizedBox(
+              height: 25,
+            ),
             InkWell(
-              onTap: (){
-                Get.to(()=> const OrdersScreen(
-                  admin: true,
-                ));
+              onTap: () {
+                Get.to(() => const OrdersScreen(
+                      admin: true,
+                    ));
               },
               child: Container(
                 height: 50,
                 width: Get.width,
-                decoration: BoxDecoration(color: Colors.blue,borderRadius: BorderRadius.circular(21)),
-                child: const Center(child: Text('Show Order',style: TextStyle(color: Colors.white,fontSize: 20),)),
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
+                child: const Center(
+                    child: Text(
+                  'Show Order',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )),
               ),
             ),
           ],

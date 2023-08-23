@@ -1,7 +1,7 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-showToast(message,{ToastGravity? gravity}) {
+showToast(message, {ToastGravity? gravity}) {
   Fluttertoast.cancel();
   Fluttertoast.showToast(
       msg: message.toString().capitalize!,

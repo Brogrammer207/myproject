@@ -37,7 +37,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             if (snapshot.data == null) return const SizedBox();
             log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
             List<ModelOrderDetails> ordersList =
-                snapshot.data!.docs.map((e) => ModelOrderDetails.fromJson(e.data(),e.id)).toList();
+                snapshot.data!.docs.map((e) => ModelOrderDetails.fromJson(e.data(), e.id)).toList();
             return ListView.builder(
                 itemCount: ordersList.length,
                 shrinkWrap: true,
@@ -53,7 +53,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                         Get.to(
                             () => OrderDetails(
                                   modelOrderDetails: order,
-                              admin: widget.admin,
+                                  admin: widget.admin,
                                 ),
                             transition: Transition.rightToLeft);
                       },

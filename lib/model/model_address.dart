@@ -5,8 +5,7 @@ class ModelAddress {
   String? landmark;
   String? title;
 
-  ModelAddress(
-      {this.address, this.city, this.phone, this.landmark, this.title});
+  ModelAddress({this.address, this.city, this.phone, this.landmark, this.title});
 
   ModelAddress.fromJson(Map<String, dynamic> json) {
     address = json['address'];
@@ -33,7 +32,7 @@ class ModelCityList {
   ModelCityList({this.cityList});
 
   ModelCityList.fromJson(Map<String, dynamic> json) {
-    if(json['cityList'] == null){
+    if (json['cityList'] == null) {
       cityList = [];
       return;
     }
@@ -46,4 +45,3 @@ class ModelCityList {
     return data;
   }
 }
-

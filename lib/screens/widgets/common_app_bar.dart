@@ -17,14 +17,11 @@ class _CommonAppBarState extends State<CommonAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(widget.title,
-        style: GoogleFonts.poppins(
-            fontWeight: FontWeight.w500,
-            fontSize: 18
-        ),),
-      actions: [
-        ...widget.actions ?? []
-      ],
+      title: Text(
+        widget.title,
+        style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
+      ),
+      actions: [...widget.actions ?? []],
     );
   }
 }

@@ -26,37 +26,40 @@ class _ViewProductsLListState extends State<ViewProductsLList> {
         title: "Products List",
         actions: [
           IconButton(
-              onPressed: (){
-                Get.to(()=> const AddProductAdmin());
+              onPressed: () {
+                Get.to(() => const AddProductAdmin());
               },
-              icon: const Icon(Icons.add_circle_outline_rounded,color: Colors.teal,size: 30,)
-          ),
-          const SizedBox(width: 10,)
+              icon: const Icon(
+                Icons.add_circle_outline_rounded,
+                color: Colors.teal,
+                size: 30,
+              )),
+          const SizedBox(
+            width: 10,
+          )
         ],
       ),
       body: StreamBuilder(
         stream: fireStoreService.getAllProductsList(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-          if(snapshot.hasData){
-            if(snapshot.data == null)return const SizedBox();
+          if (snapshot.hasData) {
+            if (snapshot.data == null) return const SizedBox();
             // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
             List<Product> products = snapshot.data!.docs.map((e) => Product.fromMap(e.id, e.data())).toList();
             return ListView.builder(
                 itemCount: products.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index){
+                itemBuilder: (context, index) {
                   final productInfo = products[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
-                      onTap: (){
-                        Get.to(()=> AddProductAdmin(
-                          product: productInfo,
-                        ));
+                      onTap: () {
+                        Get.to(() => AddProductAdmin(
+                              product: productInfo,
+                            ));
                         // Get.to(()=> OrderDetails(modelOrderDetails: order,),
                         //     transition: Transition.rightToLeft);
                       },
@@ -95,7 +98,6 @@ class _ViewProductsLListState extends State<ViewProductsLList> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
                                         fontWeight: FontWeight.w500,
-
                                         color: Colors.black,
                                       ),
                                     ),
@@ -125,17 +127,17 @@ class _ViewProductsLListState extends State<ViewProductsLList> {
                                             ),
                                           ),
                                         ),
-                                        productInfo.inStock == true ?
-                                        Text("InStock",
-                                        style: GoogleFonts.poppins(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.greenAccent.shade700
-                                        ),) :
-                                        Text("Out of Stock",
-                                          style: GoogleFonts.poppins(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.redAccent.shade700
-                                          ),)
+                                        productInfo.inStock == true
+                                            ? Text(
+                                                "InStock",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500, color: Colors.greenAccent.shade700),
+                                              )
+                                            : Text(
+                                                "Out of Stock",
+                                                style: GoogleFonts.poppins(
+                                                    fontWeight: FontWeight.w500, color: Colors.redAccent.shade700),
+                                              )
                                       ],
                                     ),
                                   ],

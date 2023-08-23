@@ -19,7 +19,6 @@ class SelectAddressScreen extends StatefulWidget {
 }
 
 class _SelectAddressScreenState extends State<SelectAddressScreen> {
-
   final TextEditingController addressName = TextEditingController();
   final TextEditingController number = TextEditingController();
   // final TextEditingController city = TextEditingController();
@@ -37,31 +36,33 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
   bool updating = false;
 
-  updateAddress(){
-    if(formKey.currentState!.validate()) {
-      if(city.isEmpty){
+  updateAddress() {
+    if (formKey.currentState!.validate()) {
+      if (city.isEmpty) {
         showToast("Please wait loading city");
         return;
       }
-      if(updating == true)return;
+      if (updating == true) return;
       updating = true;
-      fireStoreService.updateAddress(
-          title: addressName.text.trim(),
-          phone: number.text.trim(),
-          city: city.trim(),
-          address: address.text.trim(),
-          landmark: landMark.text.trim()).then((value) {
-        Get.to(()=> CheckOutScreen(
-          address: ModelAddress(
-            title: addressName.text.trim(),
-            address: address.text.trim(),
-            city: city.trim(),
-            landmark: landMark.text.trim(),
-            phone: number.text.trim(),
-          ),
-        ));
+      fireStoreService
+          .updateAddress(
+              title: addressName.text.trim(),
+              phone: number.text.trim(),
+              city: city.trim(),
+              address: address.text.trim(),
+              landmark: landMark.text.trim())
+          .then((value) {
+        Get.to(() => CheckOutScreen(
+              address: ModelAddress(
+                title: addressName.text.trim(),
+                address: address.text.trim(),
+                city: city.trim(),
+                landmark: landMark.text.trim(),
+                phone: number.text.trim(),
+              ),
+            ));
         updating = false;
-      }).catchError((e){
+      }).catchError((e) {
         updating = false;
       });
     }
@@ -82,7 +83,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
         fireStoreService.getCityList().then((value) {
           if (value == null) return;
           cities = value.cityList ?? [];
-          if(!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())){
+          if (!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())) {
             city = "";
           }
           cityLoaded = true;
@@ -98,188 +99,193 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Delivery Address',
-          style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              fontSize: 18
-          ),),
-      ),
-      body: apiLoaded ?
-      SingleChildScrollView(
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Select Your address to continue'.capitalize!,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.urbanist(fontSize: 18, color: Colors.blue,fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 12,),
-              Lottie.asset(
-                "assets/images/delivery.json",
-                height: 160.0,
-                repeat: true,
-                reverse: true,
-                animate: true,
-              ),
-              const SizedBox(height: 18,),
-              buildTextField(
-                  hintetxt: 'Enter Location Name',
-                  icon: const Icon(
-                    Icons.near_me,
-                    color: Colors.blue,
-                  ),
-                  controller: addressName,
-                  keyboardType: TextInputType.name,
-                  validator: (value){
-                    if(value!.trim().isEmpty){
-                      return "Please enter address name";
-                    }
-                    return null;
-                  }
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              buildTextField(
-                  hintetxt: 'Enter Your Phone Number',
-                  controller: number,
-                  keyboardType: TextInputType.number,
-                  validator: (value){
-                    if(value!.trim().isEmpty){
-                      return "Please enter phone no.".capitalize;
-                    }
-                    if(value.trim().length < 10){
-                      return "Please enter valid phone no.".capitalize;
-                    }
-                    return null;
-                  },
-                  icon: const Icon(
-                    Icons.phone,
-                    color: Colors.blue,
-                  )),
-              const SizedBox(
-                height: 20,
-              ),
-
-              if(cityLoaded)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "City",
-                        style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
-                            counterText: "",
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                            enabled: true,
-                            filled: true,
-                            fillColor: Colors.grey.withOpacity(0.2),
-                            hintText: "City",),
-                          validator: (vds){
-                            if(city.isEmpty){
-                              return "Please select city";
-                            }
-                            return null;
-                          },
-                          value: city.isEmpty ? null : city,
-                          items:
-                          cities.map((e) => DropdownMenuItem(value: e.toLowerCase(), child: Text(e))).toList(),
-                          onChanged: (value) {
-                            if (value == null) return;
-                            city = value;
-                          }),
-                    ],
-                  ),
-                ),
-              // buildTextField(
-              //     hintetxt: 'City',
-              //     controller: city,
-              //     keyboardType: TextInputType.number,
-              //     validator: (value){
-              //       if(value!.trim().isEmpty){
-              //         return "Please your city".capitalize;
-              //       }
-              //       return null;
-              //     },
-              //     icon: const Icon(
-              //       Icons.location_city_rounded,
-              //       color: Colors.blue,
-              //     )),
-              const SizedBox(
-                height: 20,
-              ),
-              buildTextField(
-                  hintetxt: 'Address(Area and Street)',
-                  keyboardType: TextInputType.streetAddress,
-                  controller: address,
-                  validator: (value){
-                    if(value!.trim().isEmpty){
-                      return "Please Enter Address";
-                    }
-                    return null;
-                  },
-                  icon: const Icon(
-                    Icons.home,
-                    color: Colors.blue,
-                  )),
-              const SizedBox(
-                height: 20,
-              ),
-              buildTextField(
-                  hintetxt: 'Nearby Landmark',
-                  keyboardType: TextInputType.streetAddress,
-                  controller: landMark,
-                  validator: (value){
-                    if(value!.trim().isEmpty){
-                      return "Please Enter Nearby Landmark";
-                    }
-                    return null;
-                  },
-                  icon: const Icon(
-                    Icons.home,
-                    color: Colors.blue,
-                  )),
-              const SizedBox(
-                height: 50,
-              ),
-              GestureDetector(
-                onTap: (){
-                  updateAddress();
-                },
-                child: Container(
-                  height: 50,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.blue),
-                  child: const Center(
-                      child: Text(
-                        'Continue',
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      )),
-                ),
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-            ],
-          ),
+        title: Text(
+          'Select Delivery Address',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
         ),
-      ) : const LoadingAnimation(),
+      ),
+      body: apiLoaded
+          ? SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Select Your address to continue'.capitalize!,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.urbanist(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Lottie.asset(
+                      "assets/images/delivery.json",
+                      height: 160.0,
+                      repeat: true,
+                      reverse: true,
+                      animate: true,
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    buildTextField(
+                        hintetxt: 'Enter Location Name',
+                        icon: const Icon(
+                          Icons.near_me,
+                          color: Colors.blue,
+                        ),
+                        controller: addressName,
+                        keyboardType: TextInputType.name,
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please enter address name";
+                          }
+                          return null;
+                        }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    buildTextField(
+                        hintetxt: 'Enter Your Phone Number',
+                        controller: number,
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please enter phone no.".capitalize;
+                          }
+                          if (value.trim().length < 10) {
+                            return "Please enter valid phone no.".capitalize;
+                          }
+                          return null;
+                        },
+                        icon: const Icon(
+                          Icons.phone,
+                          color: Colors.blue,
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    if (cityLoaded)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "City",
+                              style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            DropdownButtonFormField(
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                  counterText: "",
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                  enabled: true,
+                                  filled: true,
+                                  fillColor: Colors.grey.withOpacity(0.2),
+                                  hintText: "City",
+                                ),
+                                validator: (vds) {
+                                  if (city.isEmpty) {
+                                    return "Please select city";
+                                  }
+                                  return null;
+                                },
+                                value: city.isEmpty ? null : city,
+                                items: cities
+                                    .map((e) => DropdownMenuItem(value: e.toLowerCase(), child: Text(e)))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value == null) return;
+                                  city = value;
+                                }),
+                          ],
+                        ),
+                      ),
+                    // buildTextField(
+                    //     hintetxt: 'City',
+                    //     controller: city,
+                    //     keyboardType: TextInputType.number,
+                    //     validator: (value){
+                    //       if(value!.trim().isEmpty){
+                    //         return "Please your city".capitalize;
+                    //       }
+                    //       return null;
+                    //     },
+                    //     icon: const Icon(
+                    //       Icons.location_city_rounded,
+                    //       color: Colors.blue,
+                    //     )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    buildTextField(
+                        hintetxt: 'Address(Area and Street)',
+                        keyboardType: TextInputType.streetAddress,
+                        controller: address,
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please Enter Address";
+                          }
+                          return null;
+                        },
+                        icon: const Icon(
+                          Icons.home,
+                          color: Colors.blue,
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    buildTextField(
+                        hintetxt: 'Nearby Landmark',
+                        keyboardType: TextInputType.streetAddress,
+                        controller: landMark,
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please Enter Nearby Landmark";
+                          }
+                          return null;
+                        },
+                        icon: const Icon(
+                          Icons.home,
+                          color: Colors.blue,
+                        )),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        updateAddress();
+                      },
+                      child: Container(
+                        height: 50,
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.blue),
+                        child: const Center(
+                            child: Text(
+                          'Continue',
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        )),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : const LoadingAnimation(),
     );
   }
 }

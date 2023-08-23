@@ -99,10 +99,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
                           prefixIcon: const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 18),
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                             child: Text(
                               "+91",
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                             ),
                           ),
                           suffixIcon: const Icon(

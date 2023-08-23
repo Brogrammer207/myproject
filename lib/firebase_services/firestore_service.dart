@@ -112,7 +112,7 @@ class FirebaseFireStoreService {
     final response = await fireStore.collection(profileCollection).doc(userId).get();
     if (response.exists) {
       log("Api Repsponse.....    ${jsonEncode(response.data())}");
-      if(response.data() == null)return null;
+      if (response.data() == null) return null;
       return ModelProfileData.fromJson(response.data()!);
     }
     return null;
@@ -149,14 +149,13 @@ class FirebaseFireStoreService {
       });
       NewHelper.hideLoader(loader);
       return false;
-    } catch(e){
+    } catch (e) {
       NewHelper.hideLoader(loader);
       throw Exception(e);
-    } finally{
+    } finally {
       NewHelper.hideLoader(loader);
     }
   }
-
 
   Future<bool> updateProduct({
     required String productId,
@@ -176,10 +175,10 @@ class FirebaseFireStoreService {
     try {
       if (allowChange) {
         Overlay.of(context).insert(loader);
-        if(deletePrevious.isNotEmpty) {
+        if (deletePrevious.isNotEmpty) {
           try {
             await FirebaseStorage.instance.refFromURL(deletePrevious).delete();
-          }catch(e){}
+          } catch (e) {}
         }
         final userProfileImageRef = storageRef.child("product_image/${name}_${DateTime.now().millisecondsSinceEpoch}");
         UploadTask task6 = userProfileImageRef.putFile(profileImage);
@@ -206,18 +205,18 @@ class FirebaseFireStoreService {
       });
       NewHelper.hideLoader(loader);
       return false;
-    } catch(e){
+    } catch (e) {
       NewHelper.hideLoader(loader);
       throw Exception(e);
-    } finally{
+    } finally {
       NewHelper.hideLoader(loader);
     }
   }
 
   Future<ModelAddress?> getAddress() async {
     final response = await fireStore.collection(addressCollection).doc(userId).get();
-    if(response.exists){
-      if(response.data() == null)return null;
+    if (response.exists) {
+      if (response.data() == null) return null;
       return ModelAddress.fromJson(response.data()!);
     }
     return null;
@@ -240,7 +239,7 @@ class FirebaseFireStoreService {
       }).then((value) {
         showToast("Address Updated");
       });
-    } catch(e){
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -259,7 +258,7 @@ class FirebaseFireStoreService {
         showToast("Order Updated");
         updated(true);
       });
-    } catch(e){
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -267,11 +266,11 @@ class FirebaseFireStoreService {
   Future<ModelShippingAddress?> getShippingDetails() async {
     try {
       final response = await fireStore.collection(shippingCollection).doc("shipping").get();
-      if(response.exists == false)return null;
-        if (response.data() == null) return null;
-        final gg = ModelShippingAddress.fromJson(response.data()!);
-        return gg;
-    } catch(e){
+      if (response.exists == false) return null;
+      if (response.data() == null) return null;
+      final gg = ModelShippingAddress.fromJson(response.data()!);
+      return gg;
+    } catch (e) {
       throw Exception(e);
     }
   }
@@ -279,30 +278,29 @@ class FirebaseFireStoreService {
   Future<ModelCityList?> getCityList() async {
     try {
       final response = await fireStore.collection("admin_details").doc("address_city").get();
-      if(response.exists == false)return null;
-        if (response.data() == null) return null;
-        if (kDebugMode) {
-          print(jsonEncode(response.data()));
-        }
-        return ModelCityList.fromJson(response.data()!);
-        // return gg;
-    } catch(e){
+      if (response.exists == false) return null;
+      if (response.data() == null) return null;
+      if (kDebugMode) {
+        print(jsonEncode(response.data()));
+      }
+      return ModelCityList.fromJson(response.data()!);
+      // return gg;
+    } catch (e) {
       throw Exception(e);
     }
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getOrdersList() {
-    return fireStore.collection(orderCollection)
-        .where("user_id", isEqualTo:  userId)
-    .orderBy("orderTimeInMilliSec", descending: true)
-    .limit(100)
+    return fireStore
+        .collection(orderCollection)
+        .where("user_id", isEqualTo: userId)
+        .orderBy("orderTimeInMilliSec", descending: true)
+        .limit(100)
         .snapshots();
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getAdminOrdersList({int? limit}) {
-    return fireStore.collection(orderCollection)
-    .orderBy("orderTimeInMilliSec", descending: true)
-        .snapshots();
+    return fireStore.collection(orderCollection).orderBy("orderTimeInMilliSec", descending: true).snapshots();
   }
 
   checkOutTransaction({
@@ -312,7 +310,7 @@ class FirebaseFireStoreService {
     required String paymentMethod,
     required BuildContext context,
     required Map<String, dynamic> address,
-}) async {
+  }) async {
     OverlayEntry loader = NewHelper.overlayLoader(context);
     Overlay.of(context).insert(loader);
     try {
@@ -332,20 +330,14 @@ class FirebaseFireStoreService {
         return;
       }
 
-      await fireStore.collection(orderCollection)
-          .doc(DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString()).set({
+      await fireStore.collection(orderCollection).doc(DateTime.now().millisecondsSinceEpoch.toString()).set({
         "products_list": cartListCollection.docs.map((e) => e.data()).toList(),
         "total_amount": total,
         "sub_total": cartList.getTotalAmount,
         "shipping": shipping,
         "payment_method": paymentMethod,
         "address": address,
-        "orderTimeInMilliSec": DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        "orderTimeInMilliSec": DateTime.now().millisecondsSinceEpoch,
         "transactionId": transactionId,
         "user_id": userId,
         "phone_number": phoneNumber,
@@ -356,10 +348,10 @@ class FirebaseFireStoreService {
             element.reference.delete();
           }
         });
-        Get.offAll(()=> const BottomNavigationScreen());
+        Get.offAll(() => const BottomNavigationScreen());
         showToast("Order Placed");
       });
-    } catch(e){
+    } catch (e) {
       NewHelper.hideLoader(loader);
       throw Exception(e);
     } finally {
@@ -379,19 +371,17 @@ class FirebaseFireStoreService {
     return fireStore.collection("categories").snapshots();
   }
 
-
-  Future<bool> checkAdminAccount() async{
+  Future<bool> checkAdminAccount() async {
     final response = await fireStore.collection("admin_details").doc("admin_info").get();
-    if(response.exists){
-      if(response.data() == null)return false;
+    if (response.exists) {
+      if (response.data() == null) return false;
       log(jsonEncode(response.data()));
       log(auth.currentUser!.phoneNumber!.toString().simpleString);
       ModelAdminDetails modelAdminDetails = ModelAdminDetails.fromJson(response.data()!);
-      if(modelAdminDetails.number!.contains(auth.currentUser!.phoneNumber.toString().simpleString)){
+      if (modelAdminDetails.number!.contains(auth.currentUser!.phoneNumber.toString().simpleString)) {
         auth.currentUser!.updateDisplayName("Admin");
         return true;
-      }
-      else {
+      } else {
         auth.currentUser!.updateDisplayName("User");
         return false;
       }
@@ -400,20 +390,19 @@ class FirebaseFireStoreService {
     }
   }
 
- Future<Product?> getProductDetails({
+  Future<Product?> getProductDetails({
     required String productId,
-}) async {
+  }) async {
     final response = await fireStore.collection("products").doc(productId).get();
-    if(response.exists == false || response.data() == null){
+    if (response.exists == false || response.data() == null) {
       return null;
     }
     return Product.fromMap(response.id, response.data()!);
   }
-
 }
 
-extension TrimString on String{
-  String get simpleString{
+extension TrimString on String {
+  String get simpleString {
     return replaceAll("+91", "");
   }
 }

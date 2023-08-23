@@ -44,7 +44,7 @@ class _AddressScreenState extends State<AddressScreen> {
         fireStoreService.getCityList().then((value) {
           if (value == null) return;
           cities = value.cityList ?? [];
-          if(!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())){
+          if (!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())) {
             city = "";
           }
           cityLoaded = true;
@@ -55,13 +55,14 @@ class _AddressScreenState extends State<AddressScreen> {
       });
     });
   }
+
   bool cityLoaded = false;
 
   bool updating = false;
 
   updateAddress() {
     if (formKey.currentState!.validate()) {
-      if(city.isEmpty){
+      if (city.isEmpty) {
         showToast("Please wait loading city");
         return;
       }
@@ -154,21 +155,21 @@ class _AddressScreenState extends State<AddressScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    if(cityLoaded)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "City",
-                            style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
-                          ),
-                          const SizedBox(
-                            height: 4,
-                          ),
-                          DropdownButtonFormField(
-                              decoration: InputDecoration(
+                    if (cityLoaded)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "City",
+                              style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
+                            ),
+                            const SizedBox(
+                              height: 4,
+                            ),
+                            DropdownButtonFormField(
+                                decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
                                   enabledBorder: OutlineInputBorder(
@@ -178,23 +179,25 @@ class _AddressScreenState extends State<AddressScreen> {
                                   enabled: true,
                                   filled: true,
                                   fillColor: Colors.grey.withOpacity(0.2),
-                                  hintText: "City",),
-                              validator: (vds){
-                                if(city.isEmpty){
-                                  return "Please select city";
-                                }
-                                return null;
-                              },
-                              value: city.isEmpty ? null : city,
-                              items:
-                                  cities.map((e) => DropdownMenuItem(value: e.toLowerCase(), child: Text(e))).toList(),
-                              onChanged: (value) {
-                                if (value == null) return;
-                                city = value;
-                              }),
-                        ],
+                                  hintText: "City",
+                                ),
+                                validator: (vds) {
+                                  if (city.isEmpty) {
+                                    return "Please select city";
+                                  }
+                                  return null;
+                                },
+                                value: city.isEmpty ? null : city,
+                                items: cities
+                                    .map((e) => DropdownMenuItem(value: e.toLowerCase(), child: Text(e)))
+                                    .toList(),
+                                onChanged: (value) {
+                                  if (value == null) return;
+                                  city = value;
+                                }),
+                          ],
+                        ),
                       ),
-                    ),
                     // buildTextField(
                     //     hintetxt: 'City',
                     //     controller: city,

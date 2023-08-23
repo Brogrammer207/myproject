@@ -81,7 +81,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   ///Upi Payment
 
   getAvailableApps() {
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
         apps = value;
         if (kDebugMode) {
@@ -120,11 +120,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       showToast("Select Available Payment Methods");
       return;
     }
-    if(upiApp != null) {
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
+    if (upiApp != null) {
+      final refId = DateTime.now().microsecondsSinceEpoch.toString();
       initiateTransaction(upiApp!, refId, total).then((value) {
         if (value.status.toString() == "success" || true) {
           // value.transactionId ?? refId;
@@ -138,11 +135,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         }
       });
     }
-    if(cashOnDelivery.value == "Cod"){
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
+    if (cashOnDelivery.value == "Cod") {
+      final refId = DateTime.now().microsecondsSinceEpoch.toString();
       fireStoreService.checkOutTransaction(
           shipping: shipping,
           total: total.toString(),
@@ -273,7 +267,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                       GestureDetector(
                                                         onTap: () {
                                                           int updateNew = item.productQuantity! - 1;
-                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
+                                                          updateValue(
+                                                              productId: item.productId!, productQuantity: updateNew);
                                                         },
                                                         child: Container(
                                                           width: 28,
@@ -296,7 +291,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                           child: Text(
                                                         item.productQuantity.toString(),
                                                         style: const TextStyle(
-                                                            color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
+                                                            color: Colors.black,
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w500),
                                                       )),
                                                       const SizedBox(
                                                         width: 10,
@@ -304,7 +301,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                       GestureDetector(
                                                         onTap: () {
                                                           int updateNew = item.productQuantity! + 1;
-                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
+                                                          updateValue(
+                                                              productId: item.productId!, productQuantity: updateNew);
                                                         },
                                                         child: Container(
                                                           width: 28,
@@ -325,7 +323,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                 ),
                                                 CheckInStock(
                                                   productID: item.productId,
-                                                  inStock: (bool value){
+                                                  inStock: (bool value) {
                                                     item.inStock = value;
                                                     canBuy = value;
                                                     if (kDebugMode) {
@@ -357,11 +355,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                if(cartList.map((e) => e.inStock).toList().contains(null)){
+                                if (cartList.map((e) => e.inStock).toList().contains(null)) {
                                   showToast("Please wait");
                                   return;
                                 }
-                                if(canBuy == false){
+                                if (canBuy == false) {
                                   showToast("some product is out of stock");
                                   return;
                                 }
@@ -483,67 +481,67 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             const SizedBox(
               height: 6,
             ),
-            if(Platform.isAndroid)
-            if(apps.isNotEmpty)
-            ...apps
-                .map((e) => Obx(() {
-                      if (refreshInt > 0) {}
-                      return ListTile(
-                        // dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        onTap: () {
-                          upiApp = e;
-                          refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                          cashOnDelivery.value = "";
-                        },
-                        visualDensity: VisualDensity.compact,
-                        title: Text(e.name.toString()),
-                        trailing: IgnorePointer(
-                          ignoring: true,
-                          child: Radio<UpiApp?>(
-                            value: e,
+            if (Platform.isAndroid)
+              if (apps.isNotEmpty)
+                ...apps
+                    .map((e) => Obx(() {
+                          if (refreshInt > 0) {}
+                          return ListTile(
+                            // dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            onTap: () {
+                              upiApp = e;
+                              refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                              cashOnDelivery.value = "";
+                            },
                             visualDensity: VisualDensity.compact,
-                            groupValue: upiApp,
-                            onChanged: (fa) {},
-                          ),
-                        ),
-                        leading: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.memory(e.icon),
-                        ),
-                      );
-                    }))
-                .toList()
-            else
-              const Center(
-                child: Text("No UPI installed"),
-              ),
+                            title: Text(e.name.toString()),
+                            trailing: IgnorePointer(
+                              ignoring: true,
+                              child: Radio<UpiApp?>(
+                                value: e,
+                                visualDensity: VisualDensity.compact,
+                                groupValue: upiApp,
+                                onChanged: (fa) {},
+                              ),
+                            ),
+                            leading: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.memory(e.icon),
+                            ),
+                          );
+                        }))
+                    .toList()
+              else
+                const Center(
+                  child: Text("No UPI installed"),
+                ),
             Obx(() => ListTile(
-              contentPadding: EdgeInsets.zero,
-              onTap: () {
-                upiApp = null;
-                refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                cashOnDelivery.value = "Cod";
-              },
-              visualDensity: VisualDensity.compact,
-              title: const Text("Cash On Delivery"),
-              trailing: IgnorePointer(
-                ignoring: true,
-                child: Radio<String?>(
-                  value: "Cod",
-                  visualDensity: VisualDensity.compact,
-                  groupValue: cashOnDelivery.value,
-                  onChanged: (fa) {
+                  contentPadding: EdgeInsets.zero,
+                  onTap: () {
+                    upiApp = null;
+                    refreshInt.value = DateTime.now().millisecondsSinceEpoch;
                     cashOnDelivery.value = "Cod";
                   },
-                ),
-              ),
-              leading: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.delivery_dining_rounded),
-                // child: Image.memory("e.icon"),
-              ),
-            ))
+                  visualDensity: VisualDensity.compact,
+                  title: const Text("Cash On Delivery"),
+                  trailing: IgnorePointer(
+                    ignoring: true,
+                    child: Radio<String?>(
+                      value: "Cod",
+                      visualDensity: VisualDensity.compact,
+                      groupValue: cashOnDelivery.value,
+                      onChanged: (fa) {
+                        cashOnDelivery.value = "Cod";
+                      },
+                    ),
+                  ),
+                  leading: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.delivery_dining_rounded),
+                    // child: Image.memory("e.icon"),
+                  ),
+                ))
           ],
         ),
       ),

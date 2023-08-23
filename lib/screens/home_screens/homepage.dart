@@ -42,149 +42,81 @@ class _HomePageState extends State<HomePageScreen> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          children: [
-            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: firestore.collection('banner').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('Error fetching products'),
-                  );
-                }
-
-                List<BannerModel> banner = snapshot.data!.docs.map((doc) {
-                  return BannerModel.fromMap(doc.id, doc.data());
-                }).toList();
-
-                return Column(
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                          viewportFraction: 1,
-                          autoPlay: true,
-                          onPageChanged: (value, _) {
-                            sliderIndex.value = value.toDouble();
-                          },
-                          autoPlayCurve: Curves.ease,
-                          height: height * .20),
-                      items: List.generate(
-                          banner.length,
-                          (index) => Container(
-                              width: width,
-                              margin: EdgeInsets.symmetric(horizontal: width * .01),
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(15),
-                                child: CachedNetworkImage(
-                                  imageUrl: banner[index].imageUrl,
-                                  errorWidget: (_, __, ___) => const SizedBox(),
-                                  placeholder: (_, __) => const SizedBox(),
-                                  fit: BoxFit.cover,
-                                ),
-                              ))),
-                    ),
-                    // SizedBox(
-                    //   height: height * .01,
-                    // ),
-                    // Center(
-                    //   child: DotsIndicator(
-                    //     dotsCount: banner.length,
-                    //     position: sliderIndex.value.toInt(),
-                    //     decorator: const DotsDecorator(
-                    //       color: Colors.black, // Inactive color
-                    //       activeColor: Colors.white,
-                    //       size: Size.square(12),
-                    //       activeSize: Size.square(12),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Column(
+        children: [
+          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: firestore.collection('banner').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            SizedBox(
-              height: 100,
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: firestore.collection('categories').snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+              }
 
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text('Error fetching products'),
-                    );
-                  }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Error fetching products'),
+                );
+              }
 
-                  List<Category> category = snapshot.data!.docs.map((doc) {
-                    return Category.fromMap(doc.id, doc.data());
-                  }).toList();
-                  return ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      // padEnds: false,
-                      // controller: PageController(viewportFraction: .2),
-                      itemCount: category.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Get.to(() => CategoryScreen(
-                                  keyId: category[index].name,
-                                ));
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.transparent, width: 2)),
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            constraints: BoxConstraints(
-                              maxWidth: context.getSize.width*.16
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CircleAvatar(
-                                  radius: 30, // Image radius
-                                  backgroundImage: NetworkImage(category[index].imageUrl),
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                Center(
-                                  child: Text(
-                                    category[index].name.capitalize!,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      });
-                },
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: firestore.collection('products').snapshots(),
+              List<BannerModel> banner = snapshot.data!.docs.map((doc) {
+                return BannerModel.fromMap(doc.id, doc.data());
+              }).toList();
+
+              return Column(
+                children: [
+                  CarouselSlider(
+                    options: CarouselOptions(
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        onPageChanged: (value, _) {
+                          sliderIndex.value = value.toDouble();
+                        },
+                        autoPlayCurve: Curves.ease,
+                        height: height * .20),
+                    items: List.generate(
+                        banner.length,
+                        (index) => Container(
+                            width: width,
+                            margin: EdgeInsets.symmetric(horizontal: width * .01),
+                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: CachedNetworkImage(
+                                imageUrl: banner[index].imageUrl,
+                                errorWidget: (_, __, ___) => const SizedBox(),
+                                placeholder: (_, __) => const SizedBox(),
+                                fit: BoxFit.cover,
+                              ),
+                            ))),
+                  ),
+                  // SizedBox(
+                  //   height: height * .01,
+                  // ),
+                  // Center(
+                  //   child: DotsIndicator(
+                  //     dotsCount: banner.length,
+                  //     position: sliderIndex.value.toInt(),
+                  //     decorator: const DotsDecorator(
+                  //       color: Colors.black, // Inactive color
+                  //       activeColor: Colors.white,
+                  //       size: Size.square(12),
+                  //       activeSize: Size.square(12),
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            height: 100,
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: firestore.collection('categories').snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -197,108 +129,173 @@ class _HomePageState extends State<HomePageScreen> {
                     child: Text('Error fetching products'),
                   );
                 }
-                List<Product> products = snapshot.data!.docs.map((doc) {
-                  return Product.fromMap(doc.id, doc.data());
-                }).toList();
 
-                return GridView.builder(
-                  itemCount: products.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                  ),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(() => ProductDetailsScreen(productId: products[index].id));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                List<Category> category = snapshot.data!.docs.map((doc) {
+                  return Category.fromMap(doc.id, doc.data());
+                }).toList();
+                return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    // padEnds: false,
+                    // controller: PageController(viewportFraction: .2),
+                    itemCount: category.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => CategoryScreen(
+                                keyId: category[index].name,
+                              ));
+                        },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                blurRadius: 4,
-                                color: Color(0x3600000F),
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.transparent, width: 2)),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          constraints: BoxConstraints(maxWidth: context.getSize.width * .16),
                           child: Column(
-                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        bottomLeft: Radius.circular(0),
-                                        bottomRight: Radius.circular(0),
-                                        topLeft: Radius.circular(8),
-                                        topRight: Radius.circular(8),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Image.network(
-                                          products[index].imageUrl,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              CircleAvatar(
+                                radius: 30, // Image radius
+                                backgroundImage: NetworkImage(category[index].imageUrl),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        products[index].name,
-                                        style: const TextStyle(fontSize: 17, color: Colors.black),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              const SizedBox(
+                                height: 7,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8, right: 8),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        '\₹${products[index].price.toStringAsFixed(2)}',
-                                style: const TextStyle(fontSize: 20, color: Colors.black
-                                      ),
-                                    ),
-                                    )
-                                  ],
+                              Center(
+                                child: Text(
+                                  category[index].name.capitalize!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
+                      );
+                    });
               },
             ),
-            const SizedBox(
-              height: 40,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            stream: firestore.collection('products').snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Error fetching products'),
+                );
+              }
+              List<Product> products = snapshot.data!.docs.map((doc) {
+                return Product.fromMap(doc.id, doc.data());
+              }).toList();
+
+              return GridView.builder(
+                itemCount: products.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                ),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(() => ProductDetailsScreen(productId: products[index].id));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: Color(0x3600000F),
+                              offset: Offset(0, 2),
+                            )
+                          ],
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Expanded(
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(0),
+                                      bottomRight: Radius.circular(0),
+                                      topLeft: Radius.circular(8),
+                                      topRight: Radius.circular(8),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Image.network(
+                                        products[index].imageUrl,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      products[index].name,
+                                      style: const TextStyle(fontSize: 17, color: Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      '\₹${products[index].price.toStringAsFixed(2)}',
+                                      style: const TextStyle(fontSize: 20, color: Colors.black),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          const SizedBox(
+            height: 40,
+          ),
+        ],
+      ),
     );
   }
 }

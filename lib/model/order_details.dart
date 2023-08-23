@@ -18,19 +18,19 @@ class ModelOrderDetails {
 
   ModelOrderDetails(
       {this.orderTimeInMilliSec,
-        this.shipping,
-        required this.orderId,
-        this.dispatch,
-        this.delivered,
-        this.totalAmount,
-        this.paymentMethod,
-        this.userId,
-        this.userDetails,
-        this.address,
-        this.subTotal,
-        this.productsList,
-        this.phoneNumber,
-        this.transactionId});
+      this.shipping,
+      required this.orderId,
+      this.dispatch,
+      this.delivered,
+      this.totalAmount,
+      this.paymentMethod,
+      this.userId,
+      this.userDetails,
+      this.address,
+      this.subTotal,
+      this.productsList,
+      this.phoneNumber,
+      this.transactionId});
 
   ModelOrderDetails.fromJson(Map<String, dynamic> json, givenOrderId) {
     orderId = givenOrderId;
@@ -41,12 +41,8 @@ class ModelOrderDetails {
     paymentMethod = json['payment_method'];
     totalAmount = json['total_amount'];
     userId = json['user_id'];
-    userDetails = json['user_details'] != null
-        ? UserDetails.fromJson(json['user_details'])
-        : null;
-    address = json['address'] != null
-        ? ModelAddress.fromJson(json['address'])
-        : null;
+    userDetails = json['user_details'] != null ? UserDetails.fromJson(json['user_details']) : null;
+    address = json['address'] != null ? ModelAddress.fromJson(json['address']) : null;
     subTotal = json['sub_total'];
     if (json['products_list'] != null) {
       productsList = <ProductsList>[];
@@ -73,8 +69,7 @@ class ModelOrderDetails {
     }
     data['sub_total'] = subTotal;
     if (productsList != null) {
-      data['products_list'] =
-          productsList!.map((v) => v.toJson()).toList();
+      data['products_list'] = productsList!.map((v) => v.toJson()).toList();
     }
     data['phone_number'] = phoneNumber;
     data['transactionId'] = transactionId;
@@ -116,9 +111,7 @@ class ProductsList {
 
   ProductsList.fromJson(Map<String, dynamic> json) {
     productId = json['product_id'];
-    productDetails = json['product_details'] != null
-        ? ProductDetails.fromJson(json['product_details'])
-        : null;
+    productDetails = json['product_details'] != null ? ProductDetails.fromJson(json['product_details']) : null;
     productQuantity = json['product_quantity'];
   }
 
@@ -140,8 +133,7 @@ class ProductDetails {
   dynamic description;
   dynamic category;
 
-  ProductDetails(
-      {this.price, this.imageUrl, this.name, this.description, this.category});
+  ProductDetails({this.price, this.imageUrl, this.name, this.description, this.category});
 
   ProductDetails.fromJson(Map<String, dynamic> json) {
     price = json['price'];

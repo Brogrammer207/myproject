@@ -13,7 +13,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class NewHelper {
-
   static OverlayEntry overlayLoader(context) {
     OverlayEntry loader = OverlayEntry(builder: (context) {
       final size = MediaQuery.of(context).size;
@@ -90,7 +89,7 @@ class NewHelper {
       throw Exception(e);
     }
   }
-  
+
   Future<List<File>?> multiImagePicker({int imageQuality = 80}) async {
     try {
       final item = await ImagePicker().pickMultiImage(imageQuality: imageQuality);
@@ -126,7 +125,7 @@ class NewHelper {
             onPressed: () {
               // pickImage(
               //     ImageSource.gallery);
-              NewHelper().addImagePicker(imageSource: ImageSource.gallery,imageQuality: 60).then((value) {
+              NewHelper().addImagePicker(imageSource: ImageSource.gallery, imageQuality: 60).then((value) {
                 if (value == null) return;
                 gotImage(value);
                 Get.back();
@@ -136,49 +135,51 @@ class NewHelper {
           CupertinoActionSheetAction(
             child: const Text('Camera'),
             onPressed: () {
-              NewHelper().addImagePicker(imageSource: ImageSource.camera,imageQuality: 60).then((value) {
+              NewHelper().addImagePicker(imageSource: ImageSource.camera, imageQuality: 60).then((value) {
                 if (value == null) return;
                 gotImage(value);
                 Get.back();
               });
             },
           ),
-          if(removeOption == true)
-          CupertinoActionSheetAction(
-            child: const Text('Remove'),
-            onPressed: () {
-              Get.back();
-              if(removeImage != null) {
-                removeImage(true);
-              }
-            },
-          ),
+          if (removeOption == true)
+            CupertinoActionSheetAction(
+              child: const Text('Remove'),
+              onPressed: () {
+                Get.back();
+                if (removeImage != null) {
+                  removeImage(true);
+                }
+              },
+            ),
         ],
       ),
     );
   }
-
 }
 
-extension ConvertToNum on String{
-  num? get convertToNum{
+extension ConvertToNum on String {
+  num? get convertToNum {
     return num.tryParse(this);
   }
-  num get toNum{
+
+  num get toNum {
     return num.tryParse(this) ?? 0;
   }
-  bool get isValidEmail{
-    Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+  bool get isValidEmail {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regex = RegExp(pattern.toString());
     return (regex.hasMatch(this)) ? false : true;
   }
 
-  String? validateEmpty(String gg){
-    return trim().isEmpty ? "$gg is required" :  null;
+  String? validateEmpty(String gg) {
+    return trim().isEmpty ? "$gg is required" : null;
   }
 
-  String get checkNullable{
-    if(this == "null") return"";
+  String get checkNullable {
+    if (this == "null") return "";
     return this;
   }
 }
@@ -197,34 +198,35 @@ extension ConvertToNum on String{
 //   }
 // }
 
-extension GetTotal on List<num>{
-  num get getTotal{
+extension GetTotal on List<num> {
+  num get getTotal {
     return sum;
   }
 }
 
-extension Spacing on num{
-  SizedBox get spaceX=> SizedBox(width: toDouble(),);
-  SizedBox get spaceY=> SizedBox(height: toDouble(),);
+extension Spacing on num {
+  SizedBox get spaceX => SizedBox(
+        width: toDouble(),
+      );
+  SizedBox get spaceY => SizedBox(
+        height: toDouble(),
+      );
 
-  Duration get inSecond{
+  Duration get inSecond {
     return Duration(seconds: toInt());
   }
 
-  Duration get inMilliSeconds{
+  Duration get inMilliSeconds {
     return Duration(milliseconds: toInt());
   }
-
 }
 
-extension GetContext on BuildContext{
-  Size get getSize=> MediaQuery.of(this).size;
+extension GetContext on BuildContext {
+  Size get getSize => MediaQuery.of(this).size;
 
-  void get navigate{
-    Scrollable.ensureVisible(this,
-        alignment: .25, duration: const Duration(milliseconds: 600));
+  void get navigate {
+    Scrollable.ensureVisible(this, alignment: .25, duration: const Duration(milliseconds: 600));
   }
-
 }
 
 // extension ValidateErrors on TextEditingController{
@@ -266,9 +268,9 @@ extension GetContext on BuildContext{
 //   }
 // }
 
-extension ConvertToDateon on Duration{
-  DateTime get fromTodayStart{
-    DateTime now =DateTime.now();
+extension ConvertToDateon on Duration {
+  DateTime get fromTodayStart {
+    DateTime now = DateTime.now();
     DateTime gg = DateTime(now.year, now.month, now.day);
     return gg.add(this);
   }
@@ -278,13 +280,11 @@ const audioType = [
   "mp3",
 ];
 
-extension ChangeFont on TextStyle{
-  TextStyle get changeFont{
+extension ChangeFont on TextStyle {
+  TextStyle get changeFont {
     return GoogleFonts.urbanist().merge(this);
   }
 }
-
-
 
 // showToast(message,{ToastGravity? gravity}) {
 //   Fluttertoast.cancel();

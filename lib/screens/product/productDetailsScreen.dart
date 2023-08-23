@@ -98,11 +98,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       width: Get.width,
                       child: ElevatedButton(
                           onPressed: () {
-                            if(!fireStoreService.userLoggedIn){
-                              Get.to(()=> const SignUpScreen());
+                            if (!fireStoreService.userLoggedIn) {
+                              Get.to(() => const SignUpScreen());
                               return;
                             }
-                            if(canBuy == false){
+                            if (canBuy == false) {
                               showToast("Product is out of stock");
                               return;
                             }

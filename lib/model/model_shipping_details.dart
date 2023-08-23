@@ -4,8 +4,7 @@ class ModelShippingAddress {
   String? shopName;
   String? upiId;
 
-  ModelShippingAddress(
-      {this.shippingAmount, this.minFreeShipping, this.shopName, this.upiId});
+  ModelShippingAddress({this.shippingAmount, this.minFreeShipping, this.shopName, this.upiId});
 
   ModelShippingAddress.fromJson(Map<String, dynamic> json) {
     shippingAmount = json['shipping_amount'];

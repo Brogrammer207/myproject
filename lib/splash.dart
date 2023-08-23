@@ -28,13 +28,15 @@ class _SplashScreenState extends State<SplashScreen> {
     User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       bool userExists = await FirebaseFireStoreService().checkUserProfile();
-      if(userExists == true) {
-        Get.offAll(()=> const BottomNavigationScreen());
+      if (userExists == true) {
+        Get.offAll(() => const BottomNavigationScreen());
       } else {
-        Get.offAll(const ProfileScreen(fromLogin: true,));
+        Get.offAll(const ProfileScreen(
+          fromLogin: true,
+        ));
       }
     } else {
-      Get.offAll(()=> const BottomNavigationScreen());
+      Get.offAll(() => const BottomNavigationScreen());
     }
   }
 

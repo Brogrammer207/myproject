@@ -99,10 +99,12 @@ class _OtpState extends State<Otp> {
                                   PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
                               await auth.signInWithCredential(credential);
                               bool userExists = await FirebaseFireStoreService().checkUserProfile();
-                              if(userExists == true) {
+                              if (userExists == true) {
                                 Get.offAll(const BottomNavigationScreen());
                               } else {
-                                Get.offAll(const ProfileScreen(fromLogin: true,));
+                                Get.offAll(const ProfileScreen(
+                                  fromLogin: true,
+                                ));
                               }
                             } catch (e) {
                               Fluttertoast.showToast(
