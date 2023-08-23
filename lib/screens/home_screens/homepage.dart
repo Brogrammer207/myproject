@@ -162,14 +162,13 @@ class _HomePageState extends State<HomePageScreen> {
                                   radius: 30, // Image radius
                                   backgroundImage: NetworkImage(category[index].imageUrl),
                                 ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
                                 Center(
                                   child: Text(
                                     category[index].name.capitalize!,
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
+                                    style: TextStyle(fontSize: 10),
+                                    maxLines: 2,
+                                    softWrap: true,
                                   ),
                                 ),
                               ],
