@@ -8,7 +8,7 @@ class ModelProfileData {
 
   ModelProfileData.fromJson(Map<String, dynamic> json) {
     address = json['address'];
-    profile = json['profile'];
+    profile = json['profile'] ?? "";
     name = json['name'];
     email = json['email'];
   }
