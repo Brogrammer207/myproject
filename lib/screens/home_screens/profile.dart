@@ -25,13 +25,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   updateProfile() {
     if (!formKey.currentState!.validate()) return;
-    if (widget.fromLogin == true && image.path.isEmpty) {
-      showToast("Please select profile image");
-      return;
-    }
+    // if (widget.fromLogin == true && image.path.isEmpty) {
+    //   showToast("Please select profile image");
+    //   return;
+    // }
     fireStoreService.updateProfile(
         address: address.text.trim(),
-        allowChange: imagePicked,
+        allowChange: image.path.isEmpty ? false : imagePicked,
         context: context,
         email: email.text.trim(),
         name: nameController.text.trim(),
