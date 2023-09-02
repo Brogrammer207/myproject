@@ -28,7 +28,7 @@ class FirebaseFireStoreService {
   static String productsCollection = "products";
   static String profileCollection = "profile_collection";
   static String addressCollection = "address_collection";
-  static String shippingCollection = "shipping_collection";
+  // static String shippingCollection = "shipping_collection";
   final FirebaseAuth auth = FirebaseAuth.instance;
   final storageRef = FirebaseStorage.instance.ref();
 
@@ -265,10 +265,13 @@ class FirebaseFireStoreService {
 
   Future<ModelShippingAddress?> getShippingDetails() async {
     try {
-      final response = await fireStore.collection(shippingCollection).doc("shipping").get();
-      if (response.exists == false) return null;
-      if (response.data() == null) return null;
-      final gg = ModelShippingAddress.fromJson(response.data()!);
+      final response = await fireStore.collection("shipping_collection").get();
+      // print("Got Model Shipping address....     ${response.exists}");
+      // print("Got Model Shipping address....     ${response.data()!}");
+      // if (response.exists == false) return null;
+      // if (response.data() == null) return null;
+      if(response.docs.isEmpty)return null;
+      final gg = ModelShippingAddress.fromJson(response.docs.first.data());
       return gg;
     } catch (e) {
       throw Exception(e);

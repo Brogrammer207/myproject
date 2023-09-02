@@ -71,6 +71,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getAvailableApps();
+      // FirebaseFirestore.instance.collection("shipping_collection").get().then((value) {
+        // print("Got Model Shipping address....     ${value.docs.first.data()}");
+        // print("Got Model Shipping address....     ${value.docs.first.id}");
+        // print("Got Model Shipping address....     ${value}");
+      // });
+      print("Got Model Shipping address....");
       fireStoreService.getShippingDetails().then((value) {
         modelShippingAddress = value;
         setState(() {});
