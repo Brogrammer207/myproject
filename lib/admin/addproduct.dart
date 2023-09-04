@@ -203,9 +203,9 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                       ),
                       buildTextField(
                           hintetxt: 'Enter Product Price',
-                          icon: const Icon(
-                            Icons.monetization_on_outlined,
-                            color: Colors.blue,
+                          icon: const Padding(
+                            padding: EdgeInsets.only(left: 20,top: 5),
+                            child: Text('₹',style: TextStyle(fontSize: 25),),
                           ),
                           controller: price,
                           keyboardType: TextInputType.number,

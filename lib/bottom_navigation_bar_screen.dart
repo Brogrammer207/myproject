@@ -40,8 +40,8 @@ class BottomNavigationScreen extends StatefulWidget {
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
-  Color color2 = const Color(0XFF96B1FD);
-  Color bgColor = const Color(0XFF1752FE);
+  Color color2 = Colors.white;
+  Color bgColor = Colors.red;
 
   int selectedIndex = 0;
 

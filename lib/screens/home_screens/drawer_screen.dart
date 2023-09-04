@@ -39,7 +39,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   height: 100,
                 ),
                 const Text(
-                  'Borawar Store',
+                  'Borawar',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

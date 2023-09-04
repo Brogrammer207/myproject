@@ -66,7 +66,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                'Price: \$${product.price.toStringAsFixed(2)}',
+                                'Price: \₹ ${product.price.toStringAsFixed(2)}',
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ),

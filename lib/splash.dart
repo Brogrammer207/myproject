@@ -56,38 +56,38 @@ class _SplashScreenState extends State<SplashScreen> {
           Center(
             child: Image.asset(
               'assets/images/borawarlogo.png',
-              width: 240,
+              width: 300,
             ),
           ),
           const SizedBox(
             height: 18,
           ),
-          const Center(
-            child: Text(
-              "Let's get started",
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Center(
-            child: Text(
-              "Never a better time than now to start.",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black38,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          const SizedBox(
-            height: 38,
-          ),
+          // const Center(
+          //   child: Text(
+          //     "Let's get started",
+          //     style: TextStyle(
+          //       fontSize: 26,
+          //       fontWeight: FontWeight.bold,
+          //     ),
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // const Center(
+          //   child: Text(
+          //     "Never a better time than now to start.",
+          //     style: TextStyle(
+          //       fontSize: 20,
+          //       fontWeight: FontWeight.bold,
+          //       color: Colors.black38,
+          //     ),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 38,
+          // ),
         ],
       ),
     );
