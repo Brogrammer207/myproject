@@ -71,6 +71,12 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getAvailableApps();
+      // FirebaseFirestore.instance.collection("shipping_collection").get().then((value) {
+      // print("Got Model Shipping address....     ${value.docs.first.data()}");
+      // print("Got Model Shipping address....     ${value.docs.first.id}");
+      // print("Got Model Shipping address....     ${value}");
+      // });
+      print("Got Model Shipping address....");
       fireStoreService.getShippingDetails().then((value) {
         modelShippingAddress = value;
         setState(() {});
@@ -81,7 +87,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   ///Upi Payment
 
   getAvailableApps() {
-    if(Platform.isAndroid) {
+    if (Platform.isAndroid) {
       _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
         apps = value;
         if (kDebugMode) {
@@ -120,11 +126,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       showToast("Select Available Payment Methods");
       return;
     }
-    if(upiApp != null) {
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
+    if (upiApp != null) {
+      final refId = DateTime.now().microsecondsSinceEpoch.toString();
       initiateTransaction(upiApp!, refId, total).then((value) {
         if (value.status.toString() == "success" || true) {
           // value.transactionId ?? refId;
@@ -138,11 +141,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
         }
       });
     }
-    if(cashOnDelivery.value == "Cod"){
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
+    if (cashOnDelivery.value == "Cod") {
+      final refId = DateTime.now().microsecondsSinceEpoch.toString();
       fireStoreService.checkOutTransaction(
           shipping: shipping,
           total: total.toString(),
@@ -168,232 +168,236 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       ),
       body: modelShippingAddress != null && upiLoaded
           ? SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-              child: Column(
-                children: [
-                  addressCard(address: widget.address, ordersDetails: false),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                    stream: fireStoreService.getCartList(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<ModelCartList> cartList = [];
-                        if (snapshot.data == null) return const SizedBox();
-                        cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+        child: Column(
+          children: [
+            addressCard(address: widget.address, ordersDetails: false),
+            const SizedBox(
+              height: 20,
+            ),
+            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: fireStoreService.getCartList(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<ModelCartList> cartList = [];
+                  if (snapshot.data == null) return const SizedBox();
+                  cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
 
-                        double subTotalAmount = cartList
-                            .map((e) =>
-                                e.productQuantity!.toString().toNum *
-                                (double.tryParse(e.productDetails!.price.toString()) ?? 0))
-                            .toList()
-                            .sum
-                            .toDouble();
-                        bool freeShipping = subTotalAmount > modelShippingAddress!.minFreeShipping.toString().toNum;
+                  double subTotalAmount = cartList
+                      .map((e) =>
+                  e.productQuantity!.toString().toNum *
+                      (double.tryParse(e.productDetails!.price.toString()) ?? 0))
+                      .toList()
+                      .sum
+                      .toDouble();
+                  bool freeShipping = subTotalAmount > modelShippingAddress!.minFreeShipping.toString().toNum;
 
-                        double totalAmount =
-                            freeShipping ? subTotalAmount : subTotalAmount + modelShippingAddress!.shippingAmount!;
+                  double totalAmount =
+                  freeShipping ? subTotalAmount : subTotalAmount + modelShippingAddress!.shippingAmount!;
 
-                        bool canBuy = true;
+                  bool canBuy = true;
 
-                        return Column(
-                          children: [
-                            ListView.builder(
-                              itemCount: cartList.length,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                final item = cartList[index];
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0).copyWith(bottom: 12),
-                                  child: Row(
+                  return Column(
+                    children: [
+                      ListView.builder(
+                        itemCount: cartList.length,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final item = cartList[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0).copyWith(bottom: 12),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width: 60,
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(boxShadow: const [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x3600000F),
+                                      offset: Offset(0, 2),
+                                    )
+                                  ], borderRadius: BorderRadius.circular(21), color: Colors.white),
+                                  child: Image.network(
+                                    item.productDetails!.imageUrl.toString(),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Container(
-                                        height: 60,
-                                        width: 60,
-                                        padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(boxShadow: const [
-                                          BoxShadow(
-                                            blurRadius: 4,
-                                            color: Color(0x3600000F),
-                                            offset: Offset(0, 2),
-                                          )
-                                        ], borderRadius: BorderRadius.circular(21), color: Colors.white),
-                                        child: Image.network(
-                                          item.productDetails!.imageUrl.toString(),
-                                          fit: BoxFit.contain,
-                                        ),
+                                      Text(
+                                        item.productDetails!.name.toString(),
+                                        style: const TextStyle(
+                                            fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
                                       ),
                                       const SizedBox(
-                                        width: 20,
+                                        height: 4,
                                       ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              item.productDetails!.name.toString(),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "${item.productQuantity!.toString()} x ${item.productDetails!.price.toString()}",
                                               style: const TextStyle(
-                                                  fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+                                                fontSize: 15,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                            const SizedBox(
-                                              height: 4,
+                                          ),
+                                          Text(
+                                            "${item.productQuantity!.toString().toNum * item.productDetails!.price.toString().toNum} Rs",
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black,
                                             ),
-                                            Row(
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
-                                                Expanded(
-                                                  child: Text(
-                                                    "${item.productQuantity!.toString()} x ${item.productDetails!.price.toString()}",
-                                                    style: const TextStyle(
-                                                      fontSize: 15,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "${item.productQuantity!.toString().toNum * item.productDetails!.price.toString().toNum} Rs",
-                                                  style: const TextStyle(
-                                                    fontSize: 15,
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          int updateNew = item.productQuantity! - 1;
-                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
-                                                        },
-                                                        child: Container(
-                                                          width: 28,
-                                                          height: 28,
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.black, // border color
-                                                            shape: BoxShape.circle,
-                                                          ),
-                                                          child: const Center(
-                                                              child: Text(
-                                                            '--',
-                                                            style: TextStyle(color: Colors.white),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Center(
-                                                          child: Text(
-                                                        item.productQuantity.toString(),
-                                                        style: const TextStyle(
-                                                            color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
-                                                      )),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          int updateNew = item.productQuantity! + 1;
-                                                          updateValue(productId: item.productId!, productQuantity: updateNew);
-                                                        },
-                                                        child: Container(
-                                                          width: 28,
-                                                          height: 28,
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.black, // border color
-                                                            shape: BoxShape.circle,
-                                                          ),
-                                                          child: const Center(
-                                                              child: Text(
-                                                            '+',
-                                                            style: TextStyle(color: Colors.white),
-                                                          )),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                CheckInStock(
-                                                  productID: item.productId,
-                                                  inStock: (bool value){
-                                                    item.inStock = value;
-                                                    canBuy = value;
-                                                    if (kDebugMode) {
-                                                      print("Value updated......    ${cartList.map((e) => e.inStock)}");
-                                                    }
-                                                    // print("Value updated......    $value");
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    int updateNew = item.productQuantity! - 1;
+                                                    updateValue(
+                                                        productId: item.productId!, productQuantity: updateNew);
                                                   },
+                                                  child: Container(
+                                                    width: 28,
+                                                    height: 28,
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.black, // border color
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: const Center(
+                                                        child: Text(
+                                                          '--',
+                                                          style: TextStyle(color: Colors.white),
+                                                        )),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Center(
+                                                    child: Text(
+                                                      item.productQuantity.toString(),
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.w500),
+                                                    )),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    int updateNew = item.productQuantity! + 1;
+                                                    updateValue(
+                                                        productId: item.productId!, productQuantity: updateNew);
+                                                  },
+                                                  child: Container(
+                                                    width: 28,
+                                                    height: 28,
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.black, // border color
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: const Center(
+                                                        child: Text(
+                                                          '+',
+                                                          style: TextStyle(color: Colors.white),
+                                                        )),
+                                                  ),
                                                 ),
                                               ],
-                                            )
-                                          ],
-                                        ),
+                                            ),
+                                          ),
+                                          CheckInStock(
+                                            productID: item.productId,
+                                            inStock: (bool value) {
+                                              item.inStock = value;
+                                              canBuy = value;
+                                              if (kDebugMode) {
+                                                print("Value updated......    ${cartList.map((e) => e.inStock)}");
+                                              }
+                                              // print("Value updated......    $value");
+                                            },
+                                          ),
+                                        ],
                                       )
                                     ],
                                   ),
-                                );
-                              },
+                                )
+                              ],
                             ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            paymentMethods(),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            paymentAmounts(freeShipping, subTotalAmount, totalAmount),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if(cartList.map((e) => e.inStock).toList().contains(null)){
-                                  showToast("Please wait");
-                                  return;
-                                }
-                                if(canBuy == false){
-                                  showToast("some product is out of stock");
-                                  return;
-                                }
-                                addPaymentUPI(
-                                  totalAmount,
-                                  freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
-                                );
-                                // Get.to(const OrdersScreen());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              child: const Text(
-                                'CheckOut',
-                                style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                          ],
-                        );
-                      }
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      paymentMethods(),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      paymentAmounts(freeShipping, subTotalAmount, totalAmount),
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (cartList.map((e) => e.inStock).toList().contains(null)) {
+                            showToast("Please wait");
+                            return;
+                          }
+                          if (canBuy == false) {
+                            showToast("some product is out of stock");
+                            return;
+                          }
+                          addPaymentUPI(
+                            totalAmount,
+                            freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
+                          );
+                          // Get.to(const OrdersScreen());
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.blue,
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                        child: const Text(
+                          'CheckOut',
+                          style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+          ],
+        ),
+      )
           : const LoadingAnimation(),
     );
   }
@@ -416,9 +420,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               children: [
                 const Expanded(
                     child: Text(
-                  "Shipping:",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                )),
+                      "Shipping:",
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    )),
                 Text(
                   freeShipping ? "Free Shipping!" : "${modelShippingAddress!.shippingAmount} Rs",
                   style: TextStyle(
@@ -435,9 +439,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               children: [
                 const Expanded(
                     child: Text(
-                  "Subtotal:",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                )),
+                      "Subtotal:",
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                    )),
                 Text(
                   "${subTotalAmount.toStringAsFixed(2)} Rs",
                   style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.red),
@@ -451,9 +455,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               children: [
                 const Expanded(
                     child: Text(
-                  "Total:",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                )),
+                      "Total:",
+                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    )),
                 Text(
                   "${totalAmount.toStringAsFixed(2)} Rs",
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.red),
@@ -483,41 +487,41 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             const SizedBox(
               height: 6,
             ),
-            if(Platform.isAndroid)
-            if(apps.isNotEmpty)
-            ...apps
-                .map((e) => Obx(() {
-                      if (refreshInt > 0) {}
-                      return ListTile(
-                        // dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        onTap: () {
-                          upiApp = e;
-                          refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                          cashOnDelivery.value = "";
-                        },
+            if (Platform.isAndroid)
+              if (apps.isNotEmpty)
+                ...apps
+                    .map((e) => Obx(() {
+                  if (refreshInt > 0) {}
+                  return ListTile(
+                    // dense: true,
+                    contentPadding: EdgeInsets.zero,
+                    onTap: () {
+                      upiApp = e;
+                      refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                      cashOnDelivery.value = "";
+                    },
+                    visualDensity: VisualDensity.compact,
+                    title: Text(e.name.toString()),
+                    trailing: IgnorePointer(
+                      ignoring: true,
+                      child: Radio<UpiApp?>(
+                        value: e,
                         visualDensity: VisualDensity.compact,
-                        title: Text(e.name.toString()),
-                        trailing: IgnorePointer(
-                          ignoring: true,
-                          child: Radio<UpiApp?>(
-                            value: e,
-                            visualDensity: VisualDensity.compact,
-                            groupValue: upiApp,
-                            onChanged: (fa) {},
-                          ),
-                        ),
-                        leading: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.memory(e.icon),
-                        ),
-                      );
-                    }))
-                .toList()
-            else
-              const Center(
-                child: Text("No UPI installed"),
-              ),
+                        groupValue: upiApp,
+                        onChanged: (fa) {},
+                      ),
+                    ),
+                    leading: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.memory(e.icon),
+                    ),
+                  );
+                }))
+                    .toList()
+              else
+                const Center(
+                  child: Text("No UPI installed"),
+                ),
             Obx(() => ListTile(
               contentPadding: EdgeInsets.zero,
               onTap: () {
@@ -568,30 +572,30 @@ Card addressCard({
                 .toJson()
                 .entries
                 .map((e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                              flex: 5,
-                              child: Text(
-                                "${e.key.capitalize!} :",
-                                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
-                              )),
-                          Expanded(
-                              flex: 12,
-                              child: Text(
-                                e.value.toString().capitalize!,
-                                style: GoogleFonts.urbanist(
-                                  fontSize: 16,
-                                  height: 1.2,
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              )),
-                        ],
-                      ),
-                    ))
+              padding: const EdgeInsets.only(bottom: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      flex: 5,
+                      child: Text(
+                        "${e.key.capitalize!} :",
+                        style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                      )),
+                  Expanded(
+                      flex: 12,
+                      child: Text(
+                        e.value.toString().capitalize!,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          height: 1.2,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )),
+                ],
+              ),
+            ))
                 .toList(),
           ),
           if (!ordersDetails)
