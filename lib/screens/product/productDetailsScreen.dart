@@ -10,6 +10,7 @@ import 'package:myproject/model/model_product.dart';
 import 'package:myproject/screens/auth/signup.dart';
 
 import '../../firebase_services/firestore_service.dart';
+import '../home_screens/cart_screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final String productId;
@@ -91,26 +92,53 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 60,
-                      width: Get.width,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if (!fireStoreService.userLoggedIn) {
-                              Get.to(() => const SignUpScreen());
-                              return;
-                            }
-                            if (canBuy == false) {
-                              showToast("Product is out of stock");
-                              return;
-                            }
-                            fireStoreService.addToCart(
-                                productId: product.id.trim().toString(), productData: productData);
-                          },
-                          child: const Text("Add to cart")),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 50,
+                          //width: Get.width,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                if (!fireStoreService.userLoggedIn) {
+                                  Get.to(() => const SignUpScreen());
+                                  return;
+                                }
+                                if (canBuy == false) {
+                                  showToast("Product is out of stock");
+                                  return;
+                                }
+                                fireStoreService.addToCart(
+                                    productId: product.id.trim().toString(), productData: productData);
+                              },
+                              child: const Text("Add to cart")),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 50,
+                          //width: Get.width,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                if (!fireStoreService.userLoggedIn) {
+                                  Get.to(() => const SignUpScreen());
+                                  return;
+                                }
+                                if (canBuy == false) {
+                                  showToast("Product is out of stock");
+                                  return;
+                                }
+                                fireStoreService.addToCart(
+                                    productId: product.id.trim().toString(), productData: productData);
+                                Get.to(() => const CartScreen());
+                              },
+                              child: const Text("Buy Now")),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),

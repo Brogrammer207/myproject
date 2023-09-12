@@ -46,7 +46,8 @@ class _AddProductAdminState extends State<AddProductAdmin> {
       fireStoreService
           .updateProduct(
               category: category.value,
-              deletePrevious: widget.product != null ? widget.product!.imageUrl : "",
+              deletePrevious:
+                  widget.product != null ? widget.product!.imageUrl : "",
               description: description.text.trim(),
               price: price.text.trim(),
               allowChange: imagePicked,
@@ -54,7 +55,9 @@ class _AddProductAdminState extends State<AddProductAdmin> {
               inStock: inStock,
               name: nameController.text.trim(),
               profileImage: image,
-              productId: widget.product != null ? widget.product!.id : DateTime.now().millisecondsSinceEpoch.toString(),
+              productId: widget.product != null
+                  ? widget.product!.id
+                  : DateTime.now().millisecondsSinceEpoch.toString(),
               updated: (bool value) {
                 Get.back();
                 updating = false;
@@ -134,7 +137,8 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                 width: 130,
                                 height: 130,
                                 decoration: BoxDecoration(
-                                  border: Border.all(width: 4, color: Colors.white),
+                                  border:
+                                      Border.all(width: 4, color: Colors.white),
                                   boxShadow: [
                                     BoxShadow(
                                       spreadRadius: 2,
@@ -148,7 +152,8 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                   borderRadius: BorderRadius.circular(10000),
                                   child: Image.file(image,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) => Image.network(
+                                      errorBuilder: (_, __, ___) =>
+                                          Image.network(
                                             image.path,
                                             fit: BoxFit.cover,
                                             errorBuilder: (_, __, ___) => Icon(
@@ -204,8 +209,11 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                       buildTextField(
                           hintetxt: 'Enter Product Price',
                           icon: const Padding(
-                            padding: EdgeInsets.only(left: 20,top: 5),
-                            child: Text('₹',style: TextStyle(fontSize: 25),),
+                            padding: EdgeInsets.only(left: 20, top: 5),
+                            child: Text(
+                              '₹',
+                              style: TextStyle(fontSize: 25),
+                            ),
                           ),
                           controller: price,
                           keyboardType: TextInputType.number,
@@ -228,20 +236,27 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                           children: [
                             Text(
                               "Categories",
-                              style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
+                              style: GoogleFonts.urbanist(
+                                  fontWeight: FontWeight.w600, fontSize: 13.2),
                             ),
                             const SizedBox(
                               height: 5,
                             ),
                             StreamBuilder(
                               stream: fireStoreService.getCategories(),
-                              builder:
-                                  (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<
+                                          QuerySnapshot<Map<String, dynamic>>>
+                                      snapshot) {
                                 if (snapshot.hasData) {
-                                  if (snapshot.data == null) return const LoadingAnimation();
+                                  if (snapshot.data == null)
+                                    return const LoadingAnimation();
                                   // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
-                                  List<Category> catoriesList =
-                                      snapshot.data!.docs.map((e) => Category.fromMap(e.id, e.data())).toList();
+                                  List<Category> catoriesList = snapshot
+                                      .data!.docs
+                                      .map((e) =>
+                                          Category.fromMap(e.id, e.data()))
+                                      .toList();
 
                                   if (assigneInitial == false) {
                                     assigneInitial = true;
@@ -250,7 +265,8 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                         .toList()
                                         .contains(category.value)) {
                                       if (catoriesList.isNotEmpty) {
-                                        category.value = catoriesList.first.name.toLowerCase();
+                                        category.value = catoriesList.first.name
+                                            .toLowerCase();
                                       }
                                     }
                                   }
@@ -259,10 +275,13 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                     spacing: 12,
                                     children: catoriesList
                                         .map((e) => Obx(() => FilterChip(
-                                            selected: category.value == e.name.toString().toLowerCase(),
+                                            selected: category.value ==
+                                                e.name.toString().toLowerCase(),
                                             label: Text(e.name.capitalize!),
                                             onSelected: (gg) {
-                                              category.value = e.name.toString().toLowerCase();
+                                              category.value = e.name
+                                                  .toString()
+                                                  .toLowerCase();
                                             })))
                                         .toList(),
                                   );
@@ -311,10 +330,14 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                         style: ElevatedButton.styleFrom(
                             primary: Colors.blue,
                             padding: const EdgeInsets.symmetric(horizontal: 50),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20))),
                         child: const Text(
                           'Update',
-                          style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 15,
+                              letterSpacing: 2,
+                              color: Colors.white),
                         ),
                       ),
                     ],
