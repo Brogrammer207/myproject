@@ -243,6 +243,7 @@ class _HomePageState extends State<HomePageScreen> {
                                   child: Image.network(
                                     products[index].imageUrl,
                                     fit: BoxFit.fill,
+                                    width: Get.width,
                                   ),
                                 ),
                               ),
