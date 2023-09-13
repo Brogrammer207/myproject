@@ -92,54 +92,50 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ],
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 50,
-                          //width: Get.width,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                if (!fireStoreService.userLoggedIn) {
-                                  Get.to(() => const SignUpScreen());
-                                  return;
-                                }
-                                if (canBuy == false) {
-                                  showToast("Product is out of stock");
-                                  return;
-                                }
-                                fireStoreService.addToCart(
-                                    productId: product.id.trim().toString(), productData: productData);
-                              },
-                              child: const Text("Add to cart")),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 50,
-                          //width: Get.width,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                if (!fireStoreService.userLoggedIn) {
-                                  Get.to(() => const SignUpScreen());
-                                  return;
-                                }
-                                if (canBuy == false) {
-                                  showToast("Product is out of stock");
-                                  return;
-                                }
-                                fireStoreService.addToCart(
-                                    productId: product.id.trim().toString(), productData: productData);
-                                Get.to(() => const CartScreen());
-                              },
-                              child: const Text("Buy Now")),
-                        ),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 50,
+                      width: Get.width,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            if (!fireStoreService.userLoggedIn) {
+                              Get.to(() => const SignUpScreen());
+                              return;
+                            }
+                            if (canBuy == false) {
+                              showToast("Product is out of stock");
+                              return;
+                            }
+                            fireStoreService.addToCart(
+                                productId: product.id.trim().toString(), productData: productData);
+                          },
+                          child: const Text("Add to cart")),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 50,
+                      width: Get.width,
+                      child: ElevatedButton(
+                          onPressed: () {
+                            if (!fireStoreService.userLoggedIn) {
+                              Get.to(() => const SignUpScreen());
+                              return;
+                            }
+                            if (canBuy == false) {
+                              showToast("Product is out of stock");
+                              return;
+                            }
+                            fireStoreService.addToCart(
+                                productId: product.id.trim().toString(), productData: productData);
+                            Get.to(() => const CartScreen());
+                          },
+                          child: const Text("Buy Now")),
+                    ),
                   )
+
                 ],
               ),
             );
@@ -149,6 +145,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           );
         },
       ),
+
     );
   }
 }
