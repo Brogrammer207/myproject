@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:myproject/helper/new_helper.dart';
@@ -45,11 +47,13 @@ class _OrderDetailsState extends State<OrderDetails> {
             SliverList.builder(
                 itemCount: widget.modelOrderDetails.productsList!.length,
                 itemBuilder: (context, index) {
-                  final productDetails = widget.modelOrderDetails.productsList![index];
+                  final productDetails =
+                      widget.modelOrderDetails.productsList![index];
                   return Card(
                     elevation: 1,
                     margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                     child: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: IntrinsicHeight(
@@ -60,13 +64,16 @@ class _OrderDetailsState extends State<OrderDetails> {
                               height: 80,
                               width: 80,
                               padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(boxShadow: const [
-                                BoxShadow(
-                                  blurRadius: 4,
-                                  color: Color(0x3600000F),
-                                  offset: Offset(0, 2),
-                                )
-                              ], borderRadius: BorderRadius.circular(21), color: Colors.white),
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      blurRadius: 4,
+                                      color: Color(0x3600000F),
+                                      offset: Offset(0, 2),
+                                    )
+                                  ],
+                                  borderRadius: BorderRadius.circular(21),
+                                  color: Colors.white),
                               child: Image.network(
                                 productDetails.productDetails!.imageUrl!,
                                 fit: BoxFit.contain,
@@ -80,9 +87,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    productDetails.productDetails!.name.toString(),
-                                    style:
-                                        const TextStyle(fontSize: 15, color: Colors.teal, fontWeight: FontWeight.bold),
+                                    productDetails.productDetails!.name
+                                        .toString(),
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.teal,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(
                                     height: 2,
@@ -124,7 +134,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(top: 10),
-                child: addressCard(address: widget.modelOrderDetails.address!, ordersDetails: true),
+                child: addressCard(
+                    address: widget.modelOrderDetails.address!,
+                    ordersDetails: true),
               ),
             ),
             SliverToBoxAdapter(
@@ -143,11 +155,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                             const Expanded(
                                 child: Text(
                               "Payment Method:",
-                              style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16),
                             )),
                             Text(
                               widget.modelOrderDetails.paymentMethod,
-                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
@@ -157,14 +173,22 @@ class _OrderDetailsState extends State<OrderDetails> {
                       ),
                       Row(
                         children: [
-                          const Expanded(
-                              child: Text(
+                          const Text(
                             "Transaction ID:",
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
-                          )),
-                          Text(
-                            widget.modelOrderDetails.transactionId,
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.black),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Expanded(
+                            child: Text(
+                              widget.modelOrderDetails.transactionId,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.black),
+                            ),
                           ),
                         ],
                       ),
@@ -176,7 +200,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                           const Expanded(
                               child: Text(
                             "Shipping:",
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
                           )),
                           Text(
                             widget.modelOrderDetails.shipping.toString() == "0"
@@ -185,7 +210,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 15,
-                                color: widget.modelOrderDetails.shipping.toString() == "0"
+                                color: widget.modelOrderDetails.shipping
+                                            .toString() ==
+                                        "0"
                                     ? Colors.greenAccent.shade700
                                     : Colors.red),
                           ),
@@ -199,11 +226,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                           const Expanded(
                               child: Text(
                             "Subtotal:",
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
                           )),
                           Text(
                             "${(widget.modelOrderDetails.totalAmount.toString().toNum - widget.modelOrderDetails.shipping.toString().toNum).toStringAsFixed(2)} Rs",
-                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.red),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                                color: Colors.red),
                           ),
                         ],
                       ),
@@ -215,11 +246,15 @@ class _OrderDetailsState extends State<OrderDetails> {
                           const Expanded(
                               child: Text(
                             "Total:",
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 16),
                           )),
                           Text(
                             "${widget.modelOrderDetails.totalAmount.toString()} Rs",
-                            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.red),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Colors.red),
                           ),
                         ],
                       ),
@@ -232,100 +267,180 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Card(
-                margin: const EdgeInsets.only(top: 20),
-                child: Padding(
-                  padding: const EdgeInsets.all(14.0),
-                  child: StreamBuilder<Object>(
-                      stream: null,
-                      builder: (context, snapshot) {
-                        return Column(
-                          children: [
-                            Row(
+              child: Column(
+                children: [
+                  Card(
+                    margin: const EdgeInsets.only(top: 20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: StreamBuilder<Object>(
+                          stream: null,
+                          builder: (context, snapshot) {
+                            return Column(
                               children: [
-                                Expanded(
-                                    child: Text(
-                                  "Dispatch",
-                                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16),
-                                )),
-                                widget.admin == true
-                                    ? CupertinoSwitch(
-                                        value: dispatch,
-                                        onChanged: (value) {
-                                          fireStoreService.updateOrdersDetails(
-                                              delivered: value == false ? false : delivered,
-                                              dispatch: value,
-                                              orderID: widget.modelOrderDetails.orderId,
-                                              updated: (bool gg) {
-                                                dispatch = value;
-                                                if (value == false) {
-                                                  delivered = false;
-                                                }
-                                                setState(() {});
-                                              });
-                                        })
-                                    : dispatch
-                                        ? Text(
-                                            "Done",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.greenAccent.shade700),
-                                          )
-                                        : Text(
-                                            "Pending",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.orangeAccent.shade700),
-                                          ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      "Dispatch",
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    )),
+                                    widget.admin == true
+                                        ? CupertinoSwitch(
+                                            value: dispatch,
+                                            onChanged: (value) {
+                                              fireStoreService
+                                                  .updateOrdersDetails(
+                                                      delivered: value == false
+                                                          ? false
+                                                          : delivered,
+                                                      dispatch: value,
+                                                      orderID: widget
+                                                          .modelOrderDetails
+                                                          .orderId,
+                                                      updated: (bool gg) {
+                                                        dispatch = value;
+                                                        if (value == false) {
+                                                          delivered = false;
+                                                        }
+                                                        setState(() {});
+                                                      });
+                                            })
+                                        : dispatch
+                                            ? Text(
+                                                "Done",
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .greenAccent.shade700),
+                                              )
+                                            : Text(
+                                                "Pending",
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .orangeAccent.shade700),
+                                              ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                        child: Text(
+                                      "Delivered",
+                                      style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16),
+                                    )),
+                                    widget.admin == true
+                                        ? CupertinoSwitch(
+                                            value: delivered,
+                                            onChanged: (value) {
+                                              fireStoreService
+                                                  .updateOrdersDetails(
+                                                      delivered: value,
+                                                      dispatch: true,
+                                                      orderID: widget
+                                                          .modelOrderDetails
+                                                          .orderId,
+                                                      updated: (bool gg) {
+                                                        delivered = value;
+                                                        dispatch = true;
+                                                        setState(() {});
+                                                      });
+                                            })
+                                        : delivered
+                                            ? Text(
+                                                "Done",
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .greenAccent.shade700),
+                                              )
+                                            : Text(
+                                                "Pending",
+                                                style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors
+                                                        .orangeAccent.shade700),
+                                              ),
+                                  ],
+                                ),
                               ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                    child: Text(
-                                  "Delivered",
-                                  style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 16),
-                                )),
-                                widget.admin == true
-                                    ? CupertinoSwitch(
-                                        value: delivered,
-                                        onChanged: (value) {
-                                          fireStoreService.updateOrdersDetails(
-                                              delivered: value,
-                                              dispatch: true,
-                                              orderID: widget.modelOrderDetails.orderId,
-                                              updated: (bool gg) {
-                                                delivered = value;
-                                                dispatch = true;
-                                                setState(() {});
-                                              });
-                                        })
-                                    : delivered
-                                        ? Text(
-                                            "Done",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.greenAccent.shade700),
-                                          )
-                                        : Text(
-                                            "Pending",
-                                            style: GoogleFonts.poppins(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.orangeAccent.shade700),
-                                          ),
-                              ],
-                            ),
-                          ],
-                        );
-                      }),
-                ),
+                            );
+                          }),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Order Cancelling'),
+                            content: const Text(
+                                'Are you sure you want to cancel this order'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Yes'),
+                                onPressed: () async {
+                                  try {
+                                    await FirebaseFirestore.instance.collection('cancellation_orders').add(
+                                        {'orderId': widget.modelOrderDetails.orderId,'transactionId': widget.modelOrderDetails.transactionId,
+                                          'paymentMethod': widget.modelOrderDetails.paymentMethod,'phoneNumber': widget.modelOrderDetails.phoneNumber,
+                                          'totalAmount': widget.modelOrderDetails.totalAmount,});
+                                    await FirebaseFirestore.instance
+                                        .collection('orders')
+                                        .doc(widget.modelOrderDetails.orderId)
+                                        .delete();
+                                    Get.back();
+                                    Get.back();
+
+                                    print('Order canceled successfully');
+                                  } catch (e) {
+                                    print('Error canceling order: $e');
+                                  }
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('No'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                        height: 50,
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(11)),
+                        child: const Center(
+                            child: Text(
+                          'Cancel Order',
+                          style: TextStyle(color: Colors.white),
+                        ))),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
               ),
             ),
           ],
