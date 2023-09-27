@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,19 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   bool dispatch = false;
   bool delivered = false;
+  bool isOrderCancelable = false;
 
+  void cancelOrder() async {
+      await FirebaseFirestore.instance
+          .collection('orders')
+          .doc(widget.modelOrderDetails.orderId)
+          .update({'isCancelled': true});
+
+      setState(() {
+        isOrderCancelable = true;
+      });
+
+  }
   @override
   void initState() {
     super.initState();
@@ -384,47 +397,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     height: 20,
                   ),
                   InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Order Cancelling'),
-                            content: const Text(
-                                'Are you sure you want to cancel this order'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Yes'),
-                                onPressed: () async {
-                                  try {
-                                    await FirebaseFirestore.instance.collection('cancellation_orders').add(
-                                        {'orderId': widget.modelOrderDetails.orderId,'transactionId': widget.modelOrderDetails.transactionId,
-                                          'paymentMethod': widget.modelOrderDetails.paymentMethod,'phoneNumber': widget.modelOrderDetails.phoneNumber,
-                                          'totalAmount': widget.modelOrderDetails.totalAmount,});
-                                    await FirebaseFirestore.instance
-                                        .collection('orders')
-                                        .doc(widget.modelOrderDetails.orderId)
-                                        .delete();
-                                    Get.back();
-                                    Get.back();
-
-                                    print('Order canceled successfully');
-                                  } catch (e) {
-                                    print('Error canceling order: $e');
-                                  }
-                                },
-                              ),
-                              TextButton(
-                                child: const Text('No'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
+                    onTap: isOrderCancelable ? null : cancelOrder,
                     child: Container(
                         height: 50,
                         width: Get.width,
