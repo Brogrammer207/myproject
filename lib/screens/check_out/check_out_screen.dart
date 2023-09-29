@@ -129,7 +129,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     if (upiApp != null) {
       final refId = DateTime.now().microsecondsSinceEpoch.toString();
       initiateTransaction(upiApp!, refId, total).then((value) {
-        if (value.status.toString() == "success" || true) {
+        if (value.status.toString() == "success") {
           // value.transactionId ?? refId;
           fireStoreService.checkOutTransaction(
               shipping: shipping,
@@ -138,6 +138,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               transactionId: value.transactionId ?? refId,
               address: widget.address.toJson(),
               context: context);
+        } else {
+          showToast("Payment Canceled");
         }
       });
     }

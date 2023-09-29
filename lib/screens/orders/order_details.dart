@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
+import 'package:myproject/helper/helper.dart';
 import 'package:myproject/helper/new_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../model/order_details.dart';
 import '../check_out/check_out_screen.dart';
@@ -27,16 +29,17 @@ class _OrderDetailsState extends State<OrderDetails> {
   bool isOrderCancelable = false;
 
   void cancelOrder() async {
-      await FirebaseFirestore.instance
-          .collection('orders')
-          .doc(widget.modelOrderDetails.orderId)
-          .update({'isCancelled': true});
+    await FirebaseFirestore.instance
+        .collection('orders')
+        .doc(widget.modelOrderDetails.orderId)
+        .update({'isCancelled': true});
 
-      setState(() {
-        isOrderCancelable = true;
-      });
-
+    setState(() {
+      isOrderCancelable = true;
+    });
+    showToast('Your order has been cancelled');
   }
+
   @override
   void initState() {
     super.initState();
@@ -396,20 +399,57 @@ class _OrderDetailsState extends State<OrderDetails> {
                   const SizedBox(
                     height: 20,
                   ),
-                  InkWell(
-                    onTap: isOrderCancelable ? null : cancelOrder,
-                    child: Container(
-                        height: 50,
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(11)),
-                        child: const Center(
-                            child: Text(
-                          'Cancel Order',
-                          style: TextStyle(color: Colors.white),
-                        ))),
+                  StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('orders')
+                        .doc(widget.modelOrderDetails.orderId)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator(); // Show a loading indicator
+                      }
+
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      if (!snapshot.hasData || !snapshot.data!.exists) {
+                        return const Text('Document does not exist');
+                      }
+
+                      var isOrderCancelable = snapshot.data!.get('isCancelled');
+                      var isOrderDelivered = snapshot.data!.get('delivered');
+                      return isOrderCancelable || isOrderDelivered
+                          ? isOrderCancelable ? const Text('This order is cancelled',style: TextStyle(color: Colors.red,fontSize: 20),)
+                          : const Text('This order is Delivered',style: TextStyle(color: Colors.green,fontSize: 20),)
+                          : InkWell(
+                        onTap: isOrderCancelable ? null : cancelOrder,
+
+                            child: Container(
+                            height: 50,
+                            width: Get.width,
+                            decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(11)),
+                            child: const Center(
+                                child: Text(
+                                  'Cancel Order',
+                                  style: TextStyle(color: Colors.white),
+                                ))),
+                          );
+                    },
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton.icon(
+                      onPressed: () async {
+                        var url = 'https://wa.me/7014143432?text=Borawar Help Support';
+                        await launch(url);
+
+                      },
+                      icon: Image.asset('assets/images/whatsapp.png',height: 30,),
+                      label: const Text('Contact Us')),
                   const SizedBox(
                     height: 20,
                   ),

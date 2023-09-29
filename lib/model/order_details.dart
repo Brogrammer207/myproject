@@ -15,6 +15,7 @@ class ModelOrderDetails {
   dynamic paymentMethod;
   bool? dispatch = false;
   bool? delivered = false;
+  bool? isCancelled = false;
 
   ModelOrderDetails(
       {this.orderTimeInMilliSec,
@@ -22,6 +23,7 @@ class ModelOrderDetails {
       required this.orderId,
       this.dispatch,
       this.delivered,
+      this.isCancelled,
       this.totalAmount,
       this.paymentMethod,
       this.userId,
@@ -38,6 +40,7 @@ class ModelOrderDetails {
     shipping = json['shipping'];
     dispatch = json['dispatch'] ?? false;
     delivered = json['delivered'] ?? false;
+    isCancelled = json['isCancelled'] ?? false;
     paymentMethod = json['payment_method'];
     totalAmount = json['total_amount'];
     userId = json['user_id'];

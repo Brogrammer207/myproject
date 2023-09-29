@@ -343,6 +343,7 @@ class FirebaseFireStoreService {
         "orderTimeInMilliSec": DateTime.now().millisecondsSinceEpoch,
         "transactionId": transactionId,
         "user_id": userId,
+        "isCancelled": false,
         "phone_number": phoneNumber,
         "user_details": userInfo.toJson(),
       }).then((value) async {
