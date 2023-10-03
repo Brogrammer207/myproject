@@ -344,6 +344,8 @@ class FirebaseFireStoreService {
         "transactionId": transactionId,
         "user_id": userId,
         "isCancelled": false,
+        "delivered" : false,
+        "dispatch" : false,
         "phone_number": phoneNumber,
         "user_details": userInfo.toJson(),
       }).then((value) async {
