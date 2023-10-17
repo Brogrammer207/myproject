@@ -30,6 +30,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
   bool apiLoaded = false;
   List<String> cities = [];
+  List<String> upi = [];
   String city = "";
 
   bool cityLoaded = false;
@@ -60,6 +61,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                 landmark: landMark.text.trim(),
                 phone: number.text.trim(),
               ),
+          cityUpi: upi.firstWhere((element) => element.toLowerCase().contains(city.trim().toLowerCase())).split("__").last,
             ));
         updating = false;
       }).catchError((e) {
@@ -83,6 +85,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
         fireStoreService.getCityList().then((value) {
           if (value == null) return;
           cities = value.cityList ?? [];
+          upi = value.cityListUPI ?? [];
           if (!cities.map((e) => e.toString().toLowerCase()).toList().contains(city.toLowerCase())) {
             city = "";
           }

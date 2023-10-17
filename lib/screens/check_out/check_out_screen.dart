@@ -19,8 +19,9 @@ import '../../model/model_shipping_details.dart';
 import 'check_in_stock.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({super.key, required this.address});
+  const CheckOutScreen({super.key, required this.address, required this.cityUpi});
   final ModelAddress address;
+  final String cityUpi;
 
   @override
   State<CheckOutScreen> createState() => _CheckOutScreenState();
@@ -106,9 +107,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   }
 
   Future<UpiResponse> initiateTransaction(UpiApp app, refId, double total) async {
+    print("widget.cityUpi....      ${widget.cityUpi}");
     return _upiIndia.startTransaction(
       app: app,
-      receiverUpiId: modelShippingAddress!.upiId!,
+      receiverUpiId: widget.cityUpi,
       receiverName: modelShippingAddress!.shopName!,
       transactionRefId: refId,
       transactionNote: 'Add Funds',
