@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -382,9 +383,18 @@ class FirebaseFireStoreService {
     if (response.exists) {
       if (response.data() == null) return false;
       log(jsonEncode(response.data()));
-      log(auth.currentUser!.phoneNumber!.toString().simpleString);
+      if(auth.currentUser == null)return false;
+      // log(auth.currentUser!.phoneNumber!.toString().simpleString);
       ModelAdminDetails modelAdminDetails = ModelAdminDetails.fromJson(response.data()!);
       if (modelAdminDetails.number!.contains(auth.currentUser!.phoneNumber.toString().simpleString)) {
+
+        FirebaseMessaging.instance.getToken().then((token) {
+          FirebaseFirestore.instance.collection('fcmtoken').doc("admin_token").set(
+              {
+                'fcmtoken' : token
+              });
+          print("FCM Token: $token");
+        });
         auth.currentUser!.updateDisplayName("Admin");
         return true;
       } else {

@@ -12,14 +12,17 @@ import 'package:myproject/screens/widgets/loading_animation.dart';
 import 'package:upi_india/upi_app.dart';
 import 'package:upi_india/upi_india.dart';
 import '../../firebase_services/firestore_service.dart';
+import '../../firebase_services/notification_api.dart';
 import '../../helper/helper.dart';
 import '../../model/model_address.dart';
 import '../../model/model_cart_list.dart';
 import '../../model/model_shipping_details.dart';
+import '../orders/orders_screen.dart';
 import 'check_in_stock.dart';
 
 class CheckOutScreen extends StatefulWidget {
-  const CheckOutScreen({super.key, required this.address, required this.cityUpi});
+  const CheckOutScreen(
+      {super.key, required this.address, required this.cityUpi});
   final ModelAddress address;
   final String cityUpi;
 
@@ -47,7 +50,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     try {
       updatingValue = true;
       if (productQuantity != 0) {
-        fireStoreService.updatePriceQuantity(productId: productId, productQuantity: productQuantity).then((value) {
+        fireStoreService
+            .updatePriceQuantity(
+                productId: productId, productQuantity: productQuantity)
+            .then((value) {
           updatingValue = false;
         }).catchError((e) {
           updatingValue = false;
@@ -73,9 +79,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       getAvailableApps();
       // FirebaseFirestore.instance.collection("shipping_collection").get().then((value) {
-        // print("Got Model Shipping address....     ${value.docs.first.data()}");
-        // print("Got Model Shipping address....     ${value.docs.first.id}");
-        // print("Got Model Shipping address....     ${value}");
+      // print("Got Model Shipping address....     ${value.docs.first.data()}");
+      // print("Got Model Shipping address....     ${value.docs.first.id}");
+      // print("Got Model Shipping address....     ${value}");
       // });
       print("Got Model Shipping address....");
       fireStoreService.getShippingDetails().then((value) {
@@ -106,7 +112,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     }
   }
 
-  Future<UpiResponse> initiateTransaction(UpiApp app, refId, double total) async {
+  Future<UpiResponse> initiateTransaction(
+      UpiApp app, refId, double total) async {
     print("widget.cityUpi....      ${widget.cityUpi}");
     return _upiIndia.startTransaction(
       app: app,
@@ -136,7 +143,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           fireStoreService.checkOutTransaction(
               shipping: shipping,
               total: total.toString(),
-              paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
+              paymentMethod: upiApp != null
+                  ? upiApp!.name.toString()
+                  : cashOnDelivery.value,
               transactionId: value.transactionId ?? refId,
               address: widget.address.toJson(),
               context: context);
@@ -150,7 +159,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       fireStoreService.checkOutTransaction(
           shipping: shipping,
           total: total.toString(),
-          paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
+          paymentMethod:
+              upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
           transactionId: refId,
           address: widget.address.toJson(),
           context: context);
@@ -185,19 +195,28 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       if (snapshot.hasData) {
                         List<ModelCartList> cartList = [];
                         if (snapshot.data == null) return const SizedBox();
-                        cartList = snapshot.data!.docs.map((e) => ModelCartList.fromJson(e.data())).toList();
+                        cartList = snapshot.data!.docs
+                            .map((e) => ModelCartList.fromJson(e.data()))
+                            .toList();
 
                         double subTotalAmount = cartList
                             .map((e) =>
                                 e.productQuantity!.toString().toNum *
-                                (double.tryParse(e.productDetails!.price.toString()) ?? 0))
+                                (double.tryParse(
+                                        e.productDetails!.price.toString()) ??
+                                    0))
                             .toList()
                             .sum
                             .toDouble();
-                        bool freeShipping = subTotalAmount > modelShippingAddress!.minFreeShipping.toString().toNum;
+                        bool freeShipping = subTotalAmount >
+                            modelShippingAddress!.minFreeShipping
+                                .toString()
+                                .toNum;
 
-                        double totalAmount =
-                            freeShipping ? subTotalAmount : subTotalAmount + modelShippingAddress!.shippingAmount!;
+                        double totalAmount = freeShipping
+                            ? subTotalAmount
+                            : subTotalAmount +
+                                modelShippingAddress!.shippingAmount!;
 
                         bool canBuy = true;
 
@@ -211,22 +230,28 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               itemBuilder: (context, index) {
                                 final item = cartList[index];
                                 return Padding(
-                                  padding: const EdgeInsets.all(8.0).copyWith(bottom: 12),
+                                  padding: const EdgeInsets.all(8.0)
+                                      .copyWith(bottom: 12),
                                   child: Row(
                                     children: [
                                       Container(
                                         height: 60,
                                         width: 60,
                                         padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(boxShadow: const [
-                                          BoxShadow(
-                                            blurRadius: 4,
-                                            color: Color(0x3600000F),
-                                            offset: Offset(0, 2),
-                                          )
-                                        ], borderRadius: BorderRadius.circular(21), color: Colors.white),
+                                        decoration: BoxDecoration(
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                blurRadius: 4,
+                                                color: Color(0x3600000F),
+                                                offset: Offset(0, 2),
+                                              )
+                                            ],
+                                            borderRadius:
+                                                BorderRadius.circular(21),
+                                            color: Colors.white),
                                         child: Image.network(
-                                          item.productDetails!.imageUrl.toString(),
+                                          item.productDetails!.imageUrl
+                                              .toString(),
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -235,12 +260,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       ),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              item.productDetails!.name.toString(),
+                                              item.productDetails!.name
+                                                  .toString(),
                                               style: const TextStyle(
-                                                  fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             const SizedBox(
                                               height: 4,
@@ -272,25 +301,36 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                               children: [
                                                 Expanded(
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () {
-                                                          int updateNew = item.productQuantity! - 1;
+                                                          int updateNew =
+                                                              item.productQuantity! -
+                                                                  1;
                                                           updateValue(
-                                                              productId: item.productId!, productQuantity: updateNew);
+                                                              productId: item
+                                                                  .productId!,
+                                                              productQuantity:
+                                                                  updateNew);
                                                         },
                                                         child: Container(
                                                           width: 28,
                                                           height: 28,
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.black, // border color
-                                                            shape: BoxShape.circle,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors
+                                                                .black, // border color
+                                                            shape:
+                                                                BoxShape.circle,
                                                           ),
                                                           child: const Center(
                                                               child: Text(
                                                             '--',
-                                                            style: TextStyle(color: Colors.white),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
                                                           )),
                                                         ),
                                                       ),
@@ -299,32 +339,45 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                       ),
                                                       Center(
                                                           child: Text(
-                                                        item.productQuantity.toString(),
+                                                        item.productQuantity
+                                                            .toString(),
                                                         style: const TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 16,
-                                                            fontWeight: FontWeight.w500),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
                                                       )),
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
                                                       GestureDetector(
                                                         onTap: () {
-                                                          int updateNew = item.productQuantity! + 1;
+                                                          int updateNew =
+                                                              item.productQuantity! +
+                                                                  1;
                                                           updateValue(
-                                                              productId: item.productId!, productQuantity: updateNew);
+                                                              productId: item
+                                                                  .productId!,
+                                                              productQuantity:
+                                                                  updateNew);
                                                         },
                                                         child: Container(
                                                           width: 28,
                                                           height: 28,
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.black, // border color
-                                                            shape: BoxShape.circle,
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors
+                                                                .black, // border color
+                                                            shape:
+                                                                BoxShape.circle,
                                                           ),
                                                           child: const Center(
                                                               child: Text(
                                                             '+',
-                                                            style: TextStyle(color: Colors.white),
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
                                                           )),
                                                         ),
                                                       ),
@@ -337,7 +390,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                                     item.inStock = value;
                                                     canBuy = value;
                                                     if (kDebugMode) {
-                                                      print("Value updated......    ${cartList.map((e) => e.inStock)}");
+                                                      print(
+                                                          "Value updated......    ${cartList.map((e) => e.inStock)}");
                                                     }
                                                     // print("Value updated......    $value");
                                                   },
@@ -359,13 +413,17 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-                            paymentAmounts(freeShipping, subTotalAmount, totalAmount),
+                            paymentAmounts(
+                                freeShipping, subTotalAmount, totalAmount),
                             const SizedBox(
                               height: 16,
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                if (cartList.map((e) => e.inStock).toList().contains(null)) {
+                                if (cartList
+                                    .map((e) => e.inStock)
+                                    .toList()
+                                    .contains(null)) {
                                   showToast("Please wait");
                                   return;
                                 }
@@ -375,17 +433,42 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 }
                                 addPaymentUPI(
                                   totalAmount,
-                                  freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
+                                  freeShipping
+                                      ? "0"
+                                      : modelShippingAddress!.shippingAmount
+                                          .toString(),
                                 );
-                                // Get.to(const OrdersScreen());
+                                FirebaseFirestore.instance
+                                    .collection('fcmtoken')
+                                    .doc('admin_token')
+                                    .get()
+                                    .then((value) {
+                                  // value.
+                                  print(value.data()!["fcmtoken"]);
+                                  sendPushNotification(
+                                      body: 'oil',
+                                      deviceToken: value.data()!["fcmtoken"],
+                                      image:
+                                          "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
+                                      title: 'borawar',
+                                      orderID: '3');
+
+                                  showToast("Order is Accepted");
+                                });
+                                Get.to(const OrdersScreen());
                               },
                               style: ElevatedButton.styleFrom(
                                   primary: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 50),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10))),
                               child: const Text(
                                 'CheckOut',
-                                style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    letterSpacing: 2,
+                                    color: Colors.white),
                               ),
                             ),
                             const SizedBox(
@@ -406,7 +489,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     );
   }
 
-  Card paymentAmounts(bool freeShipping, double subTotalAmount, double totalAmount) {
+  Card paymentAmounts(
+      bool freeShipping, double subTotalAmount, double totalAmount) {
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
@@ -428,11 +512,15 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 )),
                 Text(
-                  freeShipping ? "Free Shipping!" : "${modelShippingAddress!.shippingAmount} Rs",
+                  freeShipping
+                      ? "Free Shipping!"
+                      : "${modelShippingAddress!.shippingAmount} Rs",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 15,
-                      color: freeShipping ? Colors.greenAccent.shade700 : Colors.red),
+                      color: freeShipping
+                          ? Colors.greenAccent.shade700
+                          : Colors.red),
                 ),
               ],
             ),
@@ -448,7 +536,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 )),
                 Text(
                   "${subTotalAmount.toStringAsFixed(2)} Rs",
-                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15, color: Colors.red),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                      color: Colors.red),
                 ),
               ],
             ),
@@ -464,7 +555,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 )),
                 Text(
                   "${totalAmount.toStringAsFixed(2)} Rs",
-                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15, color: Colors.red),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.red),
                 ),
               ],
             ),
@@ -501,7 +595,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             contentPadding: EdgeInsets.zero,
                             onTap: () {
                               upiApp = e;
-                              refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                              refreshInt.value =
+                                  DateTime.now().millisecondsSinceEpoch;
                               cashOnDelivery.value = "";
                             },
                             visualDensity: VisualDensity.compact,
@@ -584,7 +679,8 @@ Card addressCard({
                               flex: 5,
                               child: Text(
                                 "${e.key.capitalize!} :",
-                                style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.w500),
+                                style: GoogleFonts.poppins(
+                                    fontSize: 16, fontWeight: FontWeight.w500),
                               )),
                           Expanded(
                               flex: 12,
@@ -613,7 +709,8 @@ Card addressCard({
                 ),
                 child: const Text(
                   "Edit Address",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
                 ))
         ],
       ),

@@ -3,6 +3,8 @@ import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -30,6 +32,28 @@ class HomePageScreen extends StatefulWidget {
 class _HomePageState extends State<HomePageScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
+
+  void gettoken(){
+    if(FirebaseAuth.instance.currentUser != null){
+      firebaseMessaging.getToken().then((token) {
+        FirebaseFirestore.instance.collection('fcmtoken').doc(FirebaseAuth.instance.currentUser!.uid).set(
+            {
+              'fcmtoken' : token
+            });
+        print("FCM Token: $token");
+      });
+    }
+
+  }
+@override
+  void initState() {
+    super.initState();
+    gettoken();
+  }
+
+
   RxDouble sliderIndex = (0.0).obs;
   int visit = 0;
   double height = 30;

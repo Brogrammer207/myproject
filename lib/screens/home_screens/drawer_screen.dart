@@ -30,7 +30,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Colors.blue,
+              color: Colors.red,
             ),
             child: Column(
               children: [

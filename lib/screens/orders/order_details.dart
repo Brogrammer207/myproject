@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
+import 'package:myproject/firebase_services/notification_api.dart';
 import 'package:myproject/helper/helper.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -27,6 +31,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   bool dispatch = false;
   bool delivered = false;
   bool isOrderCancelable = false;
+  TextEditingController cancelController = TextEditingController();
 
   void cancelOrder() async {
     await FirebaseFirestore.instance
@@ -39,16 +44,19 @@ class _OrderDetailsState extends State<OrderDetails> {
     });
     showToast('Your order has been cancelled');
   }
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   void initState() {
     super.initState();
     dispatch = widget.modelOrderDetails.dispatch!;
     delivered = widget.modelOrderDetails.delivered!;
+    // gettoken();
   }
 
   @override
   Widget build(BuildContext context) {
+    log(widget.modelOrderDetails.userId.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -194,7 +202,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             style: TextStyle(
                                 fontWeight: FontWeight.w500, fontSize: 16),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Expanded(
@@ -321,6 +329,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                                                         if (value == false) {
                                                           delivered = false;
                                                         }
+                                                        if(value == true){
+                                                          sendPushNotification(
+                                                              body: 'oil',
+                                                              deviceToken: widget.modelOrderDetails.userId,
+                                                              image:
+                                                              "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
+                                                              title: 'borawar',
+                                                              orderID: '3');
+
+                                                          showToast("Order is delivered");
+                                                        }
                                                         setState(() {});
                                                       });
                                             })
@@ -419,26 +438,69 @@ class _OrderDetailsState extends State<OrderDetails> {
 
                       var isOrderCancelable = snapshot.data!.get('isCancelled');
                       var isOrderDelivered = snapshot.data!.get('delivered');
-                      return isOrderCancelable || isOrderDelivered
-                          ? isOrderCancelable ? const Text('This order is cancelled',style: TextStyle(color: Colors.red,fontSize: 20),)
-                          : const Text('This order is Delivered',style: TextStyle(color: Colors.green,fontSize: 20),)
-                          : InkWell(
-                        onTap: isOrderCancelable ? null : cancelOrder,
 
+                      return isOrderCancelable || isOrderDelivered
+                          ? isOrderCancelable
+                          ? const Text(
+                        'This order is cancelled',
+                        style: TextStyle(color: Colors.red, fontSize: 20),
+                      )
+                          : const Text(
+                        'This order is Delivered',
+                        style: TextStyle(color: Colors.green, fontSize: 20),
+                      )
+                          : InkWell(
+                        onTap: isOrderCancelable ? null : () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Enter Cancelation Reason'),
+                                content: TextFormField(
+                                  controller: cancelController,
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+
+                                  TextButton(
+                                    child: const Text('Yes'),
+                                    onPressed: () {
+                                      if(cancelController.text.isEmpty) {
+                                        showToast('Please Enter Reason');
+                                      }else {
+                                        cancelOrder();
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
                         child: Container(
-                            height: 50,
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.circular(11)),
-                            child: const Center(
-                                child: Text(
-                                  'Cancel Order',
-                                  style: TextStyle(color: Colors.white),
-                                ))),
+                          height: 50,
+                          width: Get.width,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(11),
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Cancel Order',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
                       );
                     },
                   ),
+
                   const SizedBox(
                     height: 20,
                   ),
