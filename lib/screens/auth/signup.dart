@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:myproject/screens/auth/otp.dart';
 
+import '../widgets/helper.dart';
+
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
@@ -86,7 +88,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: [
                       TextFormField(
                         controller: phoneController,
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.number,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -119,6 +121,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+                            OverlayEntry loader = Helper.overlayLoader(context);
+                            Overlay.of(context).insert(loader);
                             auth.verifyPhoneNumber(
                               phoneNumber: "${"+91"}${phoneController.text.trim()}",
                               verificationCompleted: (PhoneAuthCredential credential) {},
@@ -126,6 +130,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               codeSent: (String verificationId, int? resendToken) {
                                 SignUpScreen.verify = verificationId;
                                 Get.to(const Otp());
+                                Helper.hideLoader(loader);
+
                               },
                               codeAutoRetrievalTimeout: (String verificationId) {},
                             );

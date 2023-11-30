@@ -9,6 +9,7 @@ import 'package:pinput/pinput.dart';
 
 import '../home_screens/profile.dart';
 import '../../bottom_navigation_bar_screen.dart';
+import '../widgets/helper.dart';
 
 class Otp extends StatefulWidget {
   const Otp({super.key});
@@ -95,16 +96,20 @@ class _OtpState extends State<Otp> {
                         child: ElevatedButton(
                           onPressed: () async {
                             try {
+                              OverlayEntry loader = Helper.overlayLoader(context);
+                              Overlay.of(context).insert(loader);
                               PhoneAuthCredential credential =
                                   PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
                               await auth.signInWithCredential(credential);
                               bool userExists = await FirebaseFireStoreService().checkUserProfile();
                               if (userExists == true) {
                                 Get.offAll(const BottomNavigationScreen());
+                                Helper.hideLoader(loader);
                               } else {
                                 Get.offAll(const ProfileScreen(
                                   fromLogin: true,
                                 ));
+                                Helper.hideLoader(loader);
                               }
                             } catch (e) {
                               Fluttertoast.showToast(
