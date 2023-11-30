@@ -44,6 +44,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     });
     showToast('Your order has been cancelled');
   }
+
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   @override
@@ -329,16 +330,29 @@ class _OrderDetailsState extends State<OrderDetails> {
                                                         if (value == false) {
                                                           delivered = false;
                                                         }
-                                                        if(value == true){
-                                                          sendPushNotification(
-                                                              body: 'oil',
-                                                              deviceToken: widget.modelOrderDetails.userId,
-                                                              image:
-                                                              "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
-                                                              title: 'borawar',
-                                                              orderID: '3');
-
-                                                          showToast("Order is delivered");
+                                                        if (value == true) {
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'fcmtoken')
+                                                              .doc(widget
+                                                                  .modelOrderDetails
+                                                                  .userId)
+                                                              .get()
+                                                              .then((value) {
+                                                            if (value.exists) {
+                                                              sendPushNotification(
+                                                                  body: 'oil',
+                                                                  deviceToken: value.data()!["fcmtoken"],
+                                                                  image:
+                                                                      "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
+                                                                  title:
+                                                                      'borawar',
+                                                                  orderID: '3');
+                                                            }
+                                                          });
+                                                          showToast(
+                                                              "Order is delivered");
                                                         }
                                                         setState(() {});
                                                       });
@@ -388,6 +402,30 @@ class _OrderDetailsState extends State<OrderDetails> {
                                                       updated: (bool gg) {
                                                         delivered = value;
                                                         dispatch = true;
+                                                        if (value == true) {
+
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                              'fcmtoken')
+                                                              .doc(widget
+                                                              .modelOrderDetails
+                                                              .userId)
+                                                              .get()
+                                                              .then((value) {
+                                                            if (value.exists) {
+                                                              sendPushNotification(
+                                                                  body: 'oil',
+                                                                  deviceToken: value.data()!["fcmtoken"],
+                                                                  image:
+                                                                  "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
+                                                                  title: 'borawar',
+                                                                  orderID: '3');
+                                                            }
+                                                          });
+                                                          showToast(
+                                                              "Order is delivered");
+                                                        }
                                                         setState(() {});
                                                       });
                                             })
@@ -441,76 +479,84 @@ class _OrderDetailsState extends State<OrderDetails> {
 
                       return isOrderCancelable || isOrderDelivered
                           ? isOrderCancelable
-                          ? const Text(
-                        'This order is cancelled',
-                        style: TextStyle(color: Colors.red, fontSize: 20),
-                      )
-                          : const Text(
-                        'This order is Delivered',
-                        style: TextStyle(color: Colors.green, fontSize: 20),
-                      )
+                              ? const Text(
+                                  'This order is cancelled',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 20),
+                                )
+                              : const Text(
+                                  'This order is Delivered',
+                                  style: TextStyle(
+                                      color: Colors.green, fontSize: 20),
+                                )
                           : InkWell(
-                        onTap: isOrderCancelable ? null : () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Enter Cancelation Reason'),
-                                content: TextFormField(
-                                  controller: cancelController,
+                              onTap: isOrderCancelable
+                                  ? null
+                                  : () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Enter Cancelation Reason'),
+                                            content: TextFormField(
+                                              controller: cancelController,
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: const Text('No'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: const Text('Yes'),
+                                                onPressed: () {
+                                                  if (cancelController
+                                                      .text.isEmpty) {
+                                                    showToast(
+                                                        'Please Enter Reason');
+                                                  } else {
+                                                    cancelOrder();
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                              child: Container(
+                                height: 50,
+                                width: Get.width,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(11),
                                 ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('No'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
+                                child: const Center(
+                                  child: Text(
+                                    'Cancel Order',
+                                    style: TextStyle(color: Colors.white),
                                   ),
-
-                                  TextButton(
-                                    child: const Text('Yes'),
-                                    onPressed: () {
-                                      if(cancelController.text.isEmpty) {
-                                        showToast('Please Enter Reason');
-                                      }else {
-                                        cancelOrder();
-                                        Navigator.of(context).pop();
-                                      }
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(11),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Cancel Order',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      );
+                                ),
+                              ),
+                            );
                     },
                   ),
-
                   const SizedBox(
                     height: 20,
                   ),
                   ElevatedButton.icon(
                       onPressed: () async {
-                        var url = 'https://wa.me/9928634555?text=Borawar Help Support';
+                        var url =
+                            'https://wa.me/9928634555?text=Borawar Help Support';
                         await launch(url);
-
                       },
-                      icon: Image.asset('assets/images/whatsapp.png',height: 30,),
+                      icon: Image.asset(
+                        'assets/images/whatsapp.png',
+                        height: 30,
+                      ),
                       label: const Text('Contact Us')),
                   const SizedBox(
                     height: 20,
