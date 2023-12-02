@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePageScreen> {
                                 imageUrl: banner[index].imageUrl,
                                 errorWidget: (_, __, ___) => const SizedBox(),
                                 placeholder: (_, __) => const SizedBox(),
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                             ))),
                   ),

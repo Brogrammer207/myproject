@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
+import 'package:myproject/bottom_navigation_bar_screen.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/widgets/loading_animation.dart';
 import 'package:upi_india/upi_app.dart';
@@ -446,12 +447,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   // value.
                                   print(value.data()!["fcmtoken"]);
                                   sendPushNotification(
-                                      body: 'oil',
+                                      body: 'Contact us for any query : - borawaroilmeal@gmail.com',
                                       deviceToken: value.data()!["fcmtoken"],
-                                      image:
-                                          "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
-                                      title: 'borawar',
-                                      orderID: '3');
+                                      image:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiYcetW9NF6LmnrfB5wHc9r5cGsdkbseUNUqnqrFf6yYpGw25PaCM7fWmtQZXoLW1zGgHqmd-t3es-3BinZ-i6a5ja5Kl0Gyw4XL2VaIkm76GLbr5J2PrLziNzFqPm8LULyfthqRgxMNuC3Kf0Zty8MBCnCmhtt6QpyLDvDwFhYVtQ8RwMRfTkAMAVLlI0/s16000/Your%20Order%20will%20be%20deliver.png',
+                                      title: 'A new order is placed',
+                                      orderID: '1');
 
                                   showToast("Order is Accepted");
                                 });
