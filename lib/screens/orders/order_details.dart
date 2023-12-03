@@ -342,17 +342,17 @@ class _OrderDetailsState extends State<OrderDetails> {
                                                               .then((value) {
                                                             if (value.exists) {
                                                               sendPushNotification(
-                                                                  body: 'oil',
+                                                                  body: 'Contact us for any query : - borawaroilmeal@gmail.com',
                                                                   deviceToken: value.data()!["fcmtoken"],
                                                                   image:
-                                                                      "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
+                                                                      "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiYcetW9NF6LmnrfB5wHc9r5cGsdkbseUNUqnqrFf6yYpGw25PaCM7fWmtQZXoLW1zGgHqmd-t3es-3BinZ-i6a5ja5Kl0Gyw4XL2VaIkm76GLbr5J2PrLziNzFqPm8LULyfthqRgxMNuC3Kf0Zty8MBCnCmhtt6QpyLDvDwFhYVtQ8RwMRfTkAMAVLlI0/s16000/Your%20Order%20will%20be%20deliver.png",
                                                                   title:
-                                                                      'borawar',
+                                                                      'Your Order is dispatch from our side',
                                                                   orderID: '3');
                                                             }
                                                           });
                                                           showToast(
-                                                              "Order is delivered");
+                                                              "Order is dispatch");
                                                         }
                                                         setState(() {});
                                                       });
@@ -415,11 +415,11 @@ class _OrderDetailsState extends State<OrderDetails> {
                                                               .then((value) {
                                                             if (value.exists) {
                                                               sendPushNotification(
-                                                                  body: 'oil',
+                                                                  body: 'Thanks for taking Borwar oil',
                                                                   deviceToken: value.data()!["fcmtoken"],
                                                                   image:
-                                                                  "https://www.funfoodfrolic.com/wp-content/uploads/2021/08/Macaroni-Thumbnail-Blog.jpg",
-                                                                  title: 'borawar',
+                                                                  "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQ7G30050tUKY85hHzPZbRn6h5pAI73XO-hkXQmjcaM4YeHISX_sVOOY7uoLKmMtH69407vKotjOrny51PErCAYu3qiVzq5bccATSVHYwYclFTLrBlr6U_jixKl3ow1xV2o7f18Ln65GmMWRtI02DsMj9FLodBwzI18S0DMmseoJAbyXw5snSC-hKZ_vc/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation.jpg",
+                                                                  title: 'Your Order is delivered',
                                                                   orderID: '3');
                                                             }
                                                           });

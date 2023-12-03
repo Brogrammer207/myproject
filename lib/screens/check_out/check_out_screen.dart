@@ -447,9 +447,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   // value.
                                   print(value.data()!["fcmtoken"]);
                                   sendPushNotification(
-                                      body: 'Contact us for any query : - borawaroilmeal@gmail.com',
+                                      body: 'Click here to watch this order',
                                       deviceToken: value.data()!["fcmtoken"],
-                                      image:'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiYcetW9NF6LmnrfB5wHc9r5cGsdkbseUNUqnqrFf6yYpGw25PaCM7fWmtQZXoLW1zGgHqmd-t3es-3BinZ-i6a5ja5Kl0Gyw4XL2VaIkm76GLbr5J2PrLziNzFqPm8LULyfthqRgxMNuC3Kf0Zty8MBCnCmhtt6QpyLDvDwFhYVtQ8RwMRfTkAMAVLlI0/s16000/Your%20Order%20will%20be%20deliver.png',
+                                      image: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
                                       title: 'A new order is placed',
                                       orderID: '1');
 
