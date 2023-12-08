@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePageScreen> {
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 1,
+                  childAspectRatio: .7,
                 ),
                 itemBuilder: (context, index) {
                   return GestureDetector(
