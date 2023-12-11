@@ -188,8 +188,8 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                  // enabledBorder: OutlineInputBorder(
+                                  //     borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
                                   counterText: "",
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                   enabled: true,

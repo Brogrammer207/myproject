@@ -109,6 +109,17 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     const SizedBox(
                                       height: 2,
                                     ),
+                                    order.dispatch == false && order.delivered == false ? Text(
+                                      "Order Pending",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.red,
+                                      ),
+                                    ) : const SizedBox(),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
                                     order.dispatch == true ? Text(
                                       "Order Dispatch",
                                       style: GoogleFonts.poppins(
