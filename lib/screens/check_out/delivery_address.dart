@@ -134,7 +134,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                       height: 18,
                     ),
                     buildTextField(
-                        hintetxt: 'Enter Location Name',
+                        hintetxt: 'Enter Your Name',
                         icon: const Icon(
                           Icons.near_me,
                           color: Colors.blue,
@@ -151,20 +151,17 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                       height: 20,
                     ),
                     buildTextField(
-                        hintetxt: 'Enter Your Phone Number',
-                        controller: number,
-                        keyboardType: TextInputType.number,
+                        hintetxt: 'Address(Area and Street)',
+                        keyboardType: TextInputType.streetAddress,
+                        controller: address,
                         validator: (value) {
                           if (value!.trim().isEmpty) {
-                            return "Please enter phone no.".capitalize;
-                          }
-                          if (value.trim().length < 10) {
-                            return "Please enter valid phone no.".capitalize;
+                            return "Please Enter Address";
                           }
                           return null;
                         },
                         icon: const Icon(
-                          Icons.phone,
+                          Icons.home,
                           color: Colors.blue,
                         )),
                     const SizedBox(
@@ -214,37 +211,29 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                           ],
                         ),
                       ),
-                    // buildTextField(
-                    //     hintetxt: 'City',
-                    //     controller: city,
-                    //     keyboardType: TextInputType.number,
-                    //     validator: (value){
-                    //       if(value!.trim().isEmpty){
-                    //         return "Please your city".capitalize;
-                    //       }
-                    //       return null;
-                    //     },
-                    //     icon: const Icon(
-                    //       Icons.location_city_rounded,
-                    //       color: Colors.blue,
-                    //     )),
                     const SizedBox(
                       height: 20,
                     ),
                     buildTextField(
-                        hintetxt: 'Address(Area and Street)',
-                        keyboardType: TextInputType.streetAddress,
-                        controller: address,
+                        hintetxt: 'Enter Your Phone Number',
+                        controller: number,
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value!.trim().isEmpty) {
-                            return "Please Enter Address";
+                            return "Please enter phone no.".capitalize;
+                          }
+                          if (value.trim().length < 10) {
+                            return "Please enter valid phone no.".capitalize;
                           }
                           return null;
                         },
                         icon: const Icon(
-                          Icons.home,
+                          Icons.phone,
                           color: Colors.blue,
                         )),
+
+
+
                     const SizedBox(
                       height: 20,
                     ),
