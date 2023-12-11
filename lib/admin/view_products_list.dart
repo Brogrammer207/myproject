@@ -101,6 +101,7 @@ class _ViewProductsLListState extends State<ViewProductsLList> {
                                         color: Colors.black,
                                       ),
                                     ),
+
                                     const SizedBox(
                                       height: 2,
                                     ),

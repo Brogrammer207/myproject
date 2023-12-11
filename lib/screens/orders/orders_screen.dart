@@ -109,6 +109,31 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     const SizedBox(
                                       height: 2,
                                     ),
+                                    order.dispatch == true ? Text(
+                                      "Order Dispatch",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.orange,
+                                      ),
+                                    ) : const SizedBox(),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    order.delivered == true ? Text(
+                                      "Order delivered",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.green,
+                                      ),
+                                    ) : const SizedBox(),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
                                     Text(
                                       DateFormat("dd MMM, yyyy  hh:mm a")
                                           .format(DateTime.fromMillisecondsSinceEpoch(order.orderTimeInMilliSec!)),
