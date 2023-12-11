@@ -151,7 +151,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                       height: 20,
                     ),
                     buildTextField(
-                        hintetxt: 'Address(Area and Street)',
+                        hintetxt: 'Complete Address',
                         keyboardType: TextInputType.streetAddress,
                         controller: address,
                         validator: (value) {
@@ -234,23 +234,23 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
 
 
 
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    buildTextField(
-                        hintetxt: 'Nearby Landmark',
-                        keyboardType: TextInputType.streetAddress,
-                        controller: landMark,
-                        validator: (value) {
-                          if (value!.trim().isEmpty) {
-                            return "Please Enter Nearby Landmark";
-                          }
-                          return null;
-                        },
-                        icon: const Icon(
-                          Icons.home,
-                          color: Colors.blue,
-                        )),
+                    // const SizedBox(
+                    //   height: 20,
+                    // ),
+                    // buildTextField(
+                    //     hintetxt: 'Nearby Landmark',
+                    //     keyboardType: TextInputType.streetAddress,
+                    //     controller: landMark,
+                    //     validator: (value) {
+                    //       if (value!.trim().isEmpty) {
+                    //         return "Please Enter Nearby Landmark";
+                    //       }
+                    //       return null;
+                    //     },
+                    //     icon: const Icon(
+                    //       Icons.home,
+                    //       color: Colors.blue,
+                    //     )),
                     const SizedBox(
                       height: 50,
                     ),
