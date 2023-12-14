@@ -109,7 +109,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     const SizedBox(
                                       height: 2,
                                     ),
-                                    order.dispatch == false && order.delivered == false ? Text(
+                                    order.isCancelled == true ?
+                                    Text(
+                                      "Order cancelled",
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.red,
+                                      ),
+                                    ) : const SizedBox(),
+                                    const SizedBox(
+                                      height: 2,
+                                    ),
+                                    order.dispatch == false && order.delivered == false && order.isCancelled == false ?
+                                    Text(
                                       "Order Pending",
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
@@ -120,7 +133,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     const SizedBox(
                                       height: 2,
                                     ),
-                                    order.dispatch == true ? Text(
+                                    order.dispatch == true && order.isCancelled == false ? Text(
                                       "Order Dispatch",
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
@@ -134,7 +147,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     const SizedBox(
                                       height: 2,
                                     ),
-                                    order.delivered == true ? Text(
+                                    order.delivered == true && order.isCancelled == false ? Text(
                                       "Order delivered",
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
