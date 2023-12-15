@@ -58,7 +58,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                 title: addressName.text.trim(),
                 address: address.text.trim(),
                 city: city.trim(),
-                landmark: landMark.text.trim(),
+                // landmark: landMark.text.trim(),
                 phone: number.text.trim(),
               ),
           cityUpi: upi.firstWhere((element) => element.toLowerCase().contains(city.trim().toLowerCase())).split("__").last,
@@ -80,7 +80,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
           number.text = value.phone.toString();
           city = value.city.toString();
           address.text = value.address.toString();
-          landMark.text = value.landmark.toString();
+          // landMark.text = value.landmark.toString();
         }
         fireStoreService.getCityList().then((value) {
           if (value == null) return;

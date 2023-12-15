@@ -39,7 +39,7 @@ class _AddressScreenState extends State<AddressScreen> {
           number.text = value.phone.toString();
           city = value.city.toString();
           address.text = value.address.toString();
-          landMark.text = value.landmark.toString();
+          // landMark.text = value.landmark.toString();
         }
         fireStoreService.getCityList().then((value) {
           if (value == null) return;

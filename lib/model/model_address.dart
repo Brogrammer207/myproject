@@ -1,27 +1,28 @@
 class ModelAddress {
+  String? title;
   String? address;
+  // String? landmark;
   String? city;
   String? phone;
-  String? landmark;
-  String? title;
 
-  ModelAddress({this.address, this.city, this.phone, this.landmark, this.title});
+
+  ModelAddress({this.address, this.city, this.phone, this.title});
 
   ModelAddress.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
     address = json['address'];
+    // landmark = json['landmark'];
     city = json['city'];
     phone = json['phone'];
-    landmark = json['landmark'];
-    title = json['title'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
     data['address'] = address;
+    // data['landmark'] = landmark;
     data['city'] = city;
     data['phone'] = phone;
-    data['landmark'] = landmark;
-    data['title'] = title;
     return data;
   }
 }
