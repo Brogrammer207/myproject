@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myproject/firebase_services/firestore_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../admin/homepage.dart';
 import '../auth/signup.dart';
@@ -98,6 +99,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
               } else {
                 Get.to(() => const SignUpScreen());
               }
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.call),
+            title: const Text('Contact Us'),
+            onTap: () {
+              launch("tel://6367509883");
             },
           ),
           // ListTile(
