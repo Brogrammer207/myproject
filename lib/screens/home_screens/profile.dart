@@ -217,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
-                                    primary: Colors.blue,
+                                    backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.symmetric(horizontal: 50),
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                                 child: const Text(
@@ -240,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Get.to(const SignUpScreen());
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.red,
+                                  backgroundColor: Colors.red,
                                   padding: const EdgeInsets.symmetric(horizontal: 50),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                               child: const Text(

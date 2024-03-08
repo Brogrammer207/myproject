@@ -458,7 +458,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 Get.to(const OrdersScreen());
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
+                                  backgroundColor: Colors.blue,
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 50),
                                   shape: RoundedRectangleBorder(
@@ -621,7 +621,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 const Center(
                   child: Text("No UPI installed"),
                 ),
-            Obx(() => ListTile(
+            Obx(() => Platform.isIOS ? ListTile(
                   contentPadding: EdgeInsets.zero,
                   onTap: () {
                     upiApp = null;
@@ -646,7 +646,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     child: Icon(Icons.delivery_dining_rounded),
                     // child: Image.memory("e.icon"),
                   ),
-                ))
+                ) : const SizedBox()
+            )
           ],
         ),
       ),
