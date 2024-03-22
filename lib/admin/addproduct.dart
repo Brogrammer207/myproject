@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +34,59 @@ class _AddProductAdminState extends State<AddProductAdmin> {
   bool inStock = false;
   bool updating = false;
 
+
+  Future<void> deleteCollectionForAdmin(String collectionPath) async {
+    final CollectionReference collectionReference =
+    FirebaseFirestore.instance.collection(collectionPath);
+
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        DocumentSnapshot userSnapshot =
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+        if (userSnapshot.exists && userSnapshot.data() != null) {
+          Map<String, dynamic> userData = userSnapshot.data()! as Map<String, dynamic>;
+          String userRole = userData['role'];
+          if (userRole == 'admin') {
+            await _deleteQueryBatch(collectionReference);
+            print('Collection deleted successfully');
+          } else {
+            print('User does not have permission to delete the collection');
+          }
+        } else {
+          print('User data not found or invalid');
+        }
+      } else {
+        print('User not authenticated');
+      }
+    } catch (e) {
+      print('Error deleting collection: $e');
+    }
+  }
+
+  Future<void> _deleteQueryBatch(CollectionReference collectionReference) async {
+    final QuerySnapshot querySnapshot = await collectionReference.get();
+    final List<DocumentSnapshot> documents = querySnapshot.docs;
+
+    for (DocumentSnapshot document in documents) {
+      await _deleteDocument(document.reference);
+    }
+  }
+
+  Future<void> _deleteDocument(DocumentReference documentReference) async {
+    final QuerySnapshot subcollectionsSnapshot =
+    await documentReference.collection('products').get();
+    final List<QueryDocumentSnapshot> subcollectionDocuments =
+        subcollectionsSnapshot.docs;
+
+    for (QueryDocumentSnapshot subcollectionDocument
+    in subcollectionDocuments) {
+      await _deleteDocument(subcollectionDocument.reference);
+    }
+
+    await documentReference.delete();
+  }
+
   updateProfile() {
     if (!formKey.currentState!.validate()) return;
     if (category.value.isEmpty) {
@@ -45,31 +100,25 @@ class _AddProductAdminState extends State<AddProductAdmin> {
     try {
       fireStoreService
           .updateProduct(
-              category: category.value,
-              deletePrevious:
-                  widget.product != null ? widget.product!.imageUrl : "",
-              description: description.text.trim(),
-              price: price.text.trim(),
-              allowChange: imagePicked,
-              context: context,
-              inStock: inStock,
-              name: nameController.text.trim(),
-              profileImage: image,
-              productId: widget.product != null
-                  ? widget.product!.id
-                  : DateTime.now().millisecondsSinceEpoch.toString(),
-              updated: (bool value) {
-                Get.back();
-                updating = false;
-                // if(value == false)return;
-                // if (widget.fromLogin == false) {
-                //   Get.back();
-                // } else {
-                //   Get.offAll(const BottomNavigationScreen());
-                // }
-              })
-          .then((value) {})
-          .catchError((e) {
+        category: category.value,
+        deletePrevious: widget.product != null ? widget.product!.imageUrl : "",
+        description: description.text.trim(),
+        price: price.text.trim(),
+        allowChange: imagePicked,
+        context: context,
+        inStock: inStock,
+        name: nameController.text.trim(),
+        profileImage: image,
+        productId: widget.product != null ? widget.product!.id : DateTime.now().millisecondsSinceEpoch.toString(),
+        updated: (bool value) {
+          Get.back();
+          updating = false;
+        },
+      )
+          .then((value) async {
+        deleteCollectionForAdmin('cart');
+
+      }).catchError((e) {
         updating = false;
       });
     } catch (e) {
@@ -137,8 +186,7 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                 width: 130,
                                 height: 130,
                                 decoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 4, color: Colors.white),
+                                  border: Border.all(width: 4, color: Colors.white),
                                   boxShadow: [
                                     BoxShadow(
                                       spreadRadius: 2,
@@ -152,8 +200,7 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                   borderRadius: BorderRadius.circular(10000),
                                   child: Image.file(image,
                                       fit: BoxFit.cover,
-                                      errorBuilder: (_, __, ___) =>
-                                          Image.network(
+                                      errorBuilder: (_, __, ___) => Image.network(
                                             image.path,
                                             fit: BoxFit.cover,
                                             errorBuilder: (_, __, ___) => Icon(
@@ -236,27 +283,20 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                           children: [
                             Text(
                               "Categories",
-                              style: GoogleFonts.urbanist(
-                                  fontWeight: FontWeight.w600, fontSize: 13.2),
+                              style: GoogleFonts.urbanist(fontWeight: FontWeight.w600, fontSize: 13.2),
                             ),
                             const SizedBox(
                               height: 5,
                             ),
                             StreamBuilder(
                               stream: fireStoreService.getCategories(),
-                              builder: (BuildContext context,
-                                  AsyncSnapshot<
-                                          QuerySnapshot<Map<String, dynamic>>>
-                                      snapshot) {
+                              builder:
+                                  (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
                                 if (snapshot.hasData) {
-                                  if (snapshot.data == null)
-                                    return const LoadingAnimation();
+                                  if (snapshot.data == null) return const LoadingAnimation();
                                   // log(snapshot.data!.docs.map((e) => jsonEncode(e.data())).toList().toString());
-                                  List<Category> catoriesList = snapshot
-                                      .data!.docs
-                                      .map((e) =>
-                                          Category.fromMap(e.id, e.data()))
-                                      .toList();
+                                  List<Category> catoriesList =
+                                      snapshot.data!.docs.map((e) => Category.fromMap(e.id, e.data())).toList();
 
                                   if (assigneInitial == false) {
                                     assigneInitial = true;
@@ -265,8 +305,7 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                         .toList()
                                         .contains(category.value)) {
                                       if (catoriesList.isNotEmpty) {
-                                        category.value = catoriesList.first.name
-                                            .toLowerCase();
+                                        category.value = catoriesList.first.name.toLowerCase();
                                       }
                                     }
                                   }
@@ -275,13 +314,10 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                                     spacing: 12,
                                     children: catoriesList
                                         .map((e) => Obx(() => FilterChip(
-                                            selected: category.value ==
-                                                e.name.toString().toLowerCase(),
+                                            selected: category.value == e.name.toString().toLowerCase(),
                                             label: Text(e.name.capitalize!),
                                             onSelected: (gg) {
-                                              category.value = e.name
-                                                  .toString()
-                                                  .toLowerCase();
+                                              category.value = e.name.toString().toLowerCase();
                                             })))
                                         .toList(),
                                   );
@@ -330,14 +366,10 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             padding: const EdgeInsets.symmetric(horizontal: 50),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20))),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                         child: const Text(
                           'Update',
-                          style: TextStyle(
-                              fontSize: 15,
-                              letterSpacing: 2,
-                              color: Colors.white),
+                          style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
                         ),
                       ),
                     ],

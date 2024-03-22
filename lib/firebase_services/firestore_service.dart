@@ -79,6 +79,25 @@ class FirebaseFireStoreService {
     }
   }
 
+  Future updatePrice({
+    required String productId,
+    required int productPrice,
+  }) async {
+    try {
+      final response =
+      await fireStore.collection(cartCollection).doc(userId).collection(productsCollection).doc(productId).get();
+      if (response.exists) {
+        await response.reference.update({"price": productPrice}).then((value) {
+          showToast("Product price Updated");
+        });
+      } else {
+        showToast("price do not exist");
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
   Future removeProduct({
     required String productId,
   }) async {

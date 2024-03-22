@@ -621,33 +621,32 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 const Center(
                   child: Text("No UPI installed"),
                 ),
-            Obx(() => Platform.isIOS ? ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  onTap: () {
-                    upiApp = null;
-                    refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+            Platform.isIOS ? ListTile(
+              contentPadding: EdgeInsets.zero,
+              onTap: () {
+                upiApp = null;
+                refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                cashOnDelivery.value = "Cod";
+              },
+              visualDensity: VisualDensity.compact,
+              title: const Text("Cash On Delivery"),
+              trailing: IgnorePointer(
+                ignoring: true,
+                child: Radio<String?>(
+                  value: "Cod",
+                  visualDensity: VisualDensity.compact,
+                  groupValue: cashOnDelivery.value,
+                  onChanged: (fa) {
                     cashOnDelivery.value = "Cod";
                   },
-                  visualDensity: VisualDensity.compact,
-                  title: const Text("Cash On Delivery"),
-                  trailing: IgnorePointer(
-                    ignoring: true,
-                    child: Radio<String?>(
-                      value: "Cod",
-                      visualDensity: VisualDensity.compact,
-                      groupValue: cashOnDelivery.value,
-                      onChanged: (fa) {
-                        cashOnDelivery.value = "Cod";
-                      },
-                    ),
-                  ),
-                  leading: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.delivery_dining_rounded),
-                    // child: Image.memory("e.icon"),
-                  ),
-                ) : const SizedBox()
-            )
+                ),
+              ),
+              leading: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.delivery_dining_rounded),
+                // child: Image.memory("e.icon"),
+              ),
+            ) : const SizedBox()
           ],
         ),
       ),
