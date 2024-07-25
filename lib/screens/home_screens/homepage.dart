@@ -137,74 +137,74 @@ class _HomePageState extends State<HomePageScreen> {
           const SizedBox(
             height: 20,
           ),
-          // SizedBox(
-          //   height: 100,
-          //   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-          //     stream: firestore.collection('categories').snapshots(),
-          //     builder: (context, snapshot) {
-          //       if (snapshot.connectionState == ConnectionState.waiting) {
-          //         return const Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //       }
-          //
-          //       if (snapshot.hasError) {
-          //         return const Center(
-          //           child: Text('Error fetching products'),
-          //         );
-          //       }
-          //
-          //       List<Category> category = snapshot.data!.docs.map((doc) {
-          //         return Category.fromMap(doc.id, doc.data());
-          //       }).toList();
-          //       return ListView.builder(
-          //           scrollDirection: Axis.horizontal,
-          //           shrinkWrap: true,
-          //           // padEnds: false,
-          //           // controller: PageController(viewportFraction: .2),
-          //           itemCount: category.length,
-          //           itemBuilder: (context, index) {
-          //             return GestureDetector(
-          //               onTap: () {
-          //                 Get.to(() => CategoryScreen(
-          //                       keyId: category[index].name,
-          //                     ));
-          //               },
-          //               child: Container(
-          //                 decoration: BoxDecoration(
-          //                     borderRadius: BorderRadius.circular(12),
-          //                     border: Border.all(color: Colors.transparent, width: 2)),
-          //                 margin: const EdgeInsets.symmetric(horizontal: 10),
-          //                 padding: const EdgeInsets.symmetric(horizontal: 6),
-          //                 constraints: BoxConstraints(maxWidth: context.getSize.width * .16),
-          //                 child: Column(
-          //                   mainAxisAlignment: MainAxisAlignment.center,
-          //                   children: [
-          //                     CircleAvatar(
-          //                       radius: 30, // Image radius
-          //                       backgroundImage: NetworkImage(category[index].imageUrl),
-          //                     ),
-          //                     const SizedBox(
-          //                       height: 7,
-          //                     ),
-          //                     Center(
-          //                       child: Text(
-          //                         category[index].name.capitalize!,
-          //                         overflow: TextOverflow.ellipsis,
-          //                         maxLines: 1,
-          //                       ),
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             );
-          //           });
-          //     },
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
+          SizedBox(
+            height: 100,
+            child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+              stream: firestore.collection('categories').snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Error fetching products'),
+                  );
+                }
+
+                List<Category> category = snapshot.data!.docs.map((doc) {
+                  return Category.fromMap(doc.id, doc.data());
+                }).toList();
+                return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    // padEnds: false,
+                    // controller: PageController(viewportFraction: .2),
+                    itemCount: category.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(() => CategoryScreen(
+                                keyId: category[index].name,
+                              ));
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.transparent, width: 2)),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          constraints: BoxConstraints(maxWidth: context.getSize.width * .16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 30, // Image radius
+                                backgroundImage: NetworkImage(category[index].imageUrl),
+                              ),
+                              const SizedBox(
+                                height: 7,
+                              ),
+                              Center(
+                                child: Text(
+                                  category[index].name.capitalize!,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
           StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: firestore.collection('products').snapshots(),
             builder: (context, snapshot) {

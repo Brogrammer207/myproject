@@ -2,6 +2,7 @@ import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/screens/galleryScreen.dart';
 import 'firebase_services/firestore_service.dart';
 import 'screens/home_screens/profile.dart';
 import 'screens/search/search_products.dart';
@@ -28,6 +29,10 @@ const List<TabItem> items = [
     icon: Icons.account_box,
     title: 'Profile',
   ),
+  TabItem(
+    icon: Icons.image,
+    title: 'Gallery',
+  ),
 ];
 
 class BottomNavigationScreen extends StatefulWidget {
@@ -50,12 +55,14 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
     const SearchProducts(),
     const CartScreen(),
     const ProfileScreen(fromLogin: false, home: true),
+     GalleryScreen(),
   ];
   List<String> titles = [
     "Home",
     "Search Product",
     "Cart",
     "Profile",
+    "Gallery",
   ];
 
   @override

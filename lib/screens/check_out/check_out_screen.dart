@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -439,6 +440,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       : modelShippingAddress!.shippingAmount
                                           .toString(),
                                 );
+
                                 FirebaseFirestore.instance
                                     .collection('fcmtoken')
                                     .doc('admin_token')
@@ -621,12 +623,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 const Center(
                   child: Text("No UPI installed"),
                 ),
-            Platform.isIOS ? ListTile(
+             Platform.isIOS ?
+            ListTile(
               contentPadding: EdgeInsets.zero,
               onTap: () {
                 upiApp = null;
                 refreshInt.value = DateTime.now().millisecondsSinceEpoch;
                 cashOnDelivery.value = "Cod";
+                setState(() {
+
+                });
               },
               visualDensity: VisualDensity.compact,
               title: const Text("Cash On Delivery"),
@@ -646,7 +652,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 child: Icon(Icons.delivery_dining_rounded),
                 // child: Image.memory("e.icon"),
               ),
-            ) : const SizedBox()
+            )
+                 : const SizedBox()
           ],
         ),
       ),
