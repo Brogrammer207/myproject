@@ -372,7 +372,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 // Get.to(const OrdersScreen());
                               },
                               style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue,
+                                  backgroundColor: Colors.blue,
                                   padding: const EdgeInsets.symmetric(horizontal: 50),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                               child: const Text(

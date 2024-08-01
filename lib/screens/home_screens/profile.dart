@@ -225,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
+                          backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(horizontal: 50),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                       child: const Text(

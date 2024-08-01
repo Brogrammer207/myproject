@@ -302,7 +302,7 @@ class _AddProductAdminState extends State<AddProductAdmin> {
                     updateProfile();
                   },
                   style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
+                      backgroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(horizontal: 50),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
                   child: const Text(
