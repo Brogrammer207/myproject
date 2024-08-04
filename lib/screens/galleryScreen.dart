@@ -15,7 +15,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     List<String> imageUrls = [];
     QuerySnapshot snapshot = await _firestore.collection('images').get();
     for (var doc in snapshot.docs) {
-      imageUrls.add(doc['imageUrl']);
+      imageUrls.add(doc['url']);
     }
     return imageUrls;
   }
