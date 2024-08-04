@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myproject/admin/addproduct.dart';
+import 'package:myproject/screens/galleryScreen.dart';
+import 'package:myproject/screens/home_screens/gallery.dart';
 import 'package:myproject/screens/widgets/common_app_bar.dart';
 
 import '../screens/orders/orders_screen.dart';
@@ -59,6 +61,25 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   'Show Order',
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 )),
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            InkWell(
+              onTap: () {
+                Get.to(() =>  AddGalleryScreen(
+                ));
+              },
+              child: Container(
+                height: 50,
+                width: Get.width,
+                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
+                child: const Center(
+                    child: Text(
+                      'Gallery',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    )),
               ),
             ),
           ],

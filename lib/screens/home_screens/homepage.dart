@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePageScreen> {
                               border: Border.all(color: Colors.transparent, width: 2)),
                           margin: const EdgeInsets.symmetric(horizontal: 10),
                           padding: const EdgeInsets.symmetric(horizontal: 6),
-                          constraints: BoxConstraints(maxWidth: context.getSize.width * .16),
+                          // constraints: BoxConstraints(maxWidth: context.getSize.width * .16),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePageScreen> {
                               Center(
                                 child: Text(
                                   category[index].name.capitalize!,
-                                  overflow: TextOverflow.ellipsis,
+                                  // overflow: TextOverflow.ellipsis,
                                   maxLines: 1,
                                 ),
                               ),
