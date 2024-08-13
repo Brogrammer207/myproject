@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-class GalleryScreen extends StatefulWidget {
+class AdminViewGalleryScreen extends StatefulWidget {
   @override
-  _GalleryScreenState createState() => _GalleryScreenState();
+  _AdminViewGalleryScreenState createState() => _AdminViewGalleryScreenState();
 }
 
-class _GalleryScreenState extends State<GalleryScreen> {
+class _AdminViewGalleryScreenState extends State<AdminViewGalleryScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<List<String>> _fetchImages() async {
@@ -23,7 +23,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+
       body: FutureBuilder<List<String>>(
         future: _fetchImages(),
         builder: (context, snapshot) {
@@ -79,23 +79,22 @@ class ImageZoomPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   title: const Text('Zoom Image'),
-      // ),
+      appBar: AppBar(
+        title: const Text('Zoom Image'),
+      ),
       body: PhotoViewGallery.builder(
         itemCount: imageUrls.length,
         builder: (context, index) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(imageUrls[index]),
-            // minScale: PhotoViewComputedScale.covered,
-            // maxScale: PhotoViewComputedScale.covered * 2,
+            minScale: PhotoViewComputedScale.covered,
+            maxScale: PhotoViewComputedScale.covered * 2,
           );
         },
         pageController: PageController(initialPage: initialIndex),
         scrollPhysics: const BouncingScrollPhysics(),
         backgroundDecoration: const BoxDecoration(
-          color: Colors.white,
+          color: Colors.black,
         ),
       ),
     );
