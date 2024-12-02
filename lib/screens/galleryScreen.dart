@@ -1,5 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -76,13 +79,47 @@ class ImageZoomPage extends StatelessWidget {
 
   ImageZoomPage({required this.imageUrls, required this.initialIndex});
 
+  Future<void> _downloadImage(BuildContext context, String url) async {
+    // Request storage permissions
+    if (await Permission.storage.request().isGranted) {
+      try {
+        // Get app's document directory
+        final directory = await getApplicationDocumentsDirectory();
+        final filePath = "${directory.path}/${url.split('/').last}";
+
+        // Download the image
+        Dio dio = Dio();
+        await dio.download(url, filePath);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image saved at $filePath')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to download image: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Storage permission is required to download images.')),
+      );
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // appBar: AppBar(
-      //   title: const Text('Zoom Image'),
-      // ),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.download),
+            onPressed: () {
+              final currentImageUrl = imageUrls[initialIndex];
+              _downloadImage(context, currentImageUrl);
+            },
+          ),
+        ],
+      ),
       body: PhotoViewGallery.builder(
         itemCount: imageUrls.length,
         builder: (context, index) {

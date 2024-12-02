@@ -1,14 +1,11 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
-import 'package:myproject/bottom_navigation_bar_screen.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/widgets/loading_animation.dart';
 import 'package:upi_india/upi_app.dart';
@@ -367,7 +364,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-                            apps.isNotEmpty ?
                             ElevatedButton(
                               onPressed: () {
                                 if (cartList.map((e) => e.inStock).toList().contains(null)) {
@@ -394,7 +390,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       body: 'Click here to watch this order',
                                       deviceToken: value.data()!["fcmtoken"],
                                       image:
-                                          'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
+                                      'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
                                       title: 'A new order is placed',
                                       orderID: '1');
 
@@ -410,8 +406,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 'CheckOut',
                                 style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
                               ),
-                            ):
-                            Text('Please Install Any UPI Application'),
+                            ),
+                            // apps.isNotEmpty ?
+                            // :
+                            // Text('Please Install Any UPI Application'),
 
                             const SizedBox(
                               height: 30,
@@ -517,69 +515,70 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
               height: 6,
             ),
             // if (Platform.isAndroid)
-            if (apps.isNotEmpty)
-              ...apps
-                  .map((e) => Obx(() {
-                        if (refreshInt > 0) {}
-                        return ListTile(
-                          // dense: true,
-                          contentPadding: EdgeInsets.zero,
-                          onTap: () {
-                            upiApp = e;
-                            refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                            cashOnDelivery.value = "";
-                          },
-                          visualDensity: VisualDensity.compact,
-                          title: Text(e.name.toString()),
-                          trailing: IgnorePointer(
-                            ignoring: true,
-                            child: Radio<UpiApp?>(
-                              value: e,
-                              visualDensity: VisualDensity.compact,
-                              groupValue: upiApp,
-                              onChanged: (fa) {},
-                            ),
-                          ),
-                          leading: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.memory(e.icon),
-                          ),
-                        );
-                      }))
-                  .toList()
-            else
-              const Center(
-                child: Text("No UPI installed"),
+            // if (apps.isNotEmpty)
+            //   ...apps
+            //       .map((e) => Obx(() {
+            //             if (refreshInt > 0) {}
+            //             return ListTile(
+            //               // dense: true,
+            //               contentPadding: EdgeInsets.zero,
+            //               onTap: () {
+            //                 upiApp = e;
+            //                 refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+            //                 cashOnDelivery.value = "";
+            //               },
+            //               visualDensity: VisualDensity.compact,
+            //               title: Text(e.name.toString()),
+            //               trailing: IgnorePointer(
+            //                 ignoring: true,
+            //                 child: Radio<UpiApp?>(
+            //                   value: e,
+            //                   visualDensity: VisualDensity.compact,
+            //                   groupValue: upiApp,
+            //                   onChanged: (fa) {},
+            //                 ),
+            //               ),
+            //               leading: Padding(
+            //                 padding: const EdgeInsets.all(8.0),
+            //                 child: Image.memory(e.icon),
+            //               ),
+            //             );
+            //           }))
+            //       .toList()
+            // else
+            //   const Center(
+            //     child: Text("No UPI installed"),
+            //   ),
+            // Platform.isIOS
+            //     ?
+            //     : const SizedBox()
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              onTap: () {
+                upiApp = null;
+                refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+                cashOnDelivery.value = "Cod";
+                setState(() {});
+              },
+              visualDensity: VisualDensity.compact,
+              title: const Text("Cash On Delivery"),
+              trailing: IgnorePointer(
+                ignoring: true,
+                child: Radio<String?>(
+                  value: "Cod",
+                  visualDensity: VisualDensity.compact,
+                  groupValue: cashOnDelivery.value,
+                  onChanged: (fa) {
+                    cashOnDelivery.value = "Cod";
+                  },
+                ),
               ),
-            Platform.isIOS
-                ? ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    onTap: () {
-                      upiApp = null;
-                      refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                      cashOnDelivery.value = "Cod";
-                      setState(() {});
-                    },
-                    visualDensity: VisualDensity.compact,
-                    title: const Text("Cash On Delivery"),
-                    trailing: IgnorePointer(
-                      ignoring: true,
-                      child: Radio<String?>(
-                        value: "Cod",
-                        visualDensity: VisualDensity.compact,
-                        groupValue: cashOnDelivery.value,
-                        onChanged: (fa) {
-                          cashOnDelivery.value = "Cod";
-                        },
-                      ),
-                    ),
-                    leading: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.delivery_dining_rounded),
-                      // child: Image.memory("e.icon"),
-                    ),
-                  )
-                : const SizedBox()
+              leading: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(Icons.delivery_dining_rounded),
+                // child: Image.memory("e.icon"),
+              ),
+            )
           ],
         ),
       ),
