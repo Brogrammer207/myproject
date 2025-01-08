@@ -366,37 +366,42 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             ),
                             ElevatedButton(
                               onPressed: () {
-                                if (cartList.map((e) => e.inStock).toList().contains(null)) {
-                                  showToast("Please wait");
-                                  return;
-                                }
-                                if (canBuy == false) {
-                                  showToast("some product is out of stock");
-                                  return;
-                                }
-                                addPaymentUPI(
-                                  totalAmount,
-                                  freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
-                                );
+                                if(cashOnDelivery.value.isNotEmpty){
+                                  if (cartList.map((e) => e.inStock).toList().contains(null)) {
+                                    showToast("Please wait");
+                                    return;
+                                  }
+                                  if (canBuy == false) {
+                                    showToast("some product is out of stock");
+                                    return;
+                                  }
+                                  addPaymentUPI(
+                                    totalAmount,
+                                    freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
+                                  );
 
-                                FirebaseFirestore.instance
-                                    .collection('fcmtoken')
-                                    .doc('admin_token')
-                                    .get()
-                                    .then((value) {
-                                  // value.
-                                  print(value.data()!["fcmtoken"]);
-                                  sendPushNotification(
-                                      body: 'Click here to watch this order',
-                                      deviceToken: value.data()!["fcmtoken"],
-                                      image:
-                                      'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
-                                      title: 'A new order is placed',
-                                      orderID: '1');
+                                  FirebaseFirestore.instance
+                                      .collection('fcmtoken')
+                                      .doc('admin_token')
+                                      .get()
+                                      .then((value) {
+                                    // value.
+                                    print(value.data()!["fcmtoken"]);
+                                    sendPushNotification(
+                                        body: 'Click here to watch this order',
+                                        deviceToken: value.data()!["fcmtoken"],
+                                        image:
+                                        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
+                                        title: 'A new order is placed',
+                                        orderID: '1');
 
-                                  showToast("Order is Accepted");
-                                });
-                                Get.to(const OrdersScreen());
+                                    showToast("Order is Accepted");
+                                  });
+                                  Get.to(const OrdersScreen());
+                                }else{
+                                  showToast("PLease select payment method");
+                                }
+
                               },
                               style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,

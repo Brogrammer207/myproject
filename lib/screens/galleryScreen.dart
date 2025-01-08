@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:myproject/screens/widgets/helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -81,30 +85,58 @@ class ImageZoomPage extends StatelessWidget {
 
   Future<void> _downloadImage(BuildContext context, String url) async {
     // Request storage permissions
-    if (await Permission.storage.request().isGranted) {
-      try {
-        // Get app's document directory
-        final directory = await getApplicationDocumentsDirectory();
-        final filePath = "${directory.path}/${url.split('/').last}";
-
-        // Download the image
-        Dio dio = Dio();
-        await dio.download(url, filePath);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Image saved at $filePath')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to download image: $e')),
-        );
+    if (Platform.isAndroid) {
+      if (!await Permission.manageExternalStorage.isGranted) {
+        var result = await Permission.manageExternalStorage.request();
+        if (!result.isGranted) {
+          _showPermissionError(context);
+          return;
+        }
       }
-    } else {
+    } else if (!await Permission.photos.isGranted) {
+      var result = await Permission.photos.request();
+      if (!result.isGranted) {
+        _showPermissionError(context);
+        return;
+      }
+    }
+
+    try {
+      // Download the image
+      Dio dio = Dio();
+      final tempDirectory = await getTemporaryDirectory();
+      final filePath = "${tempDirectory.path}/${url.split('/').last}";
+
+      // Download the image file to temporary directory
+      await dio.download(url, filePath);
+
+      // Save the image to the gallery
+      final asset = await PhotoManager.editor.saveImage(
+        File(filePath).readAsBytesSync(), filename: 'Borawar Oil',
+      );
+
+      if (asset != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Image saved to gallery')),
+        );
+        showToast("Image saved to gallery");
+      } else {
+        throw Exception("Failed to save image to gallery");
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Storage permission is required to download images.')),
+        SnackBar(content: Text('Failed to download image: $e')),
       );
     }
   }
+
+  void _showPermissionError(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Storage permission is required to download images.')),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
