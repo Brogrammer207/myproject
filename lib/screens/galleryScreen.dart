@@ -30,7 +30,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white.withOpacity(.05),
       body: FutureBuilder<List<String>>(
         future: _fetchImages(),
         builder: (context, snapshot) {
