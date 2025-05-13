@@ -87,6 +87,14 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: Text(
           'Delivery Address',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
@@ -100,14 +108,14 @@ class _AddressScreenState extends State<AddressScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text(
-                      'Add your address,\n where your orders will be delivered.'.capitalize!,
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.urbanist(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    // Text(
+                    //   'Add your address,\n where your orders will be delivered.'.capitalize!,
+                    //   textAlign: TextAlign.center,
+                    //   style: GoogleFonts.urbanist(fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w600),
+                    // ),
+                    // const SizedBox(
+                    //   height: 12,
+                    // ),
                     Lottie.asset(
                       "assets/images/location.json",
                       height: 150.0,
@@ -122,7 +130,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         hintetxt: 'Enter Location Name',
                         icon: const Icon(
                           Icons.near_me,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         ),
                         controller: addressName,
                         keyboardType: TextInputType.name,
@@ -150,7 +158,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         },
                         icon: const Icon(
                           Icons.phone,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         )),
                     const SizedBox(
                       height: 20,
@@ -171,9 +179,9 @@ class _AddressScreenState extends State<AddressScreen> {
                             DropdownButtonFormField(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
                                   enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
                                   counterText: "",
                                   contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                                   enabled: true,
@@ -227,7 +235,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         },
                         icon: const Icon(
                           Icons.home,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         )),
                     const SizedBox(
                       height: 20,
@@ -244,7 +252,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         },
                         icon: const Icon(
                           Icons.landscape_rounded,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         )),
                     const SizedBox(
                       height: 50,
@@ -257,7 +265,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.blue),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF4BB10)),
                         child: const Center(
                             child: Text(
                           'Update Address',
@@ -309,9 +317,9 @@ Widget buildTextField(
           keyboardType: keyboardType,
           decoration: InputDecoration(
             border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 : 1000), borderSide: BorderSide.none),
+                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 : 10), borderSide: BorderSide.none),
             enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 : 1000), borderSide: BorderSide.none),
+                borderRadius: BorderRadius.circular(allowMultiLine == true ? 14 : 10), borderSide: BorderSide.none),
             counterText: "",
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             enabled: true,

@@ -81,54 +81,70 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       appBar: widget.home == null
           ? AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
               title: const Text('Profile'),
             )
           : null,
       body: fireStoreService.userLoggedIn
           ? dataLoaded
-              ? Container(
-                  padding: const EdgeInsets.only(left: 15, top: 20, right: 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                    child: Form(
-                      key: formKey,
-                      child: ListView(
-                        children: [
-                          Center(
-                            child: GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                NewHelper.showImagePickerSheet(
-                                    gotImage: (File gg) {
-                                      image = gg;
-                                      imagePicked = true;
-                                      setState(() {});
-                                    },
-                                    context: context);
-                              },
-                              child: Stack(
-                                children: [
-                                  Container(
-                                    width: 130,
-                                    height: 130,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(width: 4, color: Colors.white),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          spreadRadius: 2,
-                                          blurRadius: 10,
-                                          color: Colors.black.withOpacity(0.1),
-                                        )
-                                      ],
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10000),
-                                      child: Image.file(image,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) => Image.network(
+              ? GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+                },
+                child: Form(
+                  key: formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Stack(
+                          clipBehavior: Clip.none,
+
+                          children: [
+                            Image.asset('assets/images/profileback.png', height: 150, width: Get.width,fit: BoxFit.fill,),
+                            Positioned(
+                              top: 70,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    NewHelper.showImagePickerSheet(
+                                        gotImage: (File gg) {
+                                          image = gg;
+                                          imagePicked = true;
+                                          setState(() {});
+                                        },
+                                        context: context);
+                                  },
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 4, color: Colors.white),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              spreadRadius: 2,
+                                              blurRadius: 10,
+                                              color: Colors.black.withOpacity(0.1),
+                                            )
+                                          ],
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(10000),
+                                          child: Image.file(image,
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (_, __, ___) => Image.network(
                                                 image.path,
                                                 fit: BoxFit.cover,
                                                 errorBuilder: (_, __, ___) => Icon(
@@ -137,122 +153,115 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   color: Colors.grey.shade700,
                                                 ),
                                               )),
-                                    ),
-                                  ),
-                                  Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              width: 4,
+                                        ),
+                                      ),
+                                      Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                  width: 4,
+                                                  color: Colors.white,
+                                                ),
+                                                color: Colors.blue),
+                                            child: const Icon(
+                                              Icons.edit,
                                               color: Colors.white,
                                             ),
-                                            color: Colors.blue),
-                                        child: const Icon(
-                                          Icons.edit,
-                                          color: Colors.white,
-                                        ),
-                                      ))
-                                ],
+                                          ))
+                                    ],
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          buildTextField('Full Name', 'Manish prajapat', false, nameController, (value) {
-                            if (value!.trim().isEmpty) {
-                              return "Please enter name";
-                            }
-                            return null;
-                          }),
-                          buildTextField('Email', 'Manishprajapat207@gmail.com', false, email, (value) {
-                            if (value!.trim().isEmpty) {
-                              return "Please enter email";
-                            }
-                            if (value.trim().isValidEmail) {
-                              return "Please enter valid email address";
-                            }
-                            return null;
-                          }),
-                          // buildTextField('password', '***********', true),
-                          buildTextField('Address', 'Mansarovar jaipur', false, address, (value) {
-                            if (value!.trim().isEmpty) {
-                              return "Please enter address";
-                            }
-                            return null;
-                          }),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              OutlinedButton(
-                                onPressed: () {
-                                  FirebaseAuth.instance.signOut().then((value) {
-                                    Get.offAll(const SignUpScreen());
-                                    showToast("Logged Out Successfully");
-                                  });
-                                },
-                                style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                child: const Text(
-                                  'Logout',
-                                  style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.black),
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  updateProfile();
-                                  return;
-                                  if (widget.fromLogin == false) {
-                                  } else {
-                                    Get.offAll(const BottomNavigationScreen());
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    padding: const EdgeInsets.symmetric(horizontal: 50),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                child: const Text(
-                                  'Update',
-                                  style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
+                          ],
+                        ),
 
-                          if (FirebaseAuth.instance.currentUser != null)
-                            ElevatedButton(
-                              onPressed: () async {
-                                User? user = FirebaseAuth.instance.currentUser;
-                                await user!.delete();
-                                showToast("Your account has been deleted");
-                                Get.to(const SignUpScreen());
-                              },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        buildTextField('Full Name', 'Manish prajapat', false, nameController, (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please enter name";
+                          }
+                          return null;
+                        }),
+                        buildTextField('Email', 'Manishprajapat207@gmail.com', false, email, (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please enter email";
+                          }
+                          if (value.trim().isValidEmail) {
+                            return "Please enter valid email address";
+                          }
+                          return null;
+                        }),
+                        // buildTextField('password', '***********', true),
+                        buildTextField('Address', 'Mansarovar jaipur', false, address, (value) {
+                          if (value!.trim().isEmpty) {
+                            return "Please enter address";
+                          }
+                          return null;
+                        }),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            updateProfile();
+                            return;
+                          },
+                          child: Container(
+                            width: Get.width,
+                            margin:   const EdgeInsets.symmetric(horizontal: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                            decoration: BoxDecoration(
+                                color: const Color(0xffF4BB10),
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ]),
+                            child: Center(
                               child: const Text(
-                                'Delete Account',
+                                'Update',
                                 style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
                               ),
                             ),
-                        ],
-                      ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+
+                        // if (FirebaseAuth.instance.currentUser != null)
+                        //   ElevatedButton(
+                        //     onPressed: () async {
+                        //       User? user = FirebaseAuth.instance.currentUser;
+                        //       await user!.delete();
+                        //       showToast("Your account has been deleted");
+                        //       Get.to(const SignUpScreen());
+                        //     },
+                        //     style: ElevatedButton.styleFrom(
+                        //         backgroundColor: Colors.red,
+                        //         padding: const EdgeInsets.symmetric(horizontal: 50),
+                        //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                        //     child: const Text(
+                        //       'Delete Account',
+                        //       style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                        //     ),
+                        //   ),
+                      ],
                     ),
-                  ),
-                )
+                  )
+                ),
+              )
               : const Center(
                   child: CircularProgressIndicator(),
                 )
@@ -278,7 +287,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget buildTextField(String labletext, String placeholder, bool ispasswordTextField,
       TextEditingController controller, FormFieldValidator<String>? validator) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30),
+      padding: const EdgeInsets.only(bottom: 30, left: 20, right: 20),
       child: TextFormField(
         controller: controller,
         autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -293,7 +302,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.grey,
                     ))
                 : null,
-            contentPadding: const EdgeInsets.only(bottom: 5),
+            contentPadding: const EdgeInsets.only(bottom: 5, left: 10),
+            border: InputBorder.none,
+            focusedErrorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 1,),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            errorBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            disabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(10))
+            ),
             labelText: labletext,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             hintText: placeholder,

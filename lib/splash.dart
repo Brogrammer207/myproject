@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myproject/screens/home_screens/homepage.dart';
+import 'package:myproject/screens/onBoardingScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_services/firestore_service.dart';
 import 'screens/auth/signup.dart';
@@ -25,20 +27,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   checkLogin() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool onboardingShown = prefs.getBool('onboardingShown') ?? false;
+
     User? currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
+
+    if (!onboardingShown) {
+      // Show onboarding for the first time
+      Get.offAll(() => const OnBoardingScreen());
+    } else if (currentUser != null) {
+      // User is logged in and has already seen onboarding
       bool userExists = await FirebaseFireStoreService().checkUserProfile();
       if (userExists == true) {
         Get.offAll(() => const BottomNavigationScreen());
       } else {
-        Get.offAll(const ProfileScreen(
-          fromLogin: true,
-        ));
+        Get.offAll(() => const ProfileScreen(fromLogin: true));
       }
     } else {
-      Get.offAll(() => const BottomNavigationScreen());
+      // Not logged in and onboarding already shown
+      Get.offAll(() => const SignUpScreen());
     }
   }
+
 
   @override
   void initState() {
@@ -53,41 +63,25 @@ class _SplashScreenState extends State<SplashScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Center(
-            child: Image.asset(
-              'assets/images/borawarlogo.png',
-              width: 300,
+          Container(
+            height: Get.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: const AssetImage('assets/images/splash.png'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5),
+                  BlendMode.darken,
+                ),
+              ),
+            ),
+            child: Center(
+              child: Image.asset(
+                'assets/images/borawarlogo.png',
+                width: 200,
+              ),
             ),
           ),
-          const SizedBox(
-            height: 18,
-          ),
-          // const Center(
-          //   child: Text(
-          //     "Let's get started",
-          //     style: TextStyle(
-          //       fontSize: 26,
-          //       fontWeight: FontWeight.bold,
-          //     ),
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          // const Center(
-          //   child: Text(
-          //     "Never a better time than now to start.",
-          //     style: TextStyle(
-          //       fontSize: 20,
-          //       fontWeight: FontWeight.bold,
-          //       color: Colors.black38,
-          //     ),
-          //     textAlign: TextAlign.center,
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 38,
-          // ),
         ],
       ),
     );

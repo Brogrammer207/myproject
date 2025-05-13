@@ -25,6 +25,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: Text(
           'Orders',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
@@ -68,17 +76,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                 height: 80,
                                 width: 80,
                                 padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(boxShadow: const [
+                                decoration: BoxDecoration(
+                                    boxShadow: const [
                                   BoxShadow(
                                     blurRadius: 4,
                                     color: Color(0x3600000F),
                                     offset: Offset(0, 2),
+                                  ),
+                                ], borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      productDetails!.imageUrl!,
+                                    ),
+                                    fit: BoxFit.cover,
                                   )
-                                ], borderRadius: BorderRadius.circular(21), color: Colors.white),
-                                child: Image.network(
-                                  productDetails!.imageUrl!,
-                                  fit: BoxFit.contain,
                                 ),
+                                // child: Image.network(
+                                //   productDetails!.imageUrl!,
+                                //   fit: BoxFit.contain,
+                                // ),
                               ),
                               const SizedBox(
                                 width: 20,

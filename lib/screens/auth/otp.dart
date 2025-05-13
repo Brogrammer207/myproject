@@ -30,8 +30,14 @@ class _OtpState extends State<Otp> {
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+          child: Container(
+            height:Get.height,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/background.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,23 +46,24 @@ class _OtpState extends State<Otp> {
                   height: 18,
                 ),
                 Container(
-                  width: 200,
-                  height: 200,
+                  width: 100,
+                  height: 100,
                   decoration: BoxDecoration(
                     color: Colors.deepPurple.shade50,
                     shape: BoxShape.circle,
                   ),
                   child: Image.asset(
-                    'assets/images/borawarlogo.png',
+                    'assets/images/logoo.png',
                   ),
                 ),
                 const SizedBox(
-                  height: 24,
+                  height: 100,
                 ),
                 const Text(
                   'Verification',
                   style: TextStyle(
                     fontSize: 22,
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -68,80 +75,79 @@ class _OtpState extends State<Otp> {
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black38,
+                    color: Colors.grey,
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
                   height: 28,
                 ),
-                Container(
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      Pinput(
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 25.0,right: 25),
+                      child: Pinput(
                         length: 6,
                         showCursor: true,
                         onChanged: (value) => code = value,
                       ),
-                      const SizedBox(
-                        height: 22,
-                      ),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            try {
-                              OverlayEntry loader = Helper.overlayLoader(context);
-                              Overlay.of(context).insert(loader);
-                              PhoneAuthCredential credential =
-                                  PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
-                              await auth.signInWithCredential(credential);
-                              bool userExists = await FirebaseFireStoreService().checkUserProfile();
-                              if (userExists == true) {
-                                Get.offAll(const BottomNavigationScreen());
-                                Helper.hideLoader(loader);
-                              } else {
-                                Get.offAll(const ProfileScreen(
-                                  fromLogin: true,
-                                ));
-                                Helper.hideLoader(loader);
-                              }
-                            } catch (e) {
-                              Fluttertoast.showToast(
-                                  msg: "Wrong Otp",
-                                  toastLength: Toast.LENGTH_SHORT,
-                                  gravity: ToastGravity.CENTER,
-                                  timeInSecForIosWeb: 1,
-                                  backgroundColor: Colors.red,
-                                  textColor: Colors.white,
-                                  fontSize: 16.0);
+                    ),
+                    const SizedBox(
+                      height: 22,
+                    ),
+                    Container(
+                        padding: const EdgeInsets.only(left: 25.0,right: 25),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          try {
+                            OverlayEntry loader = Helper.overlayLoader(context);
+                            Overlay.of(context).insert(loader);
+                            PhoneAuthCredential credential =
+                                PhoneAuthProvider.credential(verificationId: SignUpScreen.verify, smsCode: code);
+                            await auth.signInWithCredential(credential);
+                            bool userExists = await FirebaseFireStoreService().checkUserProfile();
+                            if (userExists == true) {
+                              Get.offAll(const BottomNavigationScreen());
+                              Helper.hideLoader(loader);
+                            } else {
+                              Get.offAll(const ProfileScreen(
+                                fromLogin: true,
+                              ));
+                              Helper.hideLoader(loader);
                             }
-                          },
-                          style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                            ),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(14.0),
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(fontSize: 16),
+                          } catch (e) {
+                            Fluttertoast.showToast(
+                                msg: "Wrong Otp",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.CENTER,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 16.0);
+                          }
+                        },
+                        style: ButtonStyle(
+                          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
-                      )
-                    ],
-                  ),
+                        child: const Padding(
+                          padding: EdgeInsets.all(14.0),
+                          child: Text(
+                            'Verify',
+                            style: TextStyle(fontSize: 16,color: Color(0xffF4BB10),
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                      ),
+                    )
+                    )
+                  ],
                 ),
                 const SizedBox(
                   height: 18,
@@ -163,9 +169,12 @@ class _OtpState extends State<Otp> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+                    color:Colors.white,
                   ),
                   textAlign: TextAlign.center,
+                ),
+                const SizedBox(
+                  height: 100,
                 ),
               ],
             ),

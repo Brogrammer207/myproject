@@ -145,67 +145,50 @@ class _AdminHomePageState extends State<AdminHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  height: 100,
                   width: Get.width,
                   decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
-                  child:Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Text(
-                        'Total Delivered Orders: ${deliveredCount.toString()}',
-                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
+                  child:Column(
+                    children: [
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            'Total Delivered Orders: ${deliveredCount.toString()}',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            'Total Dispatch Orders: ${dispatchCount.toString()}',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child:  Text(
+                            'Total Cancelled Orders: ${cancelledCount.toString()}',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child:  Text(
+                            'Total Amount of Delivered Orders: \₹${totalDeliveredAmount.toStringAsFixed(2)}',
+                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
               ),
 
-              const SizedBox(height: 10,),
-              Container(
-                height: 100,
-                width: Get.width,
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
-                child:Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child: Text(
-                      'Total Dispatch Orders: ${dispatchCount.toString()}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10,),
-              Container(
-                height: 100,
-                width: Get.width,
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
-                child:Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child:  Text(
-                      'Total Cancelled Orders: ${cancelledCount.toString()}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10,),
-              Container(
-                height: 100,
-                width: Get.width,
-                decoration: BoxDecoration(color: Colors.blue, borderRadius: BorderRadius.circular(21)),
-                child:Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(18.0),
-                    child:  Text(
-                      'Total Amount of Delivered Orders: \₹${totalDeliveredAmount.toStringAsFixed(2)}',
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
 
               const SizedBox(height: 10,),
               InkWell(
@@ -269,3 +252,5 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 }
+
+

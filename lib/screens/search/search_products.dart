@@ -125,7 +125,7 @@ class _SearchProductsState extends State<SearchProducts> {
                                               Text(
                                                 productInfo.name.toString(),
                                                 style: const TextStyle(
-                                                    fontSize: 15, color: Colors.teal, fontWeight: FontWeight.bold),
+                                                    fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
                                               ),
                                               const SizedBox(
                                                 height: 2,
@@ -135,21 +135,36 @@ class _SearchProductsState extends State<SearchProducts> {
                                                 style: GoogleFonts.poppins(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.black,
+                                                  color: Color(0xffF4BB10),
                                                 ),
                                               ),
                                               const SizedBox(
-                                                height: 2,
+                                                height: 10,
                                               ),
+                                              Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.centerRight,
+                                                    child: Container(
+                                                      height: 30,
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                        color: Color(0xffFFE1D9),
+                                                        border: Border.all(color: Color(0xffF4BB10), width: 1),
+                                                        borderRadius: BorderRadius.circular(10),
+                                                      ),
+                                                      child: Center(child: Text('select',style: TextStyle(color: Color(0xffF4BB10)),)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
                                             ],
                                           ),
                                         ),
-                                        const Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(Icons.arrow_forward_ios_rounded),
-                                          ],
-                                        )
+
+
+
                                       ],
                                     ),
                                   ),

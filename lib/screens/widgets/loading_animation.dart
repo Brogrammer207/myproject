@@ -9,7 +9,9 @@ class LoadingAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: SizedBox(
-                height: 100, width: 100, child: Lottie.asset("assets/images/loading.json", frameRate: FrameRate.max))
+                height: 100, width: 100, child: Lottie.asset("assets/images/loading.json",
+
+            frameRate: FrameRate.max))
             .animate()
             .scale(duration: 600.ms)
             .fade(duration: 400.ms));

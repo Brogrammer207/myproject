@@ -13,6 +13,7 @@ import 'screens/home_screens/drawer_screen.dart';
 import 'screens/home_screens/homepage.dart';
 
 const List<TabItem> items = [
+
   TabItem(
     icon: Icons.home,
     title: 'Home',
@@ -45,8 +46,8 @@ class BottomNavigationScreen extends StatefulWidget {
 class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
-  Color color2 = Colors.white;
-  Color bgColor = Colors.red;
+  Color color2 = Color(0xff8B8B8B);
+  Color bgColor = Colors.white;
 
   int selectedIndex = 0;
 
@@ -77,11 +78,19 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
       key: _scaffoldKey,
       drawer: const DrawerScreen(),
       appBar: AppBar(
+        centerTitle: true,
         leading: InkWell(
             onTap: () {
               _scaffoldKey.currentState!.openDrawer();
             },
-            child: const Icon(Icons.menu)),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Image.asset('assets/images/menu.png', width: 30, height: 30),
+                ],
+              ),
+            )),
         title: AnimatedText(
           titles[selectedIndex],
           fadeAnimation: true,
@@ -112,8 +121,8 @@ class _BottomNavigationScreenState extends State<BottomNavigationScreen> {
         onTap: (int index) => setState(() {
           selectedIndex = index;
         }),
-        chipStyle: const ChipStyle(convexBridge: true),
-        itemStyle: ItemStyle.circle,
+        chipStyle: const ChipStyle(convexBridge: true,background:Color(0xffF4BB10)),
+        itemStyle: ItemStyle.hexagon,
         animated: false,
       ),
     );

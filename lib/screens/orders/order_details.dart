@@ -60,6 +60,14 @@ class _OrderDetailsState extends State<OrderDetails> {
     log(widget.modelOrderDetails.userId.toString());
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: Text(
           'Orders Details',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
@@ -97,11 +105,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       offset: Offset(0, 2),
                                     )
                                   ],
-                                  borderRadius: BorderRadius.circular(21),
-                                  color: Colors.white),
-                              child: Image.network(
-                                productDetails.productDetails!.imageUrl!,
-                                fit: BoxFit.contain,
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    productDetails.productDetails!.imageUrl!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -533,7 +544,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 height: 50,
                                 width: Get.width,
                                 decoration: BoxDecoration(
-                                  color: Colors.red,
+                                  color: Color(0xffF4BB10),
                                   borderRadius: BorderRadius.circular(11),
                                 ),
                                 child: const Center(
@@ -549,17 +560,33 @@ class _OrderDetailsState extends State<OrderDetails> {
                   const SizedBox(
                     height: 20,
                   ),
-                  ElevatedButton.icon(
-                      onPressed: () async {
-                        var url =
-                            'https://wa.me/9928634555?text=Borawar Help Support';
-                        await launch(url);
-                      },
-                      icon: Image.asset(
-                        'assets/images/whatsapp.png',
-                        height: 30,
+                  GestureDetector(
+                    onTap: () async {
+                      var url =
+                          'https://wa.me/9928634555?text=Borawar Help Support';
+                      await launch(url);
+                    },
+                    child: Container(
+                      height: 50,
+                      width: Get.width,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF4BB10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/whatsapp.png',
+                            height: 30,
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            "Contact Us",
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                          ),
+                        ],
                       ),
-                      label: const Text('Contact Us')),
+                    ),
+                  ),
                   const SizedBox(
                     height: 20,
                   ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:myproject/firebase_services/firestore_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../admin/homepage.dart';
+import '../../helper/helper.dart';
 import '../auth/signup.dart';
 import '../check_out/delivery_address.dart';
 import '../orders/orders_screen.dart';
@@ -26,12 +28,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      width: 250,
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
             decoration: const BoxDecoration(
-              color: Colors.red,
+              color: Color(0xFFF4BB10),
             ),
             child: Column(
               children: [
@@ -58,6 +61,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 Get.to(() => const AdminHomePage());
               },
             ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Home'),
@@ -65,6 +72,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
               // Handle the tap on the Home item
               Get.back();
             },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
           ),
           ListTile(
             leading: const Icon(Icons.person),
@@ -79,6 +90,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
               }
             },
           ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
           ListTile(
             leading: const Icon(Icons.access_alarm),
             title: const Text('Orders'),
@@ -89,6 +104,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 Get.to(() => const SignUpScreen());
               }
             },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
           ),
           ListTile(
             leading: const Icon(CupertinoIcons.map_pin_ellipse),
@@ -101,11 +120,43 @@ class _DrawerScreenState extends State<DrawerScreen> {
               }
             },
           ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
           ListTile(
             leading: const Icon(Icons.call),
             title: const Text('Contact Us'),
             onTap: () {
               launch("tel://9928634555");
+            },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete),
+            title: const Text('Delete Account'),
+            onTap: () async {
+              User? user = FirebaseAuth.instance.currentUser;
+              await user!.delete();
+              showToast("Your account has been deleted");
+              Get.to(const SignUpScreen());
+            },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () async {
+              FirebaseAuth.instance.signOut().then((value) {
+                Get.offAll(const SignUpScreen());
+                showToast("Logged Out Successfully");
+              });
             },
           ),
           // ListTile(

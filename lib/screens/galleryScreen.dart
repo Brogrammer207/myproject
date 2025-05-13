@@ -3,12 +3,16 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:myproject/screens/widgets/helper.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:http/http.dart';
+
 
 class GalleryScreen extends StatefulWidget {
   @override
@@ -26,6 +30,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
     return imageUrls;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +83,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 }
 
+
+
 class ImageZoomPage extends StatelessWidget {
   final List<String> imageUrls;
   final int initialIndex;
@@ -84,7 +92,6 @@ class ImageZoomPage extends StatelessWidget {
   ImageZoomPage({required this.imageUrls, required this.initialIndex});
 
   Future<void> _downloadImage(BuildContext context, String url) async {
-    // Request storage permissions
     if (Platform.isAndroid) {
       if (!await Permission.manageExternalStorage.isGranted) {
         var result = await Permission.manageExternalStorage.request();
@@ -93,35 +100,42 @@ class ImageZoomPage extends StatelessWidget {
           return;
         }
       }
-    } else if (!await Permission.photos.isGranted) {
-      var result = await Permission.photos.request();
-      if (!result.isGranted) {
-        _showPermissionError(context);
-        return;
+    } else if (Platform.isIOS) {
+      if (!await Permission.photosAddOnly.isGranted) {
+        var result = await Permission.photosAddOnly.request();
+        if (!result.isGranted) {
+          _showPermissionError(context);
+          return;
+        }
       }
     }
 
     try {
-      // Download the image
       Dio dio = Dio();
       final tempDirectory = await getTemporaryDirectory();
       final filePath = "${tempDirectory.path}/${url.split('/').last}";
 
-      // Download the image file to temporary directory
+      // Download image to temporary directory
       await dio.download(url, filePath);
 
-      // Save the image to the gallery
-      final asset = await PhotoManager.editor.saveImage(
-        File(filePath).readAsBytesSync(), filename: 'Borawar Oil',
-      );
-
-      if (asset != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Image saved to gallery')),
-        );
-        showToast("Image saved to gallery");
+      // Save image to gallery (use different methods for Android and iOS)
+      if (Platform.isIOS) {
+        final result = await ImageGallerySaver.saveFile(filePath);
+        if (result['isSuccess'] == true) {
+          showToast("Image saved to gallery");
+        } else {
+          throw Exception("Failed to save image to gallery");
+        }
       } else {
-        throw Exception("Failed to save image to gallery");
+        final asset = await PhotoManager.editor.saveImage(
+          File(filePath).readAsBytesSync(), filename: 'Borawar Oil',
+        );
+
+        if (asset != null) {
+          showToast("Image saved to gallery");
+        } else {
+          throw Exception("Failed to save image to gallery");
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -129,6 +143,34 @@ class ImageZoomPage extends StatelessWidget {
       );
     }
   }
+  downloadImage(String imageUrl, context) async {
+    try {
+      String devicePathToSaveImage = "";
+      var time = DateTime.now().microsecondsSinceEpoch;
+      if (Platform.isAndroid) {
+        devicePathToSaveImage = "/storage/emulated/0/Download/image-$time.jpg";
+      } else {
+        var downloadDirectoryPath = await getApplicationDocumentsDirectory();
+        devicePathToSaveImage = "${downloadDirectoryPath.path}/image-$time.jpg";
+      }
+
+      File file = File(devicePathToSaveImage);
+      print('File path: $devicePathToSaveImage');
+      // Make the HTTP GET request
+      var res = await get(Uri.parse(imageUrl));
+      if (res.statusCode == 200) {
+        // Save the image
+        await file.writeAsBytes(res.bodyBytes);
+        await ImageGallerySaver.saveFile(devicePathToSaveImage);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Yay! Downloading Completed'),
+        ));
+      }
+    } catch (error) {
+      print("Error: $error");
+    }
+  }
+
 
   void _showPermissionError(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -142,12 +184,20 @@ class ImageZoomPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         actions: [
           IconButton(
             icon: const Icon(Icons.download),
             onPressed: () {
               final currentImageUrl = imageUrls[initialIndex];
-              _downloadImage(context, currentImageUrl);
+              downloadImage(currentImageUrl,context);
             },
           ),
         ],

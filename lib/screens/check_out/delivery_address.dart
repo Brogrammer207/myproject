@@ -102,6 +102,14 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+            onTap: (){
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: Text(
           'Select Delivery Address',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
@@ -137,7 +145,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                         hintetxt: 'Enter Your Name',
                         icon: const Icon(
                           Icons.near_me,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         ),
                         controller: addressName,
                         keyboardType: TextInputType.name,
@@ -162,7 +170,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                         },
                         icon: const Icon(
                           Icons.home,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         )),
                     const SizedBox(
                       height: 20,
@@ -184,7 +192,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                             DropdownButtonFormField(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
+                                      borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
                                   // enabledBorder: OutlineInputBorder(
                                   //     borderRadius: BorderRadius.circular(1000), borderSide: BorderSide.none),
                                   counterText: "",
@@ -229,7 +237,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                         },
                         icon: const Icon(
                           Icons.phone,
-                          color: Colors.blue,
+                          color: Color(0xffF4BB10),
                         )),
 
 
@@ -262,7 +270,7 @@ class _SelectAddressScreenState extends State<SelectAddressScreen> {
                         height: 50,
                         margin: const EdgeInsets.symmetric(horizontal: 20),
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), color: Colors.blue),
+                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF4BB10)),
                         child: const Center(
                             child: Text(
                           'Continue',

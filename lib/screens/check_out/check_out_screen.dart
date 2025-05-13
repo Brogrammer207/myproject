@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
+import 'package:myproject/checkout_page.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/widgets/loading_animation.dart';
 import 'package:upi_india/upi_app.dart';
@@ -16,6 +17,7 @@ import '../../helper/helper.dart';
 import '../../model/model_address.dart';
 import '../../model/model_cart_list.dart';
 import '../../model/model_shipping_details.dart';
+import '../../phonepe_pg.dart';
 import '../orders/orders_screen.dart';
 import 'check_in_stock.dart';
 
@@ -166,6 +168,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
+        leading: GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: Text(
           'Place Order',
           style: GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 18),
@@ -197,8 +207,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             .toDouble();
                         bool freeShipping = subTotalAmount > modelShippingAddress!.minFreeShipping.toString().toNum;
 
-                        double totalAmount =
-                            freeShipping ? subTotalAmount : subTotalAmount + modelShippingAddress!.shippingAmount!;
+                        double totalAmount = freeShipping
+                            ? subTotalAmount
+                            : subTotalAmount + modelShippingAddress!.shippingAmount!;
 
                         bool canBuy = true;
 
@@ -219,16 +230,20 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                         height: 60,
                                         width: 60,
                                         padding: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(boxShadow: const [
-                                          BoxShadow(
-                                            blurRadius: 4,
-                                            color: Color(0x3600000F),
-                                            offset: Offset(0, 2),
-                                          )
-                                        ], borderRadius: BorderRadius.circular(21), color: Colors.white),
-                                        child: Image.network(
-                                          item.productDetails!.imageUrl.toString(),
-                                          fit: BoxFit.contain,
+                                        decoration: BoxDecoration(
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              blurRadius: 4,
+                                              color: Color(0x3600000F),
+                                              offset: Offset(0, 2),
+                                            )
+                                          ],
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: NetworkImage(item.productDetails!.imageUrl.toString()),
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
                                       const SizedBox(
@@ -364,9 +379,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             const SizedBox(
                               height: 16,
                             ),
-                            ElevatedButton(
-                              onPressed: () {
-                                if(cashOnDelivery.value.isNotEmpty){
+                            GestureDetector(
+                              onTap: () {
+                                if (cashOnDelivery.value == 'Cod') {
                                   if (cartList.map((e) => e.inStock).toList().contains(null)) {
                                     showToast("Please wait");
                                     return;
@@ -391,31 +406,36 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                         body: 'Click here to watch this order',
                                         deviceToken: value.data()!["fcmtoken"],
                                         image:
-                                        'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
+                                            'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi6UspEmsmGwyZV5M8fNpwaqg1nEoRENOjG2Wziyuw5XLA43MmBJOHJFyGEEwoITY4cYCmuAQTfffyBNB2EvLdfTY-j2EKvvQLtOl3yW2Za0ylLVTLdkgy_zsk7ikKCuDyhNhWETYMF8o8Z932_D1LZo3Ongu8m6nGmrtw7zyO7bhiltrIQOC241zRl4q8/s16000/Blue%20and%20Pink%20Professional%20Business%20Strategy%20Presentation%20(1).jpg',
                                         title: 'A new order is placed',
                                         orderID: '1');
 
                                     showToast("Order is Accepted");
                                   });
                                   Get.to(const OrdersScreen());
-                                }else{
+                                } else if (cashOnDelivery.value == "upi") {
+                                  PhonepePg(context: context, amount: totalAmount.round()).init();
+
+
+
+                                } else {
                                   showToast("PLease select payment method");
                                 }
-
                               },
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(horizontal: 50),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
-                              child: const Text(
-                                'CheckOut',
-                                style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                              child: Container(
+                                height: 40,
+                                width: 130,
+                                margin: const EdgeInsets.symmetric(horizontal: 20),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                decoration:
+                                    BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF4BB10)),
+                                child: const Center(
+                                    child: Text(
+                                  'CheckOut',
+                                  style: TextStyle(fontSize: 15, color: Colors.white),
+                                )),
                               ),
                             ),
-                            // apps.isNotEmpty ?
-                            // :
-                            // Text('Please Install Any UPI Application'),
-
                             const SizedBox(
                               height: 30,
                             ),
@@ -519,44 +539,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             const SizedBox(
               height: 6,
             ),
-            // if (Platform.isAndroid)
-            // if (apps.isNotEmpty)
-            //   ...apps
-            //       .map((e) => Obx(() {
-            //             if (refreshInt > 0) {}
-            //             return ListTile(
-            //               // dense: true,
-            //               contentPadding: EdgeInsets.zero,
-            //               onTap: () {
-            //                 upiApp = e;
-            //                 refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-            //                 cashOnDelivery.value = "";
-            //               },
-            //               visualDensity: VisualDensity.compact,
-            //               title: Text(e.name.toString()),
-            //               trailing: IgnorePointer(
-            //                 ignoring: true,
-            //                 child: Radio<UpiApp?>(
-            //                   value: e,
-            //                   visualDensity: VisualDensity.compact,
-            //                   groupValue: upiApp,
-            //                   onChanged: (fa) {},
-            //                 ),
-            //               ),
-            //               leading: Padding(
-            //                 padding: const EdgeInsets.all(8.0),
-            //                 child: Image.memory(e.icon),
-            //               ),
-            //             );
-            //           }))
-            //       .toList()
-            // else
-            //   const Center(
-            //     child: Text("No UPI installed"),
-            //   ),
-            // Platform.isIOS
-            //     ?
-            //     : const SizedBox()
             ListTile(
               contentPadding: EdgeInsets.zero,
               onTap: () {
@@ -571,6 +553,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 ignoring: true,
                 child: Radio<String?>(
                   value: "Cod",
+                  activeColor: Color(0xffF4BB10),
                   visualDensity: VisualDensity.compact,
                   groupValue: cashOnDelivery.value,
                   onChanged: (fa) {
@@ -583,7 +566,38 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 child: Icon(Icons.delivery_dining_rounded),
                 // child: Image.memory("e.icon"),
               ),
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.payments_outlined),
+                      // child: Image.memory("e.icon"),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Text(
+                      "UPI",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Radio<String?>(
+                  value: "upi",
+                  activeColor: Color(0xffF4BB10),
+                  visualDensity: VisualDensity.compact,
+                  groupValue: cashOnDelivery.value,
+                  onChanged: (fa) {
+                    cashOnDelivery.value = "upi";
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -635,18 +649,23 @@ Card addressCard({
                 .toList(),
           ),
           if (!ordersDetails)
-            ElevatedButton(
-                onPressed: () {
-                  Get.back();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  surfaceTintColor: Colors.blue,
-                ),
-                child: const Text(
+            GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                height: 40,
+                width: 130,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(0xffF4BB10)),
+                child: const Center(
+                    child: Text(
                   "Edit Address",
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-                ))
+                  style: TextStyle(fontSize: 15, color: Colors.white),
+                )),
+              ),
+            ),
         ],
       ),
     ),

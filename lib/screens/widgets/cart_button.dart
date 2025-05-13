@@ -35,17 +35,23 @@ class _CartButtonState extends State<CartButton> {
                   int totalAmount = cartList.map((e) => e.productQuantity!.toString().toNum).toList().sum.toInt();
 
                   return Badge(
-                    offset: const Offset(-5, 4),
+                    backgroundColor: Color(0xffF4BB10),
+                    offset: const Offset(-1, -5),
                     label: Text(totalAmount.toString()),
-                    child: IconButton(onPressed: widget.onPressed, icon: const Icon(Icons.card_travel)),
+                    child: GestureDetector(
+                        onTap: (){
+                          Get.to(() => const CartScreen());
+                        },
+                        child: Image.asset('assets/images/cart.png', width: 30, height: 30))
                   );
                 }
                 return Badge(
-                  child: IconButton(
-                      onPressed: () {
-                        Get.to(() => const CartScreen());
-                      },
-                      icon: const Icon(Icons.card_travel)),
+                  child: GestureDetector(
+                    onTap: (){
+                      Get.to(() => const CartScreen());
+                    },
+                      child: Image.asset('assets/images/cart.png', width: 30, height: 30))
+
                 );
               })
           : const SizedBox.shrink(),

@@ -30,62 +30,75 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xfff7f6fb),
-      body: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 18,
-                ),
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.deepPurple.shade50,
-                    shape: BoxShape.circle,
+      body: Container(
+        height:Get.height,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 18,
                   ),
-                  child: Image.asset(
-                    'assets/images/borawarlogo.png',
+                  Container(
+                    width: 100,
+                    height: 100,
+                    child: Image.asset(
+                      'assets/images/logoo.png',
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
-                const Text(
-                  'Registration',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(
+                    height: 80,
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text(
-                  "Add your phone number. we'll send you a verification code so we know you're real",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
+                  const Text(
+                    'welcome',
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 28,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  child: Column(
+                  const Text(
+                    "Sign in to access your account.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        "Enter your mobile number",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
                       TextFormField(
                         controller: phoneController,
                         keyboardType: TextInputType.number,
@@ -95,16 +108,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         decoration: InputDecoration(
                           hintText: "Enter Your Number",
-                          hintStyle: TextStyle(fontSize: 15),
+                          hintStyle: TextStyle(fontSize: 15,color: Colors.white),
                           enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
+                              borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(10)),
                           focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black12), borderRadius: BorderRadius.circular(10)),
+                              borderSide: BorderSide(color: Colors.white), borderRadius: BorderRadius.circular(10)),
                           prefixIcon: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 18),
                             child: Text(
                               "+91",
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                             ),
                           ),
                           suffixIcon: const Icon(
@@ -115,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       const SizedBox(
-                        height: 22,
+                        height: 40,
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -137,11 +150,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             );
                           },
                           style: ButtonStyle(
-                            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.purple),
+                            foregroundColor: MaterialStateProperty.all<Color>(Color(0xffF4BB10)),
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(24.0),
+                                borderRadius: BorderRadius.circular(5.0),
                               ),
                             ),
                           ),
@@ -149,15 +162,94 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             padding: EdgeInsets.all(14.0),
                             child: Text(
                               'Register',
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,),
                             ),
                           ),
                         ),
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 100,
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                          Text(
+                            'or Login with',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,color: Colors.white),
+                          ),
+                          Container(
+                            width: 100,
+                            color: Colors.white,
+                            height: 1,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 140,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.apple,
+                                  color: Colors.black,
+                                  size: 30,
+                                ),
+                                SizedBox(width: 10,),
+                                Text('Apple',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: 140,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/google.png',
+                                  height: 30,
+                                ),
+
+                                SizedBox(width: 10,),
+                                Text('Google',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    )),
+                              ],
+                            ),
+                          ),
+                        ],
                       )
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

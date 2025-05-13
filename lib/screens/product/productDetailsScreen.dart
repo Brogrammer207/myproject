@@ -30,6 +30,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          onTap: (){
+            Get.back();
+          },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Image.asset('assets/images/back.png'),
+            )),
         title: const Text('Product Details'),
       ),
       body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
@@ -92,49 +100,79 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 50,
+                  GestureDetector(
+                    onTap: () {
+                      if (!fireStoreService.userLoggedIn) {
+                        Get.to(() => const SignUpScreen());
+                        return;
+                      }
+                      if (canBuy == false) {
+                        showToast("Product is out of stock");
+                        return;
+                      }
+                      fireStoreService.addToCart(
+                          productId: product.id.trim().toString(), productData: productData);
+                    },
+                    child: Container(
                       width: Get.width,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if (!fireStoreService.userLoggedIn) {
-                              Get.to(() => const SignUpScreen());
-                              return;
-                            }
-                            if (canBuy == false) {
-                              showToast("Product is out of stock");
-                              return;
-                            }
-                            fireStoreService.addToCart(
-                                productId: product.id.trim().toString(), productData: productData);
-                          },
-                          child: const Text("Add to cart")),
+                      margin:   const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffF4BB10),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ]),
+                      child: Center(
+                        child: const Text(
+                          'Add to cart',
+                          style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                        ),
+                      ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 50,
+                  SizedBox(height: 15,),
+                  GestureDetector(
+                    onTap: () {
+                      if (!fireStoreService.userLoggedIn) {
+                        Get.to(() => const SignUpScreen());
+                        return;
+                      }
+                      if (canBuy == false) {
+                        showToast("Product is out of stock");
+                        return;
+                      }
+                      fireStoreService.addToCart(
+                          productId: product.id.trim().toString(), productData: productData);
+                      Get.to(() => const CartScreen());
+                    },
+                    child: Container(
                       width: Get.width,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            if (!fireStoreService.userLoggedIn) {
-                              Get.to(() => const SignUpScreen());
-                              return;
-                            }
-                            if (canBuy == false) {
-                              showToast("Product is out of stock");
-                              return;
-                            }
-                            fireStoreService.addToCart(
-                                productId: product.id.trim().toString(), productData: productData);
-                            Get.to(() => const CartScreen());
-                          },
-                          child: const Text("Buy Now")),
+                      margin:   const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffF4BB10),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ]),
+                      child: Center(
+                        child: const Text(
+                          'Buy Now',
+                          style: TextStyle(fontSize: 15, letterSpacing: 2, color: Colors.white),
+                        ),
+                      ),
                     ),
-                  )
+                  ),
+
 
                 ],
               ),
