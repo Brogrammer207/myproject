@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myproject/screens/auth/otp.dart';
 
+import '../../bottom_navigation_bar_screen.dart';
+import '../../firebase_services/firestore_service.dart';
 import '../widgets/helper.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -19,6 +23,42 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController phoneController = TextEditingController();
+  final FirebaseFireStoreService fireStoreService = FirebaseFireStoreService();
+  Future<dynamic> signInWithGoogle(BuildContext context) async {
+    OverlayEntry loader = Helper.overlayLoader(context);
+    Overlay.of(context).insert(loader);
+
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await FirebaseAuth.instance.signOut();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        Helper.hideLoader(loader);
+        return null;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      log('Google token: ${credential.accessToken}');
+
+      Get.offAll(const BottomNavigationScreen());
+
+      Helper.hideLoader(loader);
+      return userCredential;
+    } catch (e) {
+      print('Google Sign-In Exception: $e');
+      Helper.hideLoader(loader);
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -218,30 +258,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ],
                             ),
                           ),
-                          Container(
-                            width: 140,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/google.png',
-                                  height: 30,
-                                ),
+                          GestureDetector(
+                            onTap: (){
+                              signInWithGoogle(context);
+                            },
+                            child: Container(
+                              width: 140,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/google.png',
+                                    height: 30,
+                                  ),
 
-                                SizedBox(width: 10,),
-                                Text('Google',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    )),
-                              ],
+                                  SizedBox(width: 10,),
+                                  Text('Google',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      )),
+                                ],
+                              ),
                             ),
                           ),
                         ],

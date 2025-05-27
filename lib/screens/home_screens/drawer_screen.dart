@@ -10,6 +10,9 @@ import '../../helper/helper.dart';
 import '../auth/signup.dart';
 import '../check_out/delivery_address.dart';
 import '../orders/orders_screen.dart';
+import '../privacypolicyScreen.dart';
+import '../storelistScreen.dart';
+import '../termsconditionsScreen.dart';
 import 'profile.dart';
 import '../orders/address_screen.dart';
 
@@ -95,6 +98,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
             thickness: 1,
           ),
           ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Store list'),
+            onTap: () {
+                Get.to(() => const StoreListScreen());
+            },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
+          ListTile(
             leading: const Icon(Icons.access_alarm),
             title: const Text('Orders'),
             onTap: () {
@@ -129,6 +143,28 @@ class _DrawerScreenState extends State<DrawerScreen> {
             title: const Text('Contact Us'),
             onTap: () {
               launch("tel://9928634555");
+            },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.call),
+            title: const Text('Privacy Policy'),
+            onTap: () {
+              Get.to(Privacypolicyscreen());
+            },
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            thickness: 1,
+          ),
+          ListTile(
+            leading: const Icon(Icons.call),
+            title: const Text('Terms & Conditions'),
+            onTap: () {
+            Get.to(Termsconditionsscreen());
             },
           ),
           Divider(
