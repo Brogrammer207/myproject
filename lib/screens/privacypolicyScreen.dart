@@ -95,6 +95,23 @@ class _PrivacypolicyscreenState extends State<Privacypolicyscreen> {
 
           Contact Us
           If you have any questions regarding privacy while using the Application, or have questions about the practices, please contact the Service Provider via email at khushalIndustriesbidasar@gmail.com."""),
+                
+                
+                Text('''RETURN POLICY
+
+We offer return / exchange within first 7 days from the date of your purchase. Return and Exhange processed within 7 business days.If 7 days have passed since your purchase, you will not be offered a return, exchange or refund of any kind. In order to become eligible for a return or an exchange, (i) the purchased item should be unused and in the same condition as you received it, (ii) the item must have original packaging, (iii) if the item that you purchased on a sale, then the item may not be eligible for a return / exchange. Further, only such items are replaced by us (based on an exchange request), if such items are found defective or damaged.
+Exchanges,Replacements and damaged products will be delivered within 5-7 days.
+
+In case of any refunds approved by BORAWAR it will take 15 days for the refund to be credited to your account.
+
+Shipping and Delivery
+
+We strive to process and ship and deliver your orders within 5-7 business days. Delivery timelines may vary based on your location. We use reliable courier services to ensure your products reach you safely. Please note that unforeseen delays can occur due to circumstances beyond our control.
+CONTACT INFORMATION 
+TRADE NAME- KHUSHAL INDUSTRIES
+PHONE NO-9928634555
+Mail ID- khushalindustriesbidasar@gmail.com
+Physical Address:Borawar,ward no-01,plot no.H 1-72,73,jone no-11,Eiico industries aria,bidasar,dist-churu,Rajasthan-331501''')
               ],
             ),
           ),

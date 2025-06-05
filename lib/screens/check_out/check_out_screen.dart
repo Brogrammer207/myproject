@@ -6,7 +6,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
-import 'package:myproject/checkout_page.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/widgets/loading_animation.dart';
 import 'package:upi_india/upi_app.dart';
