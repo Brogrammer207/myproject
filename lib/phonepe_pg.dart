@@ -1,6 +1,5 @@
 import 'dart:convert' show base64Encode, jsonEncode, utf8;
 import 'dart:developer';
-
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
@@ -12,15 +11,16 @@ class PhonepePg {
   BuildContext context;
 
   PhonepePg({required this.context, required this.amount});
-  String marchentId = "SU2506041824508794384477";
+  String marchentId = "M2331HMEVX8A8";
   String salt = "e5446df8-12f1-41e6-9cea-126eea8a4005";
   int saltIndex = 1;
   String callbackURL = "https://us-central1-borawar-oil-meal.cloudfunctions.net/phonepeCallback";
   String apiEndPoint = "/pg/v1/pay";
+  String flowId = "";
 
 
   init() {
-    PhonePePaymentSdk.init("PRODUCTION", null, marchentId, true).then((val) {
+    PhonePePaymentSdk.init("PRODUCTION", flowId, marchentId, true).then((val) {
       print('PhonePe SDK Initialized - $val');
       startTransaction();
     }).catchError((error) {
@@ -33,10 +33,10 @@ class PhonepePg {
     Map body = {
       "merchantId": marchentId,
       "merchantTransactionId": "txn_${DateTime.now().millisecondsSinceEpoch}",
-      "merchantUserId": "asas", // Change to actual user id if needed
-      "amount": amount * 100, // in paisa
+      "merchantUserId": "txn_${DateTime.now().millisecondsSinceEpoch}",
+      "amount": amount * 100,
       "callbackUrl": callbackURL,
-      "mobileNumber": "9876543210", // Change to actual user number if needed
+      "mobileNumber": "9928634555",
       "paymentInstrument": {"type": "PAY_PAGE"}
     };
 
