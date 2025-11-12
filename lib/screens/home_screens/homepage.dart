@@ -1,7 +1,7 @@
 import 'package:awesome_bottom_bar/awesome_bottom_bar.dart';
 import 'package:awesome_bottom_bar/widgets/inspired/inspired.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+// import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,31 +63,31 @@ class _HomePageState extends State<HomePageScreen> {
 
               return Column(
                 children: [
-                  CarouselSlider(
-                    options: CarouselOptions(
-                        viewportFraction: 1,
-                        autoPlay: true,
-                        onPageChanged: (value, _) {
-                          sliderIndex.value = value.toDouble();
-                        },
-                        autoPlayCurve: Curves.ease,
-                        height: height * .20),
-                    items: List.generate(
-                        banner.length,
-                        (index) => Container(
-                            width: width,
-                            margin: EdgeInsets.symmetric(horizontal: width * .01),
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: CachedNetworkImage(
-                                imageUrl: banner[index].imageUrl,
-                                errorWidget: (_, __, ___) => const SizedBox(),
-                                placeholder: (_, __) => const SizedBox(),
-                                fit: BoxFit.cover,
-                              ),
-                            ))),
-                  ),
+                  // CarouselSlider(
+                  //   options: CarouselOptions(
+                  //       viewportFraction: 1,
+                  //       autoPlay: true,
+                  //       onPageChanged: (value, _) {
+                  //         sliderIndex.value = value.toDouble();
+                  //       },
+                  //       autoPlayCurve: Curves.ease,
+                  //       height: height * .20),
+                  //   items: List.generate(
+                  //       banner.length,
+                  //       (index) => Container(
+                  //           width: width,
+                  //           margin: EdgeInsets.symmetric(horizontal: width * .01),
+                  //           decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.grey),
+                  //           child: ClipRRect(
+                  //             borderRadius: BorderRadius.circular(15),
+                  //             child: CachedNetworkImage(
+                  //               imageUrl: banner[index].imageUrl,
+                  //               errorWidget: (_, __, ___) => const SizedBox(),
+                  //               placeholder: (_, __) => const SizedBox(),
+                  //               fit: BoxFit.cover,
+                  //             ),
+                  //           ))),
+                  // ),
                   // SizedBox(
                   //   height: height * .01,
                   // ),

@@ -9,8 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:collection/collection.dart';
 import 'package:myproject/helper/new_helper.dart';
 import 'package:myproject/screens/widgets/loading_animation.dart';
-import 'package:upi_india/upi_app.dart';
-import 'package:upi_india/upi_india.dart';
 import '../../firebase_services/firestore_service.dart';
 import '../../helper/helper.dart';
 import '../../model/model_address.dart';
@@ -34,9 +32,9 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   bool upiLoaded = false;
 
   bool updatingValue = false;
-  List<UpiApp> apps = [];
-  UpiApp? upiApp;
-  final UpiIndia _upiIndia = UpiIndia();
+  // List<UpiApp> apps = [];
+  // UpiApp? upiApp;
+  // final UpiIndia _upiIndia = UpiIndia();
 
   updateValue({
     required String productId,
@@ -70,7 +68,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-      getAvailableApps();
+      // getAvailableApps();
       fireStoreService.getShippingDetails().then((value) {
         modelShippingAddress = value;
         setState(() {});
@@ -80,78 +78,78 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
 
   ///Upi Payment
 
-  getAvailableApps() {
-    if(Platform.isAndroid) {
-      _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
-        apps = value;
-        if (kDebugMode) {
-          print(apps.map((e) => e.name).toString());
-        }
-        upiLoaded = true;
-        setState(() {});
-      }).catchError((e) {
-        apps = [];
-      });
-    } else {
-      apps = [];
-      upiLoaded = true;
-      cashOnDelivery.value = "Cod";
-    }
-  }
+  // getAvailableApps() {
+  //   if(Platform.isAndroid) {
+  //     _upiIndia.getAllUpiApps(mandatoryTransactionId: false).then((value) {
+  //       apps = value;
+  //       if (kDebugMode) {
+  //         print(apps.map((e) => e.name).toString());
+  //       }
+  //       upiLoaded = true;
+  //       setState(() {});
+  //     }).catchError((e) {
+  //       apps = [];
+  //     });
+  //   } else {
+  //     apps = [];
+  //     upiLoaded = true;
+  //     cashOnDelivery.value = "Cod";
+  //   }
+  // }
+  //
+  // Future<UpiResponse> initiateTransaction(UpiApp app, refId, double total) async {
+  //   return _upiIndia.startTransaction(
+  //     app: app,
+  //     receiverUpiId: modelShippingAddress!.upiId!,
+  //     receiverName: modelShippingAddress!.shopName!,
+  //     transactionRefId: refId,
+  //     transactionNote: 'Add Funds',
+  //     amount: total,
+  //   );
+  // }
 
-  Future<UpiResponse> initiateTransaction(UpiApp app, refId, double total) async {
-    return _upiIndia.startTransaction(
-      app: app,
-      receiverUpiId: modelShippingAddress!.upiId!,
-      receiverName: modelShippingAddress!.shopName!,
-      transactionRefId: refId,
-      transactionNote: 'Add Funds',
-      amount: total,
-    );
-  }
-
-  addPaymentUPI(double total, shipping) {
-    if (total > 100000) {
-      showToast("Total Amount is greater than 1,00,000\n"
-          "Lower the amount to initiate order");
-      return;
-    }
-    if (upiApp == null && cashOnDelivery.isEmpty) {
-      showToast("Select Available Payment Methods");
-      return;
-    }
-    if(upiApp != null) {
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
-      initiateTransaction(upiApp!, refId, total).then((value) {
-        if (value.status.toString() == "success" || true) {
-          // value.transactionId ?? refId;
-          fireStoreService.checkOutTransaction(
-              shipping: shipping,
-              total: total.toString(),
-              paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
-              transactionId: value.transactionId ?? refId,
-              address: widget.address.toJson(),
-              context: context);
-        }
-      });
-    }
-    if(cashOnDelivery.value == "Cod"){
-      final refId = DateTime
-          .now()
-          .microsecondsSinceEpoch
-          .toString();
-      fireStoreService.checkOutTransaction(
-          shipping: shipping,
-          total: total.toString(),
-          paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
-          transactionId: refId,
-          address: widget.address.toJson(),
-          context: context);
-    }
-  }
+  // addPaymentUPI(double total, shipping) {
+  //   if (total > 100000) {
+  //     showToast("Total Amount is greater than 1,00,000\n"
+  //         "Lower the amount to initiate order");
+  //     return;
+  //   }
+  //   if (upiApp == null && cashOnDelivery.isEmpty) {
+  //     showToast("Select Available Payment Methods");
+  //     return;
+  //   }
+  //   if(upiApp != null) {
+  //     final refId = DateTime
+  //         .now()
+  //         .microsecondsSinceEpoch
+  //         .toString();
+  //     initiateTransaction(upiApp!, refId, total).then((value) {
+  //       if (value.status.toString() == "success" || true) {
+  //         // value.transactionId ?? refId;
+  //         fireStoreService.checkOutTransaction(
+  //             shipping: shipping,
+  //             total: total.toString(),
+  //             paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
+  //             transactionId: value.transactionId ?? refId,
+  //             address: widget.address.toJson(),
+  //             context: context);
+  //       }
+  //     });
+  //   }
+  //   if(cashOnDelivery.value == "Cod"){
+  //     final refId = DateTime
+  //         .now()
+  //         .microsecondsSinceEpoch
+  //         .toString();
+  //     fireStoreService.checkOutTransaction(
+  //         shipping: shipping,
+  //         total: total.toString(),
+  //         paymentMethod: upiApp != null ? upiApp!.name.toString() : cashOnDelivery.value,
+  //         transactionId: refId,
+  //         address: widget.address.toJson(),
+  //         context: context);
+  //   }
+  // }
 
   RxString cashOnDelivery = "".obs;
 
@@ -347,7 +345,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             const SizedBox(
                               height: 20,
                             ),
-                            paymentMethods(),
+                            // paymentMethods(),
                             const SizedBox(
                               height: 16,
                             ),
@@ -365,10 +363,10 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                   showToast("some product is out of stock");
                                   return;
                                 }
-                                addPaymentUPI(
-                                  totalAmount,
-                                  freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
-                                );
+                                // addPaymentUPI(
+                                //   totalAmount,
+                                //   freeShipping ? "0" : modelShippingAddress!.shippingAmount.toString(),
+                                // );
                                 // Get.to(const OrdersScreen());
                               },
                               style: ElevatedButton.styleFrom(
@@ -469,86 +467,86 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     );
   }
 
-  Card paymentMethods() {
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          children: [
-            Text(
-              "Select Payment Method",
-              style: TextStyle(color: Colors.grey.shade700),
-            ),
-            const SizedBox(
-              height: 6,
-            ),
-            if(Platform.isAndroid)
-            if(apps.isNotEmpty)
-            ...apps
-                .map((e) => Obx(() {
-                      if (refreshInt > 0) {}
-                      return ListTile(
-                        // dense: true,
-                        contentPadding: EdgeInsets.zero,
-                        onTap: () {
-                          upiApp = e;
-                          refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                          cashOnDelivery.value = "";
-                        },
-                        visualDensity: VisualDensity.compact,
-                        title: Text(e.name.toString()),
-                        trailing: IgnorePointer(
-                          ignoring: true,
-                          child: Radio<UpiApp?>(
-                            value: e,
-                            visualDensity: VisualDensity.compact,
-                            groupValue: upiApp,
-                            onChanged: (fa) {},
-                          ),
-                        ),
-                        leading: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Image.memory(e.icon),
-                        ),
-                      );
-                    }))
-                .toList()
-            else
-              const Center(
-                child: Text("No UPI installed"),
-              ),
-            Obx(() => ListTile(
-              contentPadding: EdgeInsets.zero,
-              onTap: () {
-                upiApp = null;
-                refreshInt.value = DateTime.now().millisecondsSinceEpoch;
-                cashOnDelivery.value = "Cod";
-              },
-              visualDensity: VisualDensity.compact,
-              title: const Text("Cash On Delivery"),
-              trailing: IgnorePointer(
-                ignoring: true,
-                child: Radio<String?>(
-                  value: "Cod",
-                  visualDensity: VisualDensity.compact,
-                  groupValue: cashOnDelivery.value,
-                  onChanged: (fa) {
-                    cashOnDelivery.value = "Cod";
-                  },
-                ),
-              ),
-              leading: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.delivery_dining_rounded),
-                // child: Image.memory("e.icon"),
-              ),
-            ))
-          ],
-        ),
-      ),
-    );
-  }
+  // Card paymentMethods() {
+  //   return Card(
+  //     margin: EdgeInsets.zero,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(14.0),
+  //       child: Column(
+  //         children: [
+  //           Text(
+  //             "Select Payment Method",
+  //             style: TextStyle(color: Colors.grey.shade700),
+  //           ),
+  //           const SizedBox(
+  //             height: 6,
+  //           ),
+  //           if(Platform.isAndroid)
+  //           if(apps.isNotEmpty)
+  //           ...apps
+  //               .map((e) => Obx(() {
+  //                     if (refreshInt > 0) {}
+  //                     return ListTile(
+  //                       // dense: true,
+  //                       contentPadding: EdgeInsets.zero,
+  //                       onTap: () {
+  //                         upiApp = e;
+  //                         refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+  //                         cashOnDelivery.value = "";
+  //                       },
+  //                       visualDensity: VisualDensity.compact,
+  //                       title: Text(e.name.toString()),
+  //                       trailing: IgnorePointer(
+  //                         ignoring: true,
+  //                         child: Radio<UpiApp?>(
+  //                           value: e,
+  //                           visualDensity: VisualDensity.compact,
+  //                           groupValue: upiApp,
+  //                           onChanged: (fa) {},
+  //                         ),
+  //                       ),
+  //                       leading: Padding(
+  //                         padding: const EdgeInsets.all(8.0),
+  //                         child: Image.memory(e.icon),
+  //                       ),
+  //                     );
+  //                   }))
+  //               .toList()
+  //           else
+  //             const Center(
+  //               child: Text("No UPI installed"),
+  //             ),
+  //           Obx(() => ListTile(
+  //             contentPadding: EdgeInsets.zero,
+  //             onTap: () {
+  //               upiApp = null;
+  //               refreshInt.value = DateTime.now().millisecondsSinceEpoch;
+  //               cashOnDelivery.value = "Cod";
+  //             },
+  //             visualDensity: VisualDensity.compact,
+  //             title: const Text("Cash On Delivery"),
+  //             trailing: IgnorePointer(
+  //               ignoring: true,
+  //               child: Radio<String?>(
+  //                 value: "Cod",
+  //                 visualDensity: VisualDensity.compact,
+  //                 groupValue: cashOnDelivery.value,
+  //                 onChanged: (fa) {
+  //                   cashOnDelivery.value = "Cod";
+  //                 },
+  //               ),
+  //             ),
+  //             leading: const Padding(
+  //               padding: EdgeInsets.all(8.0),
+  //               child: Icon(Icons.delivery_dining_rounded),
+  //               // child: Image.memory("e.icon"),
+  //             ),
+  //           ))
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   RxInt refreshInt = 0.obs;
 }

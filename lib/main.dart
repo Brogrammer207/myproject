@@ -21,14 +21,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         fontFamily: GoogleFonts.poppins().fontFamily,
-        cardTheme: const CardTheme(
+        cardTheme: const CardThemeData(
           color: Colors.white,
           surfaceTintColor: Colors.white,
-          elevation: 1
+          elevation: 1,
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white
+          surfaceTintColor: Colors.white,
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
